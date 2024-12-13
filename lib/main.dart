@@ -1,7 +1,10 @@
+import 'package:endless_runner/endless_runner_game.dart';
+import 'package:flame/game.dart';
 import 'package:flutter/material.dart';
 
 void main() {
-  runApp(const MyApp());
+  //runApp(const MyApp());
+  runApp(GameWidget(game: EndlessRunnerGame()));
 }
 
 class MyApp extends StatelessWidget {
