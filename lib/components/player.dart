@@ -2,32 +2,21 @@ import 'package:endless_runner/endless_runner_game.dart';
 import 'package:flame/components.dart';
 
 class Player extends SpriteComponent with HasGameRef<EndlessRunnerGame> {
-  Player() : super(size: Vector2(50, 50), position: Vector2(100, 300));
+  Player() : super(size: Vector2(50, 50), position: Vector2(50, 300));
 
-  bool _isJumping = false;
+  final double moveSpeed = 100; // Speed of movement
 
   @override
   Future<void> onLoad() async {
-    super.onLoad();
-    sprite = await gameRef.loadSprite('player_1.png');
+    sprite = await gameRef.loadSprite('player_1.png'); // Load the player's sprite
   }
 
-  void jump() {
-    if (!_isJumping) {
-      _isJumping = true;
-      position.add(Vector2(0, -150));
+  void moveRight() {
+    // Move the player to the right
+    position.x += moveSpeed;
+    if (position.x > gameRef.size.x - size.x) {
+      position.x = gameRef.size.x - size.x; // Prevent moving off-screen
     }
-  }
-
-  @override
-  void update(double dt) {
-    super.update(dt);
-
-    if (position.y < gameRef.size.y - 50) {
-      position.add(Vector2(0, 300 * dt));
-    } else {
-      _isJumping = false;
-      position.y = gameRef.size.y - 50;
-    }
+    print("Player moved right to position: $position");
   }
 }
