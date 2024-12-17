@@ -1,29 +1,47 @@
 import 'package:endless_runner/endless_runner_game.dart';
+import 'package:endless_runner/utils/log_util.dart';
+import 'package:flame/collisions.dart';
 
 import 'package:flame/components.dart';
 
 class Obstacle extends SpriteComponent  with HasGameRef<EndlessRunnerGame> {
-  final double moveSpeed = 50; // Speed of obstacle movement
-  double direction = -1; // Direction: -1 for left, 1 for right
+  final double speed = 200; // Speed of obstacle movement
+  final String className = 'Obstacle';
+  bool hasScored = false;   // Flag to check if the score has been updated
 
-  Obstacle({required double startX, required double startY})
-      : super(size: Vector2(50, 50), position: Vector2(startX, startY));
+  Obstacle({required Vector2 position})
+      : super(
+          position: position,
+          size: Vector2(50, 50), // Obstacle size
+        );
 
   @override
   Future<void> onLoad() async {
-    sprite = await gameRef.loadSprite('player_1.png'); // Load the obstacle's sprite
+    LogUtil.debug('Start inside $className.onload...');
+    try {
+      sprite = await gameRef.loadSprite('rock.jpg'); // Load obstacle sprite
+      add(RectangleHitbox());  // Add hitbox for collision detection
+    } catch (e, stackTrace) {
+      LogUtil.error('Exception -> $e, $stackTrace');
+    }    
   }
 
   @override
   void update(double dt) {
     super.update(dt);
+    LogUtil.debug('Start inside $className.update...');
+    // Move the obstacle to the left
+    position.x -= speed * dt;
 
-    // Move the obstacle left or right
-    position.x += direction * moveSpeed * dt;
+    if (!hasScored && position.x + size.x < gameRef.player.position.x) {
+      hasScored = true; // Mark as scored
+      gameRef.increaseScore();
+    }
 
-    // Reverse direction if it hits the screen edges
-    if (position.x < 0 || position.x > gameRef.size.x - size.x) {
-      direction *= -1;
+    // Remove obstacle if it moves off-screen
+    if (position.x < -size.x) {
+      LogUtil.debug('Start inside $className.update...Removed obstacle here');
+      removeFromParent();
     }
   }
 
