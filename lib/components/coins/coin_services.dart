@@ -31,7 +31,6 @@ class CoinServices implements CoinManager {
     LogUtil.debug('Start inside $_className.spawnCoins ...');
     
     Coin coin = Coin(Vector2(game.size.x, _random.nextDouble() * (game.size.y - 50)));
-    //_coins.add(coin);
     game.add(coin); // Add coin to the game world
     
   }

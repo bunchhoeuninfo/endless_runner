@@ -1,3 +1,5 @@
+/*
+
 import 'package:endless_runner/endless_runner_game.dart';
 import 'package:endless_runner/utils/log_util.dart';
 import 'package:flame/components.dart';
@@ -17,7 +19,7 @@ class ScrollingBackground extends SpriteComponent with HasGameRef<EndlessRunnerG
     try {
       // Make the background size equal to the screen size
       size = gameRef.size;
-      sprite = await gameRef.loadSprite('background_object.PNG'); // Full-screen background
+      sprite = await gameRef.loadSprite('background_tile.jpg'); // Full-screen background
     } catch (e, stackTrace) {
       LogUtil.error('Exception -> $e, $stackTrace');
     }    
@@ -37,3 +39,4 @@ class ScrollingBackground extends SpriteComponent with HasGameRef<EndlessRunnerG
     }
   }
 }
+*/

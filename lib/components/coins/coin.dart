@@ -16,7 +16,7 @@ class Coin extends SpriteComponent with HasGameRef<EndlessRunnerGame> {
     super.onLoad();
 
     try {
-      sprite = await gameRef.loadSprite('coin.jpg');
+      sprite = await gameRef.loadSprite('coins/coin_flip.jpg');
       add(RectangleHitbox());
     } catch (e) {
       LogUtil.error('Exception -> $e');

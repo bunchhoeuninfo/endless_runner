@@ -57,8 +57,8 @@ class PlayerMovement {
   }
 
   void resetPosition() {
-    LogUtil.debug('Start inside $_className.resetPosition ...');
-    final screenLeftEdge = gameRef.size.x * 0.5;
+    LogUtil.debug('Start inside resetPosition ...');
+    final screenLeftEdge = gameRef.size.x * 0.02;
     final groundLevel = gameRef.size.y / 2;
 
     player.position = Vector2(screenLeftEdge, groundLevel);

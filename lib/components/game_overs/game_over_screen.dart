@@ -81,8 +81,15 @@ class GameOverScreen extends PositionComponent
   }
 
   void handleTap(Vector2 tapPosition) {
+    LogUtil.debug('Start inside handleTap, isVisible = $isVisible');
     if (isVisible) {
-      hide();
+      // Hide the game over screen
+      isVisible = false;
+
+      // Reset the game over screen state if needed
+      position = Vector2.all(-1000); // Move off-screen if required
+      LogUtil.debug('GameOver screen is reset and hidden.');
+      
       gameRef.resumeEngine(); // Resume the game
       gameRef.restartGame(); // Reset the game
     }
@@ -90,7 +97,7 @@ class GameOverScreen extends PositionComponent
 
   @override
   void onTapDown(TapDownEvent event) {
-    LogUtil.debug('Start inside $_className.onTapDown ...');
+    LogUtil.debug('Start inside $_className.onTapDown, isVisible = $isVisible');
     super.onTapDown(event);
     if (isVisible) {
       gameRef.resumeEngine(); // Resume the game

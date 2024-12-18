@@ -7,7 +7,7 @@ import 'package:endless_runner/components/coins/coin_manager.dart';
 import 'package:endless_runner/components/game_overs/game_over_screen.dart';
 import 'package:endless_runner/components/obstacles/obstacle_manager.dart';
 import 'package:endless_runner/components/players/player.dart';
-import 'package:endless_runner/components/scrolling_background.dart';
+import 'package:endless_runner/components/backgrounds/scrolling_background.dart';
 import 'package:endless_runner/components/coins/coin_services.dart';
 import 'package:endless_runner/components/obstacles/obstacle.dart';
 import 'package:endless_runner/components/obstacles/obstacle_services.dart';
@@ -53,11 +53,14 @@ class EndlessRunnerGame extends FlameGame with HasCollisionDetection, TapDetecto
       camera.viewport = FixedResolutionViewport(resolution: Vector2(800, 600));
 
       // Add two full-screen backgrounds for seamless scrolling
-      add(ScrollingBackground(startX: 0));
-      add(ScrollingBackground(startX: size.x));
+      //add(ScrollingBackground(startX: 0));
+      //add(ScrollingBackground(startX: size.x));
+      add(ScrollingBackground(position: Vector2(0, 0), speed: 100));
+      add(ScrollingBackground(position: Vector2(size.x, 0), speed: 100));
 
       // Add the player
-      player = Player(position: Vector2(size.x * 0.1, size.y / 2)); // Starting position
+      //player = Player(position: Vector2(size.x * 0.01, size.y / 2)); // Starting position
+      player = Player(position: Vector2(size.x * 0.02, size.y / 2)); // Starting position
       add(player);
       LogUtil.debug('Player added to the game');
 
@@ -105,9 +108,11 @@ class EndlessRunnerGame extends FlameGame with HasCollisionDetection, TapDetecto
 
   @override
   void onTapDown(TapDownInfo info) {
+    LogUtil.debug('Start inside onTapDown, _isGameOver=$_isGameOver');
+    final gamePosition = info.eventPosition.global;
     if (_isGameOver) {
       //_gameOverScreen.onTapDown();
-      _gameOverScreen.handleTap(info.eventPosition.global);
+      _gameOverScreen.handleTap(gamePosition);
     } else {
       player.jump();
     }
@@ -149,7 +154,7 @@ class EndlessRunnerGame extends FlameGame with HasCollisionDetection, TapDetecto
   }
 
   void gameOver() {
-    LogUtil.debug('Start EndlessRunnerGame.gameOver ...');
+    LogUtil.debug('Start EndlessRunnerGame.gameOver, _isGameOver = $_isGameOver');
     _isGameOver = true;
     _gameOverScreen.show();
     pauseEngine();

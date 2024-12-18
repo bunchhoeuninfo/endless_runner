@@ -8,7 +8,7 @@ import 'package:flame/components.dart';
 class Player extends SpriteComponent with HasGameRef<EndlessRunnerGame>, CollisionCallbacks, GestureHitboxes   {
 
   Player({required Vector2 position})
-      : super(size: Vector2(50, 50), position: position, anchor: Anchor.center); // Fixed position
+      : super(size: Vector2(50, 50), position: position); // Fixed position
 
   final String className = 'Player';
   final double moveSpeed = 200;
@@ -52,7 +52,7 @@ class Player extends SpriteComponent with HasGameRef<EndlessRunnerGame>, Collisi
 
   void resetPosition() {
     LogUtil.debug('Called reset player object position...');
-    final screenLeftEdge = gameRef.size.x * 0.5;
+    final screenLeftEdge = gameRef.size.x * 0.02;
     final groundLevel = gameRef.size.y / 2;
 
     position = Vector2(screenLeftEdge, groundLevel);
