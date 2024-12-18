@@ -64,7 +64,7 @@ flutter:
   assets:
      - assets/images/player_1.png
      - assets/images/background_object.PNG
-
+     - assets/images/coin.jpg
     # obstacle images
      - assets/images/rock.jpg
   #   - images/a_dot_ham.jpeg

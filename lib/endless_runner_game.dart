@@ -1,10 +1,16 @@
 
 import 'dart:math';
 
-import 'package:endless_runner/components/game_over_screen.dart';
-import 'package:endless_runner/components/player.dart';
+
+import 'package:endless_runner/components/coins/coin_counter.dart';
+import 'package:endless_runner/components/coins/coin_manager.dart';
+import 'package:endless_runner/components/game_overs/game_over_screen.dart';
+import 'package:endless_runner/components/obstacles/obstacle_manager.dart';
+import 'package:endless_runner/components/players/player.dart';
 import 'package:endless_runner/components/scrolling_background.dart';
-import 'package:endless_runner/obstacles/obstacle.dart';
+import 'package:endless_runner/components/coins/coin_services.dart';
+import 'package:endless_runner/components/obstacles/obstacle.dart';
+import 'package:endless_runner/components/obstacles/obstacle_services.dart';
 import 'package:endless_runner/utils/log_util.dart';
 import 'package:flame/camera.dart';
 import 'package:flame/components.dart';
@@ -18,22 +24,32 @@ class EndlessRunnerGame extends FlameGame with HasCollisionDetection, TapDetecto
   final String className = 'EndlessRunnerGame';
   late Player player;
   final Random random = Random();
-  final double obstacleSpawnInterval = 2.0; // Spawn every 2 seconds
+  final double coinSpawnInterval = 2.0; // Coin Spawn every 2 seconds
+  final double obstacleSpawnInterval = 2.0; // Obstacle Spawn every 2 seconds
   double elapsedTime = 0;
   double scoreTimer = 0;
   double obstacleTimer = 0;
+  double coinTimer = 0;
+  double coinCount = 0;
+
+  final CoinManager _coinManager = CoinServices();
+  final ObstacleManager _obstacleManager = ObstacleServices();
 
   int score = 0; // score counter
   late TextComponent scoreText;
+  late GameOverScreen _gameOverScreen;
+  bool _isGameOver = false;
   GameState gameState = GameState.playing;  // Track the game state
 
 
   @override
   Future<void> onLoad() async {    
-    LogUtil.debug('Start inside EndlessRunnerGame.onLoad...');
-
     try {
-      await super.onLoad();
+      await Future.delayed(Duration.zero);
+      //await super.onLoad();
+      LogUtil.debug('Start inside EndlessRunnerGame.onLoad...');
+      LogUtil.debug('Game Size: $size');
+
       camera.viewport = FixedResolutionViewport(resolution: Vector2(800, 600));
 
       // Add two full-screen backgrounds for seamless scrolling
@@ -41,12 +57,23 @@ class EndlessRunnerGame extends FlameGame with HasCollisionDetection, TapDetecto
       add(ScrollingBackground(startX: size.x));
 
       // Add the player
-      player = Player();
+      player = Player(position: Vector2(size.x * 0.1, size.y / 2)); // Starting position
       add(player);
+      LogUtil.debug('Player added to the game');
 
       // Add score display
       scoreText = getScoreText();
       add(scoreText);
+
+      // Add coins, spawn , count coin
+      _coinManager.spawnCoins(this);
+      add(CoinCounter());
+
+      // Add Game Over screen but keep it hidden initially
+      _gameOverScreen = GameOverScreen();
+      //_gameOverScreen.hide();
+      add(_gameOverScreen);
+      //_gameOverScreen.hide();
 
       // Add collision detection
       add(ScreenHitbox());
@@ -56,14 +83,36 @@ class EndlessRunnerGame extends FlameGame with HasCollisionDetection, TapDetecto
     }    
   }
 
+
   TextComponent getScoreText() {
     return TextComponent(
-        text: 'Score: 0',
+        text: 'Score: $score',
         position: Vector2(10, 10),  // Top-Left corner
         textRenderer: TextPaint(
           style: const TextStyle(color: Colors.amberAccent, fontSize: 24),
         ),
       );
+  }
+
+  void showCoinCount(int count) {
+    LogUtil.debug('Coins collected: $count');
+  }
+
+  void addToCoinCount(int count) {
+    coinCount += count;
+    LogUtil.debug('Total Coins Collected: $coinCount');
+  }
+
+  @override
+  void onTapDown(TapDownInfo info) {
+    if (_isGameOver) {
+      //_gameOverScreen.onTapDown();
+      _gameOverScreen.handleTap(info.eventPosition.global);
+    } else {
+      player.jump();
+    }
+    
+    LogUtil.debug('Screen tapped - Player jumps');
   }
 
   @override
@@ -77,14 +126,18 @@ class EndlessRunnerGame extends FlameGame with HasCollisionDetection, TapDetecto
       scoreText.text = 'Score: $score';
     }
     
-    
     // Spawn obstacles at intervals
     obstacleTimer += dt;
     if (obstacleTimer >= obstacleSpawnInterval) {
       obstacleTimer = 0;
-      add(Obstacle(
-        position: Vector2(size.x, random.nextDouble() * (size.y - 50)), // Random Y
-      ));
+      _obstacleManager.spawnObstacle(this);
+    }
+
+    //spawn coin at intervals
+    coinTimer += dt;
+    if (coinTimer >= coinSpawnInterval) {
+      coinTimer = 0;
+      _coinManager.spawnCoins(this);
     } 
   }
 
@@ -96,18 +149,23 @@ class EndlessRunnerGame extends FlameGame with HasCollisionDetection, TapDetecto
   }
 
   void gameOver() {
-    LogUtil.debug('Start $className.gameOver ...');
-    
-    gameState = GameState.gameOver; // Switch to Game Over state
+    LogUtil.debug('Start EndlessRunnerGame.gameOver ...');
+    _isGameOver = true;
+    _gameOverScreen.show();
     pauseEngine();
-    add(GameOverScreen(onRestart: restartGame));
-    LogUtil.debug('Game Over! Final Score: $score');
   }
 
   void restartGame() {
+    LogUtil.debug('Start method restartGame...');
+
+    // Hide Game Over screen
+    _gameOverScreen.hide();
+    _isGameOver = false;
+
     // Reset game state
     gameState = GameState.playing;
     score = 0;
+    coinCount = 0;
     scoreText.text = 'Score: $score';
 
     // Remove all obstacles and restart game

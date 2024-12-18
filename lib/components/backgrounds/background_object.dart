@@ -4,11 +4,18 @@ import 'package:flame/components.dart';
 class BackgroundObject extends SpriteComponent with HasGameRef<EndlessRunnerGame> {
   final double speed;
 
+/*
   BackgroundObject({
     required double startX,
     required double startY,
     required this.speed,
-  }) : super(position: Vector2(startX, startY), size: Vector2(100, 50));
+  }) : super(position: Vector2(startX, startY), size: Vector2(100, 50));*/
+
+  BackgroundObject({
+    required double startX,
+    required double startY,
+    required this.speed,
+  }) : super(size: Vector2.zero());
 
   @override
   Future<void> onLoad() async {
