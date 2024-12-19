@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:endless_runner/endless_runner_game.dart';
 import 'package:endless_runner/utils/log_util.dart';
 import 'package:flame/collisions.dart';
@@ -35,7 +37,7 @@ class Obstacle extends SpriteComponent  with HasGameRef<EndlessRunnerGame> {
 
     if (!hasScored && position.x + size.x < gameRef.player.position.x) {
       hasScored = true; // Mark as scored
-      gameRef.increaseScore();
+      //gameRef.increaseScore();
     }
 
     // Remove obstacle if it moves off-screen
@@ -43,6 +45,12 @@ class Obstacle extends SpriteComponent  with HasGameRef<EndlessRunnerGame> {
       LogUtil.debug('Start inside $className.update...Removed obstacle here');
       removeFromParent();
     }
+  }
+
+  @override
+  Rect toRect() {
+    super.toRect();
+    return Rect.fromLTWH(position.x, position.y, 50, 50);  // Example obstacle size (50x50)
   }
 
 }

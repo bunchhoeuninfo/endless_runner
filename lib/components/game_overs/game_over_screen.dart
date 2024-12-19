@@ -62,6 +62,7 @@ class GameOverScreen extends PositionComponent
 
   void show() {
     LogUtil.debug('Start inside $_className.show ....');
+    
     if (!isMounted) {
       gameRef.add(this);    // Add to the game tree if not already added
     }

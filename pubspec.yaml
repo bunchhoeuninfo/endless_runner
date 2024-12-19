@@ -66,6 +66,9 @@ flutter:
     # coin images
      - assets/images/coin.jpg
      - assets/images/coins/coin_flip.jpg
+     - assets/images/coins/blue.jpg
+     - assets/images/coins/red.jpg
+     - assets/images/coins/gold.jpg
     # obstacle images
      - assets/images/rock.jpg
     # background scrolling

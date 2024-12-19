@@ -1,4 +1,5 @@
 import 'package:endless_runner/endless_runner_game.dart';
+import 'package:endless_runner/state/game_state.dart';
 import 'package:endless_runner/utils/log_util.dart';
 import 'package:flame/components.dart';
 
@@ -30,6 +31,11 @@ class ScrollingBackground extends SpriteComponent with HasGameRef<EndlessRunnerG
     super.update(dt);
 
     LogUtil.debug('Start inside $className.update...');
+
+    if (gameRef.gameStateManager.state != GameState.playing) {
+      return; // Do nothing if the game is not in the "playing" state
+    }
+
     // Move the background to the left
     position.x -= speed * dt;
 
