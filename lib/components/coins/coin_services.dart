@@ -4,8 +4,8 @@ import 'package:endless_runner/components/coins/coin_manager.dart';
 import 'package:endless_runner/components/coins/coin.dart';
 import 'package:endless_runner/components/coins/coin_type.dart';
 import 'package:endless_runner/components/players/player.dart';
-import 'package:endless_runner/endless_runner_game.dart';
-import 'package:endless_runner/utils/log_util.dart';
+import 'package:endless_runner/game/endless_runner_game.dart';
+import 'package:endless_runner/game/utils/log_util.dart';
 import 'package:flame/game.dart';
 
 class CoinServices implements CoinManager {
@@ -17,7 +17,7 @@ class CoinServices implements CoinManager {
 
   @override
   void checkCoinCollisions(Player player, EndlessRunnerGame game) {
-    LogUtil.debug('Start inside $_className.checkCoinCollisions ...');
+    LogUtil.debug('Start inside checkCoinCollisions ...');
     int coinsCollected = 0;
     for (var coin in _coins) {
       if (player.toRect().overlaps(coin.toRect())) {
@@ -49,13 +49,12 @@ class CoinServices implements CoinManager {
     LogUtil.debug('Start inside $_className.spawnCoins ...');
     
     // Define the bottom range
-    final groundLevel = game.size.y / 2;
-    final int numberOfCoins = 5;
+    final groundLevel = game.size.y / 2;    
     // Define the spawn range above the ground level
-    double spawnHeight = groundLevel * 0.4;
+    double spawnHeight = groundLevel * 0.5;
     
 
-    for (int i = 0; i < numberOfCoins; i++) {
+    for (int i = 0; i < 10; i++) {
       final randomCoinType = CoinType.values[_random.nextInt(CoinType.values.length)];      
       double randomY = groundLevel - _random.nextDouble() * spawnHeight;
       // Ensure Y is valid and within visible bounds
@@ -67,7 +66,7 @@ class CoinServices implements CoinManager {
       //Coin coin = Coin(Vector2(game.size.x, randomY), randomCoinType);
       Coin coin = Coin(Vector2(randomX, randomY), randomCoinType);
       game.add(coin); // Add coin to the game world
-      LogUtil.debug('Spawned a ${randomCoinType.name} coin at (${coin.position.x}, ${coin.position.y}) relative to ground level: $groundLevel');
+      //LogUtil.debug('Spawned a ${randomCoinType.name} coin at (${coin.position.x}, ${coin.position.y}) relative to ground level: $groundLevel');
     }
     
   }

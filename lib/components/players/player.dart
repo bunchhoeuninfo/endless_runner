@@ -1,9 +1,11 @@
+
 import 'package:endless_runner/components/players/player_collision.dart';
 import 'package:endless_runner/components/players/player_movement.dart';
-import 'package:endless_runner/endless_runner_game.dart';
-import 'package:endless_runner/utils/log_util.dart';
+import 'package:endless_runner/game/endless_runner_game.dart';
+import 'package:endless_runner/game/utils/log_util.dart';
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
+import 'package:flutter/material.dart';
 
 class Player extends SpriteComponent with HasGameRef<EndlessRunnerGame>, CollisionCallbacks, GestureHitboxes   {
 
@@ -26,7 +28,8 @@ class Player extends SpriteComponent with HasGameRef<EndlessRunnerGame>, Collisi
     LogUtil.debug('Inside Player.onLoad method...');
     try {
 
-      sprite = await gameRef.loadSprite('player_1.png'); // Load the player sprite
+      //sprite = await gameRef.loadSprite('player_1.png'); // Load the player sprite
+      sprite = Sprite(gameRef.images.fromCache('player_1.png'));
       LogUtil.debug('Player sprite loaded succesfully');
 
       movementHandler = PlayerMovement(gameRef: gameRef, player: this);
@@ -46,29 +49,45 @@ class Player extends SpriteComponent with HasGameRef<EndlessRunnerGame>, Collisi
   void onCollision(Set<Vector2> intersectionPoints, PositionComponent other) {    
     super.onCollision(intersectionPoints, other);
 
-    LogUtil.debug('Start inside $className.onCollision.');
+    //LogUtil.debug('Trigger collision with $other at player position: $position and obstacle position: ${other.position}');
     collisionHandler.handleCollision(other);
   }
 
+  @override
+  void render(Canvas canvas) {
+    super.render(canvas);
+  
+    // Manually adjust the bounding box for collision purposes
+    final collisionRect = Rect.fromLTWH(
+      position.x, 
+      position.y, 
+      width * 0.8, // Shrink the width if necessary
+      height * 0.8, // Shrink the height if necessary
+    );
+
+    // Visualize the adjusted bounding box
+    canvas.drawRect(collisionRect, Paint()..color = Colors.red.withOpacity(0.5));
+  }
+
   void resetPosition() {
-    LogUtil.debug('Called reset player object position...');
+    //LogUtil.debug('Called reset player object position...');
     final screenLeftEdge = gameRef.size.x * 0.02;
     final groundLevel = gameRef.size.y / 2;
 
     position = Vector2(screenLeftEdge, groundLevel);
     velocityY = 0;
     isGrounded = true;
-    LogUtil.debug('Reset player object position is completed...');
+    //LogUtil.debug('Reset player object position is completed...');
   }
 
   void jump() {
-    LogUtil.debug('Called $className.jump method...');
+    LogUtil.debug('Called jump method...');
     movementHandler.jump();
   }
 
   @override
   void update(double dt) {
-    LogUtil.debug('Called $className.update method...');
+    //LogUtil.debug('Called update method...');
     super.update(dt);
 
     movementHandler.applyGravity(dt);
@@ -76,7 +95,7 @@ class Player extends SpriteComponent with HasGameRef<EndlessRunnerGame>, Collisi
 
 
   void handleTap(Vector2 tapPosition) {
-    LogUtil.debug('Called $className.handleTap method...');
+    LogUtil.debug('Called handleTap method...');
     movementHandler.handleTap(tapPosition);
   }
 

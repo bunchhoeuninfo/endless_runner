@@ -1,5 +1,5 @@
-import 'package:endless_runner/endless_runner_game.dart';
-import 'package:endless_runner/utils/log_util.dart';
+import 'package:endless_runner/game/endless_runner_game.dart';
+import 'package:endless_runner/game/utils/log_util.dart';
 import 'package:flame/components.dart';
 import 'package:flutter/material.dart';
 

@@ -1,12 +1,11 @@
 import 'package:endless_runner/components/coins/coin_type.dart';
-import 'package:endless_runner/endless_runner_game.dart';
-import 'package:endless_runner/utils/log_util.dart';
+import 'package:endless_runner/game/endless_runner_game.dart';
+import 'package:endless_runner/game/utils/log_util.dart';
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 
 class Coin extends SpriteComponent with HasGameRef<EndlessRunnerGame> {
   final double speed = 200;
-  final String _className = 'Coin';
   final CoinType type;
 
   Coin(Vector2 position, this.type)
@@ -14,7 +13,7 @@ class Coin extends SpriteComponent with HasGameRef<EndlessRunnerGame> {
 
   @override
   Future<void> onLoad() async {
-    LogUtil.debug('Start inside coin object onLoad...');
+    //LogUtil.debug('Start inside coin object onLoad...');
     super.onLoad();
 
     try {
@@ -44,15 +43,13 @@ class Coin extends SpriteComponent with HasGameRef<EndlessRunnerGame> {
 
   @override
   void update(double dt) {
-    LogUtil.debug('Start inside $_className.update ...');
-
+    //LogUtil.debug('Start inside $_className.update ...');
     super.update(dt);
 
     position.x -= speed * dt;
-
     // Remove coin if it moves off-screen
     if (position.x < -size.x) {
-      LogUtil.debug('Start inside $_className.update...Removed coin here');
+      //LogUtil.debug('Start inside $_className.update...Removed coin here');
       removeFromParent();
     }
 

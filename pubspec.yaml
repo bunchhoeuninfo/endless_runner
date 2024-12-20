@@ -69,6 +69,7 @@ flutter:
      - assets/images/coins/blue.jpg
      - assets/images/coins/red.jpg
      - assets/images/coins/gold.jpg
+     - assets/images/coins/rocket_coin.jpg
     # obstacle images
      - assets/images/rock.jpg
     # background scrolling

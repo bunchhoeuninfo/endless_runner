@@ -1,5 +1,5 @@
-import 'package:endless_runner/endless_runner_game.dart';
-import 'package:endless_runner/utils/log_util.dart';
+import 'package:endless_runner/game/endless_runner_game.dart';
+import 'package:endless_runner/game/utils/log_util.dart';
 import 'package:flame/components.dart';
 
 class PlayerMovement {
@@ -15,7 +15,7 @@ class PlayerMovement {
   PlayerMovement({required this.gameRef, required this.player});
 
   void applyGravity(double dt) {
-    LogUtil.debug('Start inside $_className.applyGravity ...');
+    //LogUtil.debug('Start inside $_className.applyGravity ...');
     if (!isGrounded) {
       _velocityY += _gravity * dt;
       player.position.y += _velocityY * dt;
@@ -57,7 +57,7 @@ class PlayerMovement {
   }
 
   void resetPosition() {
-    LogUtil.debug('Start inside resetPosition ...');
+    //LogUtil.debug('Start inside resetPosition ...');
     final screenLeftEdge = gameRef.size.x * 0.02;
     final groundLevel = gameRef.size.y / 2;
 

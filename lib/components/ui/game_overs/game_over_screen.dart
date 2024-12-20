@@ -1,6 +1,7 @@
 
-import 'package:endless_runner/endless_runner_game.dart';
-import 'package:endless_runner/utils/log_util.dart';
+import 'package:endless_runner/components/ui/game_overs/tap_blocker.dart';
+import 'package:endless_runner/game/endless_runner_game.dart';
+import 'package:endless_runner/game/utils/log_util.dart';
 import 'package:flame/components.dart';
 import 'package:flame/events.dart';
 import 'package:flutter/material.dart';
@@ -8,11 +9,11 @@ import 'package:flutter/material.dart';
 class GameOverScreen extends PositionComponent 
   with HasGameRef<EndlessRunnerGame>, TapCallbacks {
   
-  final String _className = 'GameOverScreen';
   bool isVisible = false; // Track visibility manually
 
   late TextComponent gameOverText;
   late TextComponent restartHintText;
+  late TapBlocker _tapBlocker;
 
 
   GameOverScreen(): super(anchor: Anchor.center);
@@ -20,9 +21,12 @@ class GameOverScreen extends PositionComponent
   @override
   Future<void> onLoad() async {
     super.onLoad();
-    LogUtil.debug('Start inside $_className.onLoad ...');
+    LogUtil.debug('Start inside onLoad ...');
 
     try {
+
+      _tapBlocker = TapBlocker(size: gameRef.size);
+
       // Game Over Text
       gameOverText = TextComponent(
         text: 'Game Over',
@@ -36,7 +40,7 @@ class GameOverScreen extends PositionComponent
       )
         ..anchor = Anchor.center
         ..position = Vector2(0, -100); // Position above the center
-      add(gameOverText);
+      
 
       // Restart Hint Text
       restartHintText = TextComponent(
@@ -50,10 +54,12 @@ class GameOverScreen extends PositionComponent
       )
         ..anchor = Anchor.center
         ..position = Vector2(0, -50); // Position below the center
-      add(restartHintText);
 
-      // Start as hidden
-      //priority = -1;
+     /// add(_tapBlocker);     // Blocker will intercept all taps  
+      add(restartHintText);
+      add(gameOverText);
+
+      isVisible = false;
     } catch (e) {
       LogUtil.error('Exception -> $e');
     }
@@ -61,11 +67,10 @@ class GameOverScreen extends PositionComponent
   }
 
   void show() {
-    LogUtil.debug('Start inside $_className.show ....');
+    LogUtil.debug('Start inside show ....');
     
-    if (!isMounted) {
-      gameRef.add(this);    // Add to the game tree if not already added
-    }
+    if (!isMounted) gameRef.add(this);    // Add to the game tree if not already added
+    
     position = gameRef.size / 2; // Center the component
     priority = 100; // Ensure it appears above other components
     isVisible = true;
@@ -73,37 +78,21 @@ class GameOverScreen extends PositionComponent
   }
 
   void hide() {
-    LogUtil.debug('Start inside $_className.hide ....');
+    LogUtil.debug('Start inside hide.');
     //priority = -1;
     isVisible = false;
-    gameOverText.position = Vector2(0, -100);
-    restartHintText.position = Vector2(0, -50);
-   // removeFromParent();
-  }
-
-  void handleTap(Vector2 tapPosition) {
-    LogUtil.debug('Start inside handleTap, isVisible = $isVisible');
-    if (isVisible) {
-      // Hide the game over screen
-      isVisible = false;
-
-      // Reset the game over screen state if needed
-      position = Vector2.all(-1000); // Move off-screen if required
-      LogUtil.debug('GameOver screen is reset and hidden.');
-      
-      gameRef.resumeEngine(); // Resume the game
-      gameRef.restartGame(); // Reset the game
-    }
+    position = Vector2.all(-1000); // Move off-screen if required
   }
 
   @override
   void onTapDown(TapDownEvent event) {
-    LogUtil.debug('Start inside $_className.onTapDown, isVisible = $isVisible');
-    super.onTapDown(event);
-    if (isVisible) {
-      gameRef.resumeEngine(); // Resume the game
-      gameRef.restartGame(); // Reset the game
+    LogUtil.debug('Start inside onTapDown, isVisible = $isVisible');
+    if (isVisible) {  
+      LogUtil.debug('Restart text tapped.');
+      hide();
+      gameRef.restartGame();
+      gameRef.resumeEngine();
+      event.handled = true; // Mark the event as handled      
     }    
   }
-
 }

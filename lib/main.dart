@@ -1,5 +1,6 @@
-import 'package:endless_runner/endless_runner_game.dart';
-import 'package:flame/game.dart';
+
+
+import 'package:endless_runner/game/widgets/game_main.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -14,5 +15,7 @@ void main() {
     ]
   );
 
-  runApp(GameWidget(game: EndlessRunnerGame()));
+  runApp(const GameMain());
+
 }
+

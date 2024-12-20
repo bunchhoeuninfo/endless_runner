@@ -1,13 +1,13 @@
 import 'dart:ui';
 
-import 'package:endless_runner/endless_runner_game.dart';
-import 'package:endless_runner/utils/log_util.dart';
+import 'package:endless_runner/game/endless_runner_game.dart';
+import 'package:endless_runner/game/utils/log_util.dart';
 import 'package:flame/collisions.dart';
 
 import 'package:flame/components.dart';
 
 class Obstacle extends SpriteComponent  with HasGameRef<EndlessRunnerGame> {
-  final double speed = 200; // Speed of obstacle movement
+  double speed = 200; // Speed of obstacle movement
   final String className = 'Obstacle';
   bool hasScored = false;   // Flag to check if the score has been updated
 
@@ -31,7 +31,7 @@ class Obstacle extends SpriteComponent  with HasGameRef<EndlessRunnerGame> {
   @override
   void update(double dt) {
     super.update(dt);
-    LogUtil.debug('Start inside $className.update...');
+    //LogUtil.debug('Start inside $className.update...');
     // Move the obstacle to the left
     position.x -= speed * dt;
 
@@ -42,9 +42,17 @@ class Obstacle extends SpriteComponent  with HasGameRef<EndlessRunnerGame> {
 
     // Remove obstacle if it moves off-screen
     if (position.x < -size.x) {
-      LogUtil.debug('Start inside $className.update...Removed obstacle here');
+      //LogUtil.debug('Start inside $className.update...Removed obstacle here');
       removeFromParent();
     }
+  }
+
+  // Method to reset obstacle state
+  void resetState() {
+    // Reset any properties related to the obstacle
+    position.x = 0;  // Reset position
+    speed = 5.0;  // Reset speed to initial value
+    // Reset any animations or special states
   }
 
   @override

@@ -2,19 +2,11 @@ import 'dart:math';
 
 import 'package:endless_runner/components/obstacles/obstacle_manager.dart';
 import 'package:endless_runner/components/obstacles/obstacle.dart';
-import 'package:endless_runner/endless_runner_game.dart';
-import 'package:endless_runner/utils/log_util.dart';
+import 'package:endless_runner/game/endless_runner_game.dart';
+import 'package:endless_runner/game/utils/log_util.dart';
 import 'package:flame/game.dart';
 
 class ObstacleServices implements ObstacleManager {
-  /*
-  static final ObstacleServices _instance = ObstacleServices._internal();
-  
-  factory ObstacleServices() {
-    return _instance;
-  }
-
-  ObstacleServices._internal();*/
 
   final List<Obstacle> _obstacles = [];
   final Random _random = Random();
@@ -22,7 +14,7 @@ class ObstacleServices implements ObstacleManager {
 
   @override
   void spawnObstacle(EndlessRunnerGame game) {
-    LogUtil.debug('Start inside $_className.spawnObstacle ...');
+    //LogUtil.debug('Start inside $_className.spawnObstacle ...');
 
     // Define the bottom range
     final groundLevel = game.size.y / 2;
@@ -38,7 +30,7 @@ class ObstacleServices implements ObstacleManager {
     _obstacles.add(obstacle);
     game.add(obstacle); // Add obstacle to the game world
 
-    LogUtil.debug('Obstacle spawned at (${obstacle.position.x}, ${obstacle.position.y}) relative to ground level: $groundLevel');
+    //LogUtil.debug('Obstacle spawned at (${obstacle.position.x}, ${obstacle.position.y}) relative to ground level: $groundLevel');
 
   }
 

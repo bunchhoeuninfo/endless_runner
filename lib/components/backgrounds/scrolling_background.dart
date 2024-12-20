@@ -1,26 +1,28 @@
-import 'package:endless_runner/endless_runner_game.dart';
-import 'package:endless_runner/state/game_state.dart';
-import 'package:endless_runner/utils/log_util.dart';
+import 'package:endless_runner/game/endless_runner_game.dart';
+import 'package:endless_runner/core/game_state.dart';
+import 'package:endless_runner/game/utils/log_util.dart';
 import 'package:flame/components.dart';
 
 class ScrollingBackground extends SpriteComponent with HasGameRef<EndlessRunnerGame> {
-  final double speed; // Speed of the background movement
-  final String className = 'ScrollingBackground';
-
-  ScrollingBackground({required Vector2 position , required this.speed})
-      : super(position: position);
+  double baseSpeed; // Speed of the background movement
+  double currentSpeed;
+  
+  ScrollingBackground({required Vector2 position , required this.baseSpeed})
+      : currentSpeed = baseSpeed,
+      super(position: position);
 
   @override
   Future<void> onLoad() async {
 
-    LogUtil.debug('Start inside $className.onLoad...');
+    LogUtil.debug('Start onLoad method');
 
     try {
       LogUtil.debug('Load sprite background_tile.jpg');
       // Make the background size equal to the screen size
       size = gameRef.size;
-      sprite = await gameRef.loadSprite('background_tile.jpg'); // Full-screen background
-      LogUtil.debug('$className loaded successfully');
+      //sprite = await gameRef.loadSprite('background_tile.jpg'); // Full-screen background
+      sprite = Sprite(gameRef.images.fromCache('background_tile.jpg'));
+      LogUtil.debug('Scrolling background loaded successfully');
     } catch (e, stackTrace) {
       LogUtil.error('Exception -> $e, $stackTrace');
     }    
@@ -29,19 +31,24 @@ class ScrollingBackground extends SpriteComponent with HasGameRef<EndlessRunnerG
   @override
   void update(double dt) {
     super.update(dt);
-
-    LogUtil.debug('Start inside $className.update...');
-
-    if (gameRef.gameStateManager.state != GameState.playing) {
-      return; // Do nothing if the game is not in the "playing" state
-    }
+    if (gameRef.gameStateManager.state != GameState.playing) return;
 
     // Move the background to the left
-    position.x -= speed * dt;
+    position.x -= currentSpeed * dt;
 
     // If the background moves completely off-screen, reset its position
     if (position.x <= -size.x) {
       position.x += 2 * size.x; // Reset to the right of the screen
     }
+  }
+
+  void updateSpeed(double newSpeed) {
+    currentSpeed = newSpeed;
+    LogUtil.debug('ScrollingBackground speed updated to $newSpeed');
+  }
+
+  void resetSpeed() {
+    currentSpeed = baseSpeed;
+    LogUtil.debug('ScrollingBackground speed reset to $baseSpeed');
   }
 }

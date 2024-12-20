@@ -1,4 +1,4 @@
-import 'package:endless_runner/endless_runner_game.dart';
+import 'package:endless_runner/game/endless_runner_game.dart';
 import 'package:flame/components.dart';
 
 class CoinScore extends TextComponent with HasGameRef<EndlessRunnerGame> {
