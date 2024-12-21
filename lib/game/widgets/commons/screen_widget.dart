@@ -1,4 +1,5 @@
 import 'package:endless_runner/components/ui/buttons/restart_button_overlay.dart';
+import 'package:endless_runner/components/ui/buttons/setting_button_overlay.dart';
 import 'package:endless_runner/components/ui/buttons/start_button_overlay.dart';
 import 'package:endless_runner/game/endless_runner_game.dart';
 import 'package:flame/game.dart';
@@ -17,9 +18,10 @@ class ScreenWidget extends StatelessWidget {
             overlayBuilderMap: {
               'start': (context, game) => StartButtonOverlay(game: game as EndlessRunnerGame),
               'restart': (context, game) => RestartButtonOverlay(game: game as EndlessRunnerGame),
+              'setting': (context, game) => SettingButtonOverlay(game: game as EndlessRunnerGame),
             },
             // Show the play overlay initially
-            initialActiveOverlays: const ['start'],
+            initialActiveOverlays: const ['start', 'setting'],
           ),
         ],
       ),

@@ -67,29 +67,31 @@ class EndlessRunnerGame extends FlameGame with HasCollisionDetection, TapDetecto
 
       // pre-load coins to optimize the performance
       await _imageAssetManager.preLoadImgAssets(images);
-
+      //Add components to the game world
+      _addComponents();
       // Setup background
       setupBackground();
-
-      // Add the player      
-      player = Player(position: Vector2(size.x * 0.02, size.y / 2)); // Starting position
-      add(player);
-      LogUtil.debug('Player added to the game');
-
-      // Add start button overlay      
-      overlays.add('start');
-      
-      // Add score display
-      add(CoinScore());
-      
-      // Add coins, spawn , count coin
-      add(CoinCounter());
-      // Add collision detection
-      add(ScreenHitbox());
-
     } catch (e) {
       LogUtil.error('Exception -> $e');
     }    
+  }
+
+  void _addComponents() {
+    // Add the player      
+    player = Player(position: Vector2(size.x * 0.02, size.y / 2)); // Starting position
+    add(player);
+    LogUtil.debug('Player added to the game');    
+
+    //Overlay button
+    overlays.add('start');
+    overlays.add('setting');
+
+    //Score board
+    add(CoinScore());
+    add(CoinCounter());
+
+    // Add collision detection
+    add(ScreenHitbox());
   }
 
   void setupBackground() {
