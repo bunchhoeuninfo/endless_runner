@@ -12,7 +12,6 @@ class Player extends SpriteComponent with HasGameRef<EndlessRunnerGame>, Collisi
   Player({required Vector2 position})
       : super(size: Vector2(50, 50), position: position); // Fixed position
 
-  final String className = 'Player';
   final double moveSpeed = 200;
   final double jumpForce = -400;
   final double gravity = 600;
@@ -28,18 +27,20 @@ class Player extends SpriteComponent with HasGameRef<EndlessRunnerGame>, Collisi
     LogUtil.debug('Inside Player.onLoad method...');
     try {
 
-      //sprite = await gameRef.loadSprite('player_1.png'); // Load the player sprite
-      sprite = Sprite(gameRef.images.fromCache('player_1.png'));
+      //sprite = await gameRef.loadSprite('rock.jpg'); // Load the player sprite
+      
+      sprite = Sprite(gameRef.images.fromCache('rock.jpg'));
       LogUtil.debug('Player sprite loaded succesfully');
 
       movementHandler = PlayerMovement(gameRef: gameRef, player: this);
       collisionHandler = PlayerCollision(gameRef: gameRef, player: this);
 
+       paint = Paint()..color = Colors.blue;
       // set initial position
       movementHandler.resetPosition();
 
       add(RectangleHitbox());
-
+      priority = 100;
     } catch (e, stackTrace) {
       LogUtil.error('Exception -> $e, $stackTrace',);
     }    
@@ -56,7 +57,8 @@ class Player extends SpriteComponent with HasGameRef<EndlessRunnerGame>, Collisi
   @override
   void render(Canvas canvas) {
     super.render(canvas);
-  
+    canvas.drawRect(size.toRect(), paint);
+  /*
     // Manually adjust the bounding box for collision purposes
     final collisionRect = Rect.fromLTWH(
       position.x, 
@@ -66,7 +68,7 @@ class Player extends SpriteComponent with HasGameRef<EndlessRunnerGame>, Collisi
     );
 
     // Visualize the adjusted bounding box
-    canvas.drawRect(collisionRect, Paint()..color = Colors.red.withOpacity(0.5));
+    canvas.drawRect(collisionRect, Paint()..color = Colors.red.withOpacity(0.5));*/
   }
 
   void resetPosition() {

@@ -1,17 +1,17 @@
-class Player {
+class PlayerProfile {
   final String? id;
   final String? name;
   final String? imgUrl;
 
-  Player({
+  PlayerProfile({
     required this.id, required this.name, required this.imgUrl
   });
 
-  factory Player.fromMap(Map<String, dynamic>? data) {
+  factory PlayerProfile.fromMap(Map<String, dynamic>? data) {
     if (data == null) {
       throw ArgumentError("data to Map is null, cannot create Category Article model.");
     }
-    return Player(id: data['id'], name: data['name'], imgUrl: data['imgUrl']);
+    return PlayerProfile(id: data['id'], name: data['name'], imgUrl: data['imgUrl']);
   }
 
   Map<String, dynamic> toMap() {

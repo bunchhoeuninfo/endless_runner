@@ -5,8 +5,6 @@ import 'dart:math';
 import 'package:endless_runner/components/powerups/speed_boost.dart';
 import 'package:endless_runner/components/powerups/speed_boost_manager.dart';
 import 'package:endless_runner/components/powerups/speed_boost_services.dart';
-import 'package:endless_runner/components/ui/buttons/restart_button_overlay.dart';
-import 'package:endless_runner/components/ui/buttons/start_button.dart';
 import 'package:endless_runner/components/coins/coin.dart';
 import 'package:endless_runner/components/ui/texts/coin_counter.dart';
 import 'package:endless_runner/components/coins/coin_manager.dart';
@@ -69,6 +67,8 @@ class EndlessRunnerGame extends FlameGame with HasCollisionDetection, TapDetecto
       await _imageAssetManager.preLoadImgAssets(images);
       //Add components to the game world
       _addComponents();
+      // Add the player      
+      //player = Player(position: Vector2(size.x * 0.02, size.y / 2)); // Starting position
       // Setup background
       setupBackground();
     } catch (e) {
@@ -210,7 +210,7 @@ class EndlessRunnerGame extends FlameGame with HasCollisionDetection, TapDetecto
     // Add start overlay button
     overlays.add('start');
   
-    player.resetPosition(); // Reset player position
+    //player.resetPosition(); // Reset player position
     resumeEngine();  //Resume the game loop
 
   }
