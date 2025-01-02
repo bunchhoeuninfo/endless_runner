@@ -41,6 +41,13 @@ class GameOption extends StatelessWidget {
             },
           ),
         ),
+        ListTile(
+          leading: Icon(Icons.person),
+          title: Text('About Us'),
+          onTap: () {
+            // Trigger game reset
+          },
+        ),
       ],
     );
   }

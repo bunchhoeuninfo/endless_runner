@@ -23,7 +23,7 @@ class NoInternetWidget extends StatelessWidget {
               ),
               const SizedBox(height: 20),
               const Text(
-                "No Internet Connection",
+                "Unable to initialie game.",
                 style: TextStyle(
                   fontSize: 24,
                   fontWeight: FontWeight.bold,

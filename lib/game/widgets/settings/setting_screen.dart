@@ -20,7 +20,26 @@ class SettingScreen extends StatelessWidget {
           icon: const Icon(Icons.arrow_back)
         ),
       ),
-      body: _buildPadding(),
+      body: _buildScrollableContent(),
+    );
+  }
+
+  Widget _buildScrollableContent() {
+    LogUtil.debug('Start building Setting.');
+    return SingleChildScrollView(
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            ProfileSection(),
+            SizedBox(height: 40),
+            GameOption(),
+            SizedBox(height: 40),
+            SignInButton(isSignedIn: false),            
+          ],
+        ),
+      ),
     );
   }
 
@@ -32,10 +51,11 @@ class SettingScreen extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           ProfileSection(),
-          SizedBox(height: 20),
+          SizedBox(height: 40),
           GameOption(),
-          SizedBox(height: 20),
+          SizedBox(height: 40),
           SignInButton(isSignedIn: false,),
+          SizedBox(height: 40),
         ],
       )
     );

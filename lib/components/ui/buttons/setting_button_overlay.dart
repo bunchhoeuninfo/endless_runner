@@ -27,7 +27,7 @@ class SettingButtonOverlay extends StatelessWidget {
             MaterialPageRoute(builder: (context) => SettingScreen()),
           );
         },
-        child: Icon(Icons.settings, size: 30),
+        child: Icon(Icons.settings, size: 30, color: Colors.white,),
       ),
     );
   }

@@ -54,6 +54,9 @@ class EndlessRunnerGame extends FlameGame with HasCollisionDetection, TapDetecto
   // State management
   final GameStateManager gameStateManager = GameStateManager();
 
+  // check if game first run or restart
+  bool isFirstRun = true;
+
   @override
   Future<void> onLoad() async {    
     try {
@@ -65,12 +68,12 @@ class EndlessRunnerGame extends FlameGame with HasCollisionDetection, TapDetecto
 
       // pre-load coins to optimize the performance
       await _imageAssetManager.preLoadImgAssets(images);
-      //Add components to the game world
+      setupBackground();      
       _addComponents();
       // Add the player      
       //player = Player(position: Vector2(size.x * 0.02, size.y / 2)); // Starting position
       // Setup background
-      setupBackground();
+      
     } catch (e) {
       LogUtil.error('Exception -> $e');
     }    
@@ -86,9 +89,7 @@ class EndlessRunnerGame extends FlameGame with HasCollisionDetection, TapDetecto
     overlays.add('start');
     overlays.add('setting');
 
-    //Score board
-    add(CoinScore());
-    add(CoinCounter());
+    
 
     // Add collision detection
     add(ScreenHitbox());
@@ -101,6 +102,7 @@ class EndlessRunnerGame extends FlameGame with HasCollisionDetection, TapDetecto
   }
 
   void startGame() {
+    
     gameStateManager.setState(GameState.playing);
     //_startButton.removeFromParent(); // Remove the start button
     LogUtil.debug('Game Started!');
@@ -191,8 +193,18 @@ class EndlessRunnerGame extends FlameGame with HasCollisionDetection, TapDetecto
   void restartGame() {
     LogUtil.debug('Start method restartGame...');
 
+    //player.resetPosition(); // Reset player position
+    resumeEngine();  //Resume the game loop
+    // Add start overlay button
+    //overlays.add('start');
+    gameStateManager.setState(GameState.playing);    
+      
+    // if restart then remove start & reset overlay
+    isFirstRun = false;
+    //overlays.remove('start');
+
     // Reset game state
-    gameStateManager.setState(GameState.menu);
+    //gameStateManager.setState(GameState.menu);
     overlays.remove('restart');
     //onLoad();
     coinScore = 0;
@@ -206,12 +218,11 @@ class EndlessRunnerGame extends FlameGame with HasCollisionDetection, TapDetecto
     obstacleTimer = 0;
     coinTimer = 0;
     speedBoostTimer = 0;
+    //Score board
+    add(CoinScore());
+    add(CoinCounter());
 
-    // Add start overlay button
-    overlays.add('start');
-  
-    //player.resetPosition(); // Reset player position
-    resumeEngine();  //Resume the game loop
+    
 
   }
 

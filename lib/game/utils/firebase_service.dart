@@ -1,7 +1,7 @@
 
 import 'package:endless_runner/game/utils/firebase_options.dart';
 import 'package:endless_runner/game/utils/log_util.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+
 import 'package:firebase_core/firebase_core.dart';
 
 class FirebaseService {
@@ -12,7 +12,7 @@ class FirebaseService {
         await Firebase.initializeApp(
           options: DefaultFirebaseOptions.firebaseOptions,
         );
-        await FirebaseAuth.instance.signInAnonymously();
+        //await FirebaseAuth.instance.signInAnonymously();
       }
     } catch (e, stackTrace) {
       LogUtil.error("Firebase Initialization failed: ", error: e, stackTrace: stackTrace);
@@ -23,14 +23,14 @@ class FirebaseService {
   Future<void> fetchAppId() async {
     try {
       // Get the current user
-      final user = FirebaseAuth.instance.currentUser;
+      /*final user = FirebaseAuth.instance.currentUser;
       if (user == null) {
         LogUtil.info("No user is currently signed in.");
         return;
       }
 
       // Retrieve the ID token
-      final idToken = await user.getIdToken();
+      final idToken = await user.getIdToken();*/
 
       // Decode the ID token
       /*final decodedToken = JwtDecoder.decode(idToken!);

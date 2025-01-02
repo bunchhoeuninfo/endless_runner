@@ -15,7 +15,7 @@ class ProfileSection extends StatelessWidget {
       children: [
         CircleAvatar(
           radius: 40,
-          backgroundImage: AssetImage('assets/images/default_avatar.png'),
+          backgroundImage: AssetImage('assets/images/player_1.png'),
         ),
         SizedBox(width: 20),
         Column(
