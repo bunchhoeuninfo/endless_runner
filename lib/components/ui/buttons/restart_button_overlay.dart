@@ -1,4 +1,10 @@
+import 'package:endless_runner/components/coins/coin.dart';
+import 'package:endless_runner/components/obstacles/obstacle.dart';
+import 'package:endless_runner/components/powerups/speed_boost.dart';
+import 'package:endless_runner/components/ui/buttons/play_pause_button.dart';
+import 'package:endless_runner/core/game_state.dart';
 import 'package:endless_runner/game/endless_runner_game.dart';
+import 'package:endless_runner/game/utils/log_util.dart';
 
 import 'package:flutter/material.dart';
 
@@ -24,10 +30,11 @@ class RestartButtonOverlay extends StatelessWidget {
               color: Colors.red,
             ),
           ),
-          SizedBox(height: 20),
+          const SizedBox(height: 20),
           ElevatedButton(
             onPressed: () {
-              game.restartGame(); // Restart the game
+              game.restartGame();
+             // game.add(PlayPauseButton());
             },
             style: ElevatedButton.styleFrom(
               backgroundColor: Colors.blue,
@@ -44,5 +51,22 @@ class RestartButtonOverlay extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  void resumeGame() {
+    LogUtil.debug('Start method restartGame...');
+    //game.add(PlayPauseButton());
+    game.gameStateManager.setState(GameState.playing);
+    game.resumeEngine();  //Resume the game loop              
+    game.isFirstRun = false;        
+    game.overlays.remove('restart');    
+    game.coinScore = 0;
+    game.coinCollected = 0;
+    
+    // Remove all objects from game screen
+    game.children.whereType<Obstacle>().forEach((obstacle) => obstacle.removeFromParent());        
+    game.children.whereType<Coin>().forEach((coin) => coin.removeFromParent());
+    game.children.whereType<SpeedBoost>().forEach((speedBoost) => speedBoost.removeFromParent());
+
   }
 }

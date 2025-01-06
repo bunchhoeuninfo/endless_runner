@@ -37,8 +37,8 @@ class CoinServices implements CoinManager {
             break;          
         }
         //
-        game.showCoinCount(coinsCollected); // Update coin count display
-        game.showCoinScore(pointToAdd);   
+        //game.showCoinCount(coinsCollected); // Update coin count display
+        //game.showCoinScore(pointToAdd);   
         game.remove(coin); // Remove the coin once collected        
       }
     }

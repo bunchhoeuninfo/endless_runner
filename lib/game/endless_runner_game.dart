@@ -60,51 +60,53 @@ class EndlessRunnerGame extends FlameGame with HasCollisionDetection, TapDetecto
   @override
   Future<void> onLoad() async {    
     try {
-      await Future.delayed(Duration.zero);
-      //await super.onLoad();
-      LogUtil.debug('Start inside EndlessRunnerGame.onLoad...');      
-
-      camera.viewport = FixedResolutionViewport(resolution: Vector2(800, 600));
-
-      // pre-load coins to optimize the performance
-      await _imageAssetManager.preLoadImgAssets(images);
+      LogUtil.debug('Start inside EndlessRunnerGame.onLoad...');   
+           
+      await super.onLoad();      
+      await Future.delayed(const Duration(seconds: 1));         
+      camera.viewport = FixedResolutionViewport(resolution: Vector2(800, 600));      
+       // pre-load image assets to optimize the performance
+      await _imageAssetManager.preLoadImgAssets(images);   
       setupBackground();      
-      _addComponents();
-      // Add the player      
-      //player = Player(position: Vector2(size.x * 0.02, size.y / 2)); // Starting position
-      // Setup background
-      
+         
+      _addComponents();      
     } catch (e) {
       LogUtil.error('Exception -> $e');
     }    
   }
 
   void _addComponents() {
-    // Add the player      
-    player = Player(position: Vector2(size.x * 0.02, size.y / 2)); // Starting position
-    add(player);
-    LogUtil.debug('Player added to the game');    
+    try {
+      // Add the player      
+      player = Player(position: Vector2(size.x * 0.02, size.y / 2)); // Starting position
+      add(player);
+      LogUtil.debug('Player added to the game');    
 
-    //Overlay button
-    overlays.add('start');
-    overlays.add('setting');
+      //Overlay button
+      overlays.add('start');      
+      overlays.add('setting');
 
-    
-
-    // Add collision detection
-    add(ScreenHitbox());
+      // Add collision detection
+      add(ScreenHitbox());
+      
+    } catch (e) {
+      LogUtil.error('Exception -> $e');
+    }    
   }
 
   void setupBackground() {
-    // Add two full-screen backgrounds for seamless scrolling
-    add(ScrollingBackground(position: Vector2(0, -50), baseSpeed: 100));
-    add(ScrollingBackground(position: Vector2(size.x, -50), baseSpeed: 100));
+    try {
+      // Add two full-screen backgrounds for seamless scrolling
+      add(ScrollingBackground(position: Vector2(0, -50), baseSpeed: 100));
+      add(ScrollingBackground(position: Vector2(size.x, -50), baseSpeed: 100));
+    } catch (e) {
+      LogUtil.error('Exception -> $e');
+    }    
   }
 
   void startGame() {
     
     gameStateManager.setState(GameState.playing);
-    //_startButton.removeFromParent(); // Remove the start button
     LogUtil.debug('Game Started!');
   }
 
@@ -120,17 +122,10 @@ class EndlessRunnerGame extends FlameGame with HasCollisionDetection, TapDetecto
     LogUtil.debug('Game Resumed!');
   }
 
-  void showCoinCount(int count) {
-    //LogUtil.debug('Coins collected: $count');
-  }
 
   void addToCoinCount(int count) {
     coinCollected += count;
     //LogUtil.debug('Total Coins Collected: $coinCollected');
-  }
-
-  void showCoinScore(int score) {
-    //LogUtil.debug('Coin scored: $score');
   }
 
   void addToCoinScore(int coinPoint) {  
@@ -140,12 +135,12 @@ class EndlessRunnerGame extends FlameGame with HasCollisionDetection, TapDetecto
 
   @override
   void onTapDown(TapDownInfo info) {
+    super.onTapDown(info);
     LogUtil.debug('Start inside onTapDown, game screen isVisible=${GameOverScreen().isVisible}');
     if (GameOverScreen().isVisible) return;
-
-    player.jump();
-    LogUtil.debug('Screen tapped - Player jumps');
-    super.onTapDown(info);
+    
+    if (gameStateManager.isPlaying()) player.jump();
+    LogUtil.debug('Screen tapped - Player jumps');    
   }  
 
   @override
@@ -155,8 +150,7 @@ class EndlessRunnerGame extends FlameGame with HasCollisionDetection, TapDetecto
     //LogUtil.debug('In update, received _gameStateManager: $gameStateManager');    
     
     if (gameStateManager.isPlaying()) {
-      //LogUtil.debug('Game is playing');
-      // Spawn obstacles at intervals
+      LogUtil.debug('Game method gameStateManager.isPlaying() -> {$gameStateManager.isPlaying()}');  
       obstacleTimer += dt;
       if (obstacleTimer >= obstacleSpawnInterval) {
         obstacleTimer = 0;
@@ -179,6 +173,12 @@ class EndlessRunnerGame extends FlameGame with HasCollisionDetection, TapDetecto
         _speedBoostManager.spawnSpeedBoostCoin(this);
         LogUtil.debug('Spawned speed boost coin');
       }
+    } else if (gameStateManager.isPaused()) {
+      LogUtil.debug('Game method gameStateManager.isPaused() -> {$gameStateManager.isPaused()}');
+      pauseEngine();
+    } else if (gameStateManager.isMenu()) {
+      pauseGame();
+      LogUtil.debug('Game method gameStateManager.isMenu() -> {$gameStateManager.isMenu()}');
     }
     
   }  
@@ -192,37 +192,28 @@ class EndlessRunnerGame extends FlameGame with HasCollisionDetection, TapDetecto
 
   void restartGame() {
     LogUtil.debug('Start method restartGame...');
-
-    //player.resetPosition(); // Reset player position
+    
     resumeEngine();  //Resume the game loop
-    // Add start overlay button
-    //overlays.add('start');
-    gameStateManager.setState(GameState.playing);    
-      
-    // if restart then remove start & reset overlay
-    isFirstRun = false;
-    //overlays.remove('start');
-
-    // Reset game state
-    //gameStateManager.setState(GameState.menu);
-    overlays.remove('restart');
-    //onLoad();
+    gameStateManager.setState(GameState.playing);          
+    isFirstRun = false;        
+    overlays.remove('restart');    
     coinScore = 0;
     coinCollected = 0;
     
-    // Remove all objects from game screen
+    // Reset background
+    setupBackground();
+    // Remove all objects from game screen    
     children.whereType<Obstacle>().forEach((obstacle) => obstacle.removeFromParent());        
     children.whereType<Coin>().forEach((coin) => coin.removeFromParent());
     children.whereType<SpeedBoost>().forEach((speedBoost) => speedBoost.removeFromParent());
+    
 
     obstacleTimer = 0;
     coinTimer = 0;
     speedBoostTimer = 0;
     //Score board
-    add(CoinScore());
-    add(CoinCounter());
-
-    
+    //add(CoinScore());
+    //add(CoinCounter());
 
   }
 

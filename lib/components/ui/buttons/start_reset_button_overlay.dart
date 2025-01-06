@@ -1,7 +1,9 @@
+import 'package:endless_runner/components/ui/buttons/play_pause_button.dart';
 import 'package:endless_runner/components/ui/texts/coin_counter.dart';
 import 'package:endless_runner/components/ui/texts/coin_score.dart';
 import 'package:endless_runner/core/game_state.dart';
 import 'package:endless_runner/game/endless_runner_game.dart';
+import 'package:endless_runner/game/utils/log_util.dart';
 
 import 'package:flutter/material.dart';
 
@@ -15,6 +17,7 @@ class StartResetButtonOverlay extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -44,12 +47,14 @@ class StartResetButtonOverlay extends StatelessWidget {
               // Start button
               ElevatedButton(
                 onPressed: () {
-                  //Score board
-                  game.add(CoinScore());
-                  game.add(CoinCounter());
-                  game.overlays.remove('start');
-                  game.gameStateManager.setState(GameState.playing);
                   game.resumeEngine();
+                  game.gameStateManager.setState(GameState.playing);
+                  //game.add(PlayPauseButton());
+                  //Score board
+                  //game.add(CoinScore());
+                  //game.add(CoinCounter());
+                  game.overlays.remove('start');
+                                    
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.blue,
@@ -64,6 +69,7 @@ class StartResetButtonOverlay extends StatelessWidget {
               // Reset button
               ElevatedButton(
                 onPressed: () {
+                  LogUtil.debug('Clicked reset button');
                   // Reset logic here
                   game.restartGame(); // Example: replace with your reset implementation
                 },

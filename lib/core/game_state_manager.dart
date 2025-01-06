@@ -1,7 +1,7 @@
 import 'package:endless_runner/core/game_state.dart';
 
 class GameStateManager {
-  GameState _state = GameState.menu;
+  GameState _state = GameState.start;
 
   GameState get state => _state;
 
