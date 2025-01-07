@@ -38,6 +38,7 @@ class SpeedBoostServices implements SpeedBoostManager {
   @override
   void applySpeedBoost(double boostMultiplier, EndlessRunnerGame game) {
     try {
+      LogUtil.debug('try to apply speed boost');
       game.children.whereType<ScrollingBackground>().forEach((background) {
         background.updateSpeed(boostMultiplier);
       });

@@ -1,5 +1,7 @@
 
 import 'package:endless_runner/components/ui/game_overs/tap_blocker.dart';
+import 'package:endless_runner/core/services/game_service_manager.dart';
+import 'package:endless_runner/core/services/game_service_service.dart';
 import 'package:endless_runner/game/endless_runner_game.dart';
 import 'package:endless_runner/game/utils/log_util.dart';
 import 'package:flame/components.dart';
@@ -14,7 +16,7 @@ class GameOverScreen extends PositionComponent
   late TextComponent gameOverText;
   late TextComponent restartHintText;
   late TapBlocker _tapBlocker;
-
+  final GameServiceManager _gameServiceManager = GameServiceService();
 
   GameOverScreen(): super(anchor: Anchor.center);
 
@@ -90,8 +92,9 @@ class GameOverScreen extends PositionComponent
     if (isVisible) {  
       LogUtil.debug('Restart text tapped.');
       hide();
-      gameRef.restartGame();
-      gameRef.resumeEngine();
+      _gameServiceManager.restartGame(gameRef);
+      //gameRef.restartGame();
+      //gameRef.resumeEngine();
       event.handled = true; // Mark the event as handled      
     }    
   }

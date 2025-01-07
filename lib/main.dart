@@ -6,13 +6,12 @@ import 'package:flutter/services.dart';
 
 void main() async {
 
-  WidgetsFlutterBinding.ensureInitialized();
   Widget appWidget;
   
   try {
     LogUtil.debug('Try to initialize main app');
-    
-    LogUtil.debug('Logging here');
+    WidgetsFlutterBinding.ensureInitialized();
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky); // Enables full-screen mode
     setDeviceOrientation();
     appWidget = const GameMain();
     LogUtil.info("Succesfully initialized game app...");

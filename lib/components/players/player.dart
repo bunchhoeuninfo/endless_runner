@@ -48,9 +48,7 @@ class Player extends SpriteComponent with HasGameRef<EndlessRunnerGame>, Collisi
 
   @override
   void onCollision(Set<Vector2> intersectionPoints, PositionComponent other) {    
-    super.onCollision(intersectionPoints, other);
-
-    //LogUtil.debug('Trigger collision with $other at player position: $position and obstacle position: ${other.position}');
+    super.onCollision(intersectionPoints, other);    
     collisionHandler.handleCollision(other);
   }
 
@@ -58,17 +56,6 @@ class Player extends SpriteComponent with HasGameRef<EndlessRunnerGame>, Collisi
   void render(Canvas canvas) {
     super.render(canvas);
     canvas.drawRect(size.toRect(), paint);
-  /*
-    // Manually adjust the bounding box for collision purposes
-    final collisionRect = Rect.fromLTWH(
-      position.x, 
-      position.y, 
-      width * 0.8, // Shrink the width if necessary
-      height * 0.8, // Shrink the height if necessary
-    );
-
-    // Visualize the adjusted bounding box
-    canvas.drawRect(collisionRect, Paint()..color = Colors.red.withOpacity(0.5));*/
   }
 
   void resetPosition() {

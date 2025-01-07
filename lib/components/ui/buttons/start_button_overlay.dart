@@ -1,27 +1,32 @@
-import 'package:endless_runner/core/game_state.dart';
+
+import 'package:endless_runner/core/services/game_service_manager.dart';
+import 'package:endless_runner/core/services/game_service_service.dart';
 import 'package:endless_runner/game/endless_runner_game.dart';
+import 'package:endless_runner/game/utils/log_util.dart';
 
 import 'package:flutter/material.dart';
 
 class StartButtonOverlay extends StatelessWidget {
   final EndlessRunnerGame game;
+  final GameServiceManager _gameServiceManager = GameServiceService();
 
-  const StartButtonOverlay({
+  StartButtonOverlay({
     super.key,
     required this.game,
   });
 
   @override
   Widget build(BuildContext context) {
+    game.pauseEngine();
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [          
           ElevatedButton(
             onPressed: () {
-              game.overlays.remove('start');
-              game.gameStateManager.setState(GameState.playing);
-              game.resumeEngine();
+              LogUtil.debug('Click start game.');
+              //game.startGame();
+              _gameServiceManager.startGame(game);
             },
             style: ElevatedButton.styleFrom(
               backgroundColor: Colors.blue,
@@ -39,4 +44,6 @@ class StartButtonOverlay extends StatelessWidget {
       ),
     );
   }
+
+  
 }

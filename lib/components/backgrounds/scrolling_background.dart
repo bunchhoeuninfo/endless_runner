@@ -17,10 +17,8 @@ class ScrollingBackground extends SpriteComponent with HasGameRef<EndlessRunnerG
     LogUtil.debug('Start onLoad method');
 
     try {
-      LogUtil.debug('Load sprite background_tile.jpg');
-      // Make the background size equal to the screen size
-      size = gameRef.size;
-      //sprite = await gameRef.loadSprite('background_tile.jpg'); // Full-screen background
+      LogUtil.debug('Load sprite background_tile.jpg');      
+      size = gameRef.size;      
       sprite = Sprite(gameRef.images.fromCache('background_tile.jpg'));
       LogUtil.debug('Scrolling background loaded successfully');
     } catch (e, stackTrace) {

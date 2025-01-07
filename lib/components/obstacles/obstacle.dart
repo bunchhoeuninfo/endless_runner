@@ -1,5 +1,7 @@
 import 'dart:ui';
 
+import 'package:endless_runner/components/players/player_manager.dart';
+import 'package:endless_runner/components/players/player_service.dart';
 import 'package:endless_runner/game/endless_runner_game.dart';
 import 'package:endless_runner/game/utils/log_util.dart';
 import 'package:flame/collisions.dart';
@@ -10,6 +12,7 @@ class Obstacle extends SpriteComponent  with HasGameRef<EndlessRunnerGame> {
   double speed = 200; // Speed of obstacle movement
   final String className = 'Obstacle';
   bool hasScored = false;   // Flag to check if the score has been updated
+  final PlayerManager _playerManager = PlayerService();
 
   Obstacle({required Vector2 position})
       : super(
@@ -35,7 +38,7 @@ class Obstacle extends SpriteComponent  with HasGameRef<EndlessRunnerGame> {
     // Move the obstacle to the left
     position.x -= speed * dt;
 
-    if (!hasScored && position.x + size.x < gameRef.player.position.x) {
+    if (!hasScored && position.x + size.x < _playerManager.singlePlayer(game).position.x) {
       hasScored = true; // Mark as scored
       //gameRef.increaseScore();
     }

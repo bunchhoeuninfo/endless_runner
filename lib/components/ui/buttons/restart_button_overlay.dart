@@ -1,8 +1,9 @@
 import 'package:endless_runner/components/coins/coin.dart';
 import 'package:endless_runner/components/obstacles/obstacle.dart';
 import 'package:endless_runner/components/powerups/speed_boost.dart';
-import 'package:endless_runner/components/ui/buttons/play_pause_button.dart';
 import 'package:endless_runner/core/game_state.dart';
+import 'package:endless_runner/core/services/game_service_manager.dart';
+import 'package:endless_runner/core/services/game_service_service.dart';
 import 'package:endless_runner/game/endless_runner_game.dart';
 import 'package:endless_runner/game/utils/log_util.dart';
 
@@ -10,8 +11,9 @@ import 'package:flutter/material.dart';
 
 class RestartButtonOverlay extends StatelessWidget {
   final EndlessRunnerGame game;
+  final GameServiceManager _gameServiceManager = GameServiceService();
 
-  const RestartButtonOverlay({
+  RestartButtonOverlay({
     super.key,
     required this.game,
   });
@@ -33,7 +35,7 @@ class RestartButtonOverlay extends StatelessWidget {
           const SizedBox(height: 20),
           ElevatedButton(
             onPressed: () {
-              game.restartGame();
+              _gameServiceManager.restartGame(game);
              // game.add(PlayPauseButton());
             },
             style: ElevatedButton.styleFrom(
