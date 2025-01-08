@@ -1,0 +1,1 @@
+enum CoinType { gold, red, blue }
