@@ -6,7 +6,6 @@ import 'package:endless_runner/components/players/player_manager.dart';
 import 'package:endless_runner/components/powerups/speed_boost.dart';
 import 'package:endless_runner/components/powerups/speed_boost_manager.dart';
 import 'package:endless_runner/components/powerups/speed_boost_services.dart';
-import 'package:endless_runner/components/scoreboards/live_score_manager.dart';
 import 'package:endless_runner/components/scoreboards/live_score_service.dart';
 import 'package:endless_runner/core/services/game_service_manager.dart';
 import 'package:endless_runner/core/services/game_service_service.dart';
@@ -26,7 +25,6 @@ class PlayerCollision implements PlayerManager {
   void handleCollision(PositionComponent other) {
     if (other is Obstacle) {
       LogUtil.debug('Game Over: Player collided with obstacle!');
-      //gameRef.gameOver();
       _gameServiceManager.gameOver(gameRef);
     } else if (other is Coin) {
       LogUtil.debug('Player collected a coin!');      
@@ -42,10 +40,8 @@ class PlayerCollision implements PlayerManager {
           pointToAdd = 5;
           break;          
       }
-      LogUtil.debug('Collected coin score: $pointToAdd');
+      //LogUtil.debug('Collected coin score: $pointToAdd');
       _liveScoreService.updateScore(pointToAdd);
-      //gameRef.addToCoinScore(pointToAdd);  // Add poin to coin score display
-      //gameRef.addToCoinCount(1);  // Increment coin count
       other.removeFromParent();   //Remove the coin after colleciton
     } else if (other is SpeedBoost) {
       LogUtil.debug('Speed Boost Activated.');

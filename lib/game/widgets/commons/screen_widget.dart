@@ -1,6 +1,5 @@
 
 import 'package:endless_runner/components/scoreboards/live_score_board.dart';
-import 'package:endless_runner/components/scoreboards/live_score_service.dart';
 import 'package:endless_runner/components/ui/buttons/restart_button_overlay.dart';
 import 'package:endless_runner/components/ui/buttons/setting_button_overlay.dart';
 import 'package:endless_runner/components/ui/buttons/start_reset_button_overlay.dart';
@@ -10,9 +9,7 @@ import 'package:flame/game.dart';
 import 'package:flutter/material.dart';
 
 class ScreenWidget extends StatelessWidget {
-   ScreenWidget({super.key});
-
-  final LiveScoreService _liveScoreService = LiveScoreService();
+  const ScreenWidget({super.key});
 
   @override
   Widget build(BuildContext context) {

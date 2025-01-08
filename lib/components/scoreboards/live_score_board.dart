@@ -9,15 +9,32 @@ class LiveScoreBoard extends StatelessWidget {
   final ValueNotifier<int> scoreNotifier;
   final ValueNotifier<int> highScoreNotifier;
   final ValueNotifier<int> levelNotifier;*/
-   LiveScoreBoard({super.key});
+  LiveScoreBoard({super.key});
 
   final LiveScoreService _liveScoreService = LiveScoreService();
 
   @override
   Widget build(BuildContext context) {
     LogUtil.debug('Inside build method');
-    return _liveScoreBoard();
+    return _futureBuilder();
   }
+
+  FutureBuilder _futureBuilder() {
+    LogUtil.debug('Inside future builder method');
+    return FutureBuilder(
+      future: _liveScoreService.loadGameProgress(), 
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(child: CircularProgressIndicator(),);
+        } else if (snapshot.hasError) {
+          return const Center(child: Text('Error loading progress'),);
+        } else {
+          return _liveScoreBoard();
+        }        
+      },
+    );
+  }
+
 
   Positioned _liveScoreBoard() {
     LogUtil.debug('Build live score board position to display score: ${_liveScoreService.scoreNotifier}, high score: ${_liveScoreService.highScoreNotifier}, level: ${_liveScoreService.levelNotifier}');
@@ -27,19 +44,20 @@ class LiveScoreBoard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          _buildRow('Player', _liveScoreService.playerNameNotifier, Colors.amber),
           _buildRow('Score', _liveScoreService.scoreNotifier, Colors.yellow),
-          const SizedBox(height: 5), // Space between rows
+          //const SizedBox(height: 5), // Space between rows
           _buildRow('High Score', _liveScoreService.highScoreNotifier, Colors.green),
-          const SizedBox(height: 5,),
+          //const SizedBox(height: 5,),
           _buildRow('Level', _liveScoreService.levelNotifier, Colors.blue),
         ],
       ),
     );
   }
 
-   Widget _buildRow(
-      String label, ValueNotifier<int> notifier, Color valueColor) {
-    return ValueListenableBuilder<int>(
+  Widget _buildRow<T>(String label, ValueNotifier<T> notifier, Color valueColor) {
+    LogUtil.debug('Inside _buildRow method');
+    return ValueListenableBuilder<T>(
       valueListenable: notifier,
       builder: (context, value, child) {
         return Row(
@@ -49,7 +67,7 @@ class LiveScoreBoard extends StatelessWidget {
               '$label: ',
               style: const TextStyle(
                 color: Colors.white,
-                fontSize: 18,
+                fontSize: 14,
                 fontWeight: FontWeight.bold,
               ),
             ),
@@ -57,7 +75,7 @@ class LiveScoreBoard extends StatelessWidget {
               '$value',
               style: TextStyle(
                 color: valueColor,
-                fontSize: 24,
+                fontSize: 18,
                 fontWeight: FontWeight.bold,
               ),
             ),
