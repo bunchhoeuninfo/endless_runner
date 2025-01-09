@@ -1,8 +1,11 @@
+import 'package:endless_runner/auth/data/player_data.dart';
 import 'package:endless_runner/game/utils/log_util.dart';
 import 'package:flutter/material.dart';
 
 class ProfileSection extends StatelessWidget {
-  const ProfileSection({super.key});
+  const ProfileSection({super.key, required this.playerData});
+  //const ProfileSection({super.key});
+  final PlayerData playerData;
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +25,7 @@ class ProfileSection extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Player Name',
+              playerData.playerName,              
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
             TextButton(
