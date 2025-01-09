@@ -1,17 +1,14 @@
 
+import 'package:endless_runner/components/scoreboards/live_score_manager.dart';
 import 'package:endless_runner/components/scoreboards/live_score_service.dart';
 import 'package:endless_runner/game/utils/log_util.dart';
 import 'package:flutter/material.dart';
 
 class LiveScoreBoard extends StatelessWidget {
-/*  const LiveScoreBoard({super.key, required this.scoreNotifier, required this.highScoreNotifier, required this.levelNotifier});
-
-  final ValueNotifier<int> scoreNotifier;
-  final ValueNotifier<int> highScoreNotifier;
-  final ValueNotifier<int> levelNotifier;*/
   LiveScoreBoard({super.key});
 
-  final LiveScoreService _liveScoreService = LiveScoreService();
+  //final LiveScoreService _liveScoreService = LiveScoreService();
+  final LiveScoreManager _liveScoreManager = LiveScoreService();
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +19,7 @@ class LiveScoreBoard extends StatelessWidget {
   FutureBuilder _futureBuilder() {
     LogUtil.debug('Inside future builder method');
     return FutureBuilder(
-      future: _liveScoreService.loadGameProgress(), 
+      future: _liveScoreManager.loadGameProgress(), 
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Center(child: CircularProgressIndicator(),);
@@ -37,19 +34,19 @@ class LiveScoreBoard extends StatelessWidget {
 
 
   Positioned _liveScoreBoard() {
-    LogUtil.debug('Build live score board position to display score: ${_liveScoreService.scoreNotifier}, high score: ${_liveScoreService.highScoreNotifier}, level: ${_liveScoreService.levelNotifier}');
+    LogUtil.debug('Build live score board position to display score: ${_liveScoreManager.scoreNotifier}, high score: ${_liveScoreManager.highScoreNotifier}, level: ${_liveScoreManager.levelNotifier}');
     return Positioned(
       top: 20,
       left: 20,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _buildRow('Player', _liveScoreService.playerNameNotifier, Colors.amber),
-          _buildRow('Score', _liveScoreService.scoreNotifier, Colors.yellow),
+          _buildRow('Player', _liveScoreManager.playerNameNotifier, Colors.amber),
+          _buildRow('Score', _liveScoreManager.scoreNotifier, Colors.yellow),
           //const SizedBox(height: 5), // Space between rows
-          _buildRow('High Score', _liveScoreService.highScoreNotifier, Colors.green),
+          _buildRow('High Score', _liveScoreManager.highScoreNotifier, Colors.green),
           //const SizedBox(height: 5,),
-          _buildRow('Level', _liveScoreService.levelNotifier, Colors.blue),
+          _buildRow('Level', _liveScoreManager.levelNotifier, Colors.blue),
         ],
       ),
     );
