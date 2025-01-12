@@ -97,16 +97,14 @@ class GameServiceService implements GameServiceManager {
   }
   
   @override
-  void pauseGame(EndlessRunnerGame game) {
-    if (game.gameStateManager.isPlaying()) {
-      try {
-        LogUtil.debug('Try to pause game');
-        game.gameStateManager.setState(GameState.paused);    
-        game.pauseEngine();
-        LogUtil.debug('Game Paused!');    
-      } catch (e) {
-        LogUtil.error('Exception -> $e');
-      }
+  void pauseGame(EndlessRunnerGame game) {    
+    try {
+      LogUtil.debug('Try to pause game');
+      game.gameStateManager.setState(GameState.paused);    
+      game.pauseEngine();
+      LogUtil.debug('Game Paused!');    
+    } catch (e) {
+      LogUtil.error('Exception -> $e');
     }    
   }
   

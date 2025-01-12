@@ -8,7 +8,6 @@ import 'package:endless_runner/game/endless_runner_game.dart';
 import 'package:endless_runner/game/utils/log_util.dart';
 import 'package:endless_runner/game/widgets/settings/widgets/game_option.dart';
 import 'package:endless_runner/game/widgets/settings/widgets/profile_section.dart';
-import 'package:endless_runner/game/widgets/settings/widgets/sign_in_button.dart';
 import 'package:flutter/material.dart';
 
 class SettingScreen extends StatelessWidget {
@@ -79,7 +78,7 @@ class SettingScreen extends StatelessWidget {
             const SizedBox(height: 40),
             GameOption(playerData: playerData,),
             const SizedBox(height: 40),
-            const SignInButton(isSignedIn: false),            
+            //const SignInButton(isSignedIn: false),            
           ],
         ),
       ),

@@ -1,12 +1,16 @@
 import 'package:endless_runner/auth/data/player_data.dart';
 import 'package:endless_runner/auth/managers/player_auth_manager.dart';
+import 'package:endless_runner/auth/services/player_auth_service.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 class PlayerSignedupEdit extends StatefulWidget {
-  final PlayerAuthManager playerAuthManager;
+  final PlayerAuthManager playerAuthManager = PlayerAuthService();
 
-  const PlayerSignedupEdit({super.key, required this.playerAuthManager});
+  //const PlayerSignedupEdit({super.key, required this.playerAuthManager});
+
+  final PlayerData playerData;
+  PlayerSignedupEdit({super.key, required this.playerData});
   
   @override
   State<PlayerSignedupEdit> createState() => _PlayerSignedupEditState();
@@ -18,22 +22,22 @@ class _PlayerSignedupEditState extends State<PlayerSignedupEdit> {
   final TextEditingController nameController = TextEditingController();
   DateTime? selectedDate;
   String? gender;
+  
 
   @override
   void initState() {
     super.initState();
     _loadPlayerData();
   }
+  
+  void _loadPlayerData() {
+    final pd = widget.playerData;
+    nameController.text = pd.playerName;
+    selectedDate = pd.dateOfBirth;
+    gender = pd.gender;
 
-  Future<void> _loadPlayerData() async {
-    final player = await widget.playerAuthManager.loadPlayerData();
-    if (player != null) {
-      setState(() {
-        nameController.text = player.playerName;
-        selectedDate = player.dateOfBirth;
-        gender = player.gender;
-      });
-    }
+    
+
   }
 
   Future<void> _selectDate(BuildContext context) async {
@@ -61,38 +65,46 @@ class _PlayerSignedupEditState extends State<PlayerSignedupEdit> {
 
     final updatedPlayer = PlayerData(
       playerName: name,
-      level: 1, // Assuming level and topScore remain unchanged
+      level: 1,
       topScore: 0,
       dateOfBirth: selectedDate!,
       gender: gender!,
-      profileImgPath: 'assets'
+      profileImgPath: 'assets',
     );
 
     await widget.playerAuthManager.updatePlayerData(updatedPlayer);
 
     if (mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
-       const  SnackBar(content: Text('Player profile updated!')),
+        const SnackBar(content: Text('Player profile updated!')),
       );
     }
+    if (mounted) {
+      Navigator.of(context).pop(); // Close the dialog
+    }
+    
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const  Text('Edit Profile')),
-      resizeToAvoidBottomInset: true,  // Adjust layout when keyboard appears
-      body: _buildBodyView(),
-    );
-  }
-
-  SingleChildScrollView _buildBodyView() {
-    return SingleChildScrollView(
-      padding: const EdgeInsets.all(16.0),
-      child: Column(
+    return Dialog(
+      insetPadding: const EdgeInsets.all(16),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: SingleChildScrollView(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
           children: [
+            const Text(
+              'Edit Profile',
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(height: 16),
             TextField(
+              
               controller: nameController,
               decoration: const InputDecoration(labelText: 'Player Name'),
             ),
@@ -136,6 +148,7 @@ class _PlayerSignedupEditState extends State<PlayerSignedupEdit> {
             ),
           ],
         ),
+      ),
     );
   }
 
