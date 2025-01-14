@@ -7,11 +7,25 @@ import 'package:endless_runner/game/utils/log_util.dart';
 import 'package:endless_runner/game/widgets/settings/widgets/player_signedup_edit.dart';
 import 'package:flutter/material.dart';
 
-class ProfileSection extends StatelessWidget {
-  ProfileSection({super.key, required this.playerData,});
-  
+class ProfileSection extends StatefulWidget {
+  const ProfileSection({super.key, required this.playerData});
   final PlayerData playerData;
+
+  @override
+  State<ProfileSection> createState() => _ProfileSectionState();
+
+}
+
+class _ProfileSectionState extends State<ProfileSection> {
+  
+  late PlayerData playerData;
   final PlayerAuthManager _playerAuthManager = PlayerAuthService();
+  
+  @override
+  void initState() {
+    super.initState();
+    playerData = widget.playerData;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -29,11 +43,17 @@ class ProfileSection extends StatelessWidget {
             return const Center(child: CircularProgressIndicator(),);
           } else if (snapshot.hasError) {
             return const Center(child: Text('Error loading progress'),);
-          } else {
+          /*} else {
+            LogUtil.debug('Player Data-> player name: ${playerData.playerName}, profileImg: ${snapshot.data}');
+            return _buildRow(context, '/data/user/0/ch.chhoeun.endless.runner/app_flutter/profile_yyyyyy1.jpg'); */
+          } else if (snapshot.hasData) {
             //final profileImg = snapshot.data as String;
-            LogUtil.debug('Player Data-> profileImg: ${snapshot.data}');
-            return _buildRow(context, '/data/user/0/ch.chhoeun.endless.runner/app_flutter/profile_yyyyyy1.jpg');     
-          } 
+            LogUtil.debug('Player Data-> player name: ${playerData.playerName}, profileImg: ${snapshot.data}');
+            return _buildRow(context, snapshot.data);     
+          } else {
+            LogUtil.debug('Received data -> ${snapshot.data}');
+            return const Center(child: Text('Invalid data received'),);
+          }
         }
       );
     } catch (e) {
@@ -79,12 +99,21 @@ class ProfileSection extends StatelessWidget {
   }
 
   Future<void> showPlayerEditDialog(BuildContext context, PlayerData playerData) async {
-    await showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return PlayerSignedupEdit(playerData: playerData);
-      }
-    );
+    final upd = await showDialog<PlayerData>(
+        context: context,
+        builder: (BuildContext context) {
+          return PlayerSignedupEdit(playerData: playerData);
+        }
+      );
+    
+    if (upd != null) {
+      playerData.playerName = upd.playerName;
+      playerData.profileImgPath = upd.profileImgPath;
+      playerData.dateOfBirth = upd.dateOfBirth;
+      playerData.gender = upd.gender;
+      // Trigger a rebuild
+      (context as Element).markNeedsBuild();
+    }
   }
   
 }

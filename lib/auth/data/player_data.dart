@@ -1,12 +1,12 @@
 class PlayerData {
-  final String playerName;
-  final int level;
-  final int topScore;
-  final String gender;
-  final DateTime dateOfBirth;
-  final String? profileImgPath;
+  String playerName;
+  int level;
+  int topScore;
+  String gender;
+  DateTime dateOfBirth;
+  String? profileImgPath;
 
-  const PlayerData({
+  PlayerData({
     required this.playerName,
     required this.level,
     required this.topScore,

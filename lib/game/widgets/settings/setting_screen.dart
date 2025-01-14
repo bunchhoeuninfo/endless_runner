@@ -2,6 +2,7 @@
 import 'package:endless_runner/auth/data/player_data.dart';
 import 'package:endless_runner/auth/managers/player_auth_manager.dart';
 import 'package:endless_runner/auth/services/player_auth_service.dart';
+import 'package:endless_runner/core/game_state.dart';
 import 'package:endless_runner/core/services/game_service_manager.dart';
 import 'package:endless_runner/core/services/game_service_service.dart';
 import 'package:endless_runner/game/endless_runner_game.dart';
@@ -19,13 +20,20 @@ class SettingScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+    LogUtil.debug('Initiate game setting');
+    gameRef.gameStateManager.setState(GameState.menu);
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Setting'),
         leading: IconButton(
-          onPressed: () {       
+          onPressed: () { 
             // Resume game
-            _gameServiceManager.resumeGame(gameRef);
+            LogUtil.debug('Game state -> ${gameRef.gameStateManager.state}');
+            gameRef.gameStateManager.isPaused() 
+              ? _gameServiceManager.resumeGame(gameRef)
+              : gameRef.gameStateManager.setState(GameState.menu);
             Navigator.pop(context);
           }, 
           icon: const Icon(Icons.arrow_back),

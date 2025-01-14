@@ -5,6 +5,7 @@ import 'package:endless_runner/auth/managers/player_auth_manager.dart';
 import 'package:endless_runner/auth/services/player_auth_service.dart';
 import 'package:endless_runner/game/utils/log_util.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:path_provider/path_provider.dart';
@@ -24,8 +25,9 @@ class _PlayerSignedupEditState extends State<PlayerSignedupEdit> {
   final TextEditingController nameController = TextEditingController();
   DateTime? selectedDate;
   String? gender;
-  File? profileImage; // Variable to hold the selected image
+  File? profileImage; // Variable to hold the selected image  
   final PlayerAuthManager _playerAuthManager = PlayerAuthService();
+  
   
 
   @override
@@ -34,12 +36,32 @@ class _PlayerSignedupEditState extends State<PlayerSignedupEdit> {
     _loadPlayerData();
   }
   
-  void _loadPlayerData() {
-    final pd = widget.playerData;
-    LogUtil.debug('_loadPlayerData player-> player name: ${pd.playerName}, level: ${pd.level}, topScore: ${pd.topScore}, gender: ${pd.gender} ,dob: ${pd.dateOfBirth}, img: ${pd.profileImgPath}');
-    nameController.text = pd.playerName;
-    selectedDate = pd.dateOfBirth;
-    gender = pd.gender;    
+  Future<void> _loadPlayerData() async {
+    try {
+      final pd = widget.playerData;
+      LogUtil.debug('_loadPlayerData player-> player name: ${pd.playerName}, level: ${pd.level}, topScore: ${pd.topScore}, gender: ${pd.gender} ,dob: ${pd.dateOfBirth}, img: ${pd.profileImgPath}');
+      nameController.text = pd.playerName;
+      selectedDate = pd.dateOfBirth;
+      gender = pd.gender;
+      
+      // Fetch the profile image path asynchronously
+      final String? profileImgPath = await _playerAuthManager.getProfileImgPath(pd.playerName);
+
+      if (profileImgPath != null && profileImgPath.isNotEmpty) {
+        setState(() {
+          profileImage = File(profileImgPath);
+        });
+      } else {
+        // If no profile image path is found, use a default image
+        final defaultImage = await _getDefaultProfileImage();
+        setState(() {
+          profileImage = defaultImage;
+        });
+      }
+
+    } catch (e) {
+      LogUtil.error('Exception -> $e');
+    }    
   }
 
   Future<void> _selectDate(BuildContext context) async {
@@ -56,55 +78,94 @@ class _PlayerSignedupEditState extends State<PlayerSignedupEdit> {
     }
   }
 
+  Future<File> _getDefaultProfileImage() async {
+      // Load the asset image
+    final byteData = await rootBundle.load('assets/images/player_1.png');
+
+    // Save the asset image as a temporary file
+    final directory = await getApplicationDocumentsDirectory();
+    final String filePath = '${directory.path}/default_profile_image.png';
+    final File file = File(filePath);
+    await file.writeAsBytes(byteData.buffer.asUint8List());
+
+    return file;   
+
+  }
+
   Future<void> _pickImage() async {
-    final ImagePicker picker = ImagePicker();
-    final XFile? pickedFile = await picker.pickImage(source: ImageSource.gallery);
+    try {
+      LogUtil.debug('Try to pick profile image');
+      final ImagePicker picker = ImagePicker();
+      final XFile? pickedFile = await picker.pickImage(source: ImageSource.gallery);
+      
+      // Check if the file already exists and delete it
+     
 
-    if (pickedFile != null) {
-      final directory = await getApplicationDocumentsDirectory();
-      final String fileName = 'profile_${nameController.text}.jpg';
-      final String filePath = '${directory.path}/$fileName';
+      if (pickedFile != null) {
+        final directory = await getApplicationDocumentsDirectory();
+        final String fileName = 'profile_${nameController.text}.jpg';
+        final String filePath = '${directory.path}/$fileName';
 
-      // Save the image locally
-      final File savedFile = await File(pickedFile.path).copy(filePath);
+         // Check if the destination file exists and delete it
+         /*
+        final File destinationFile = File(filePath);
+        if (destinationFile.existsSync()) {
+          await destinationFile.delete();
+          LogUtil.debug('Existing file deleted: $filePath');
+        }*/
 
-      setState(() {
-        profileImage = savedFile; // Update the profile image
-      });
-    }
+        // Save the image locally
+        File savedFile = await File(pickedFile.path).copy(filePath);
+
+        setState(() {
+          profileImage = savedFile;// Update the profile image
+          LogUtil.debug('Pick image: -> $profileImage');
+        });
+      }
+    
+    } catch(e) {
+      LogUtil.error('Exception -> $e');
+    }    
   }
 
   void _updateInfo() async {
-    final name = nameController.text.trim();
-    if (name.isEmpty || selectedDate == null || gender == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Please fill in all fields.')),
+    try {
+      LogUtil.debug('Try to update player information');
+      final name = nameController.text.trim();
+      if (name.isEmpty || selectedDate == null || gender == null) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Please fill in all fields.')),
+        );
+        return;
+      }
+
+      final updatedPlayer = PlayerData(
+        playerName: name,
+        level: 1,
+        topScore: 0,
+        dateOfBirth: selectedDate!,
+        gender: gender ?? 'Other',
+        profileImgPath: profileImage?.path ?? 'assets/images/player_1.png',
       );
-      return;
-    }
 
-    final updatedPlayer = PlayerData(
-      playerName: name,
-      level: 1,
-      topScore: 0,
-      dateOfBirth: selectedDate!,
-      gender: gender ?? 'Other',
-      profileImgPath: profileImage?.path ?? 'assets/images/player_1.png',
-    );
+      LogUtil.debug('Updated player-> player name: ${updatedPlayer.playerName}, level: ${updatedPlayer.level}, topScore: ${updatedPlayer.topScore}, dob: ${updatedPlayer.dateOfBirth}, img: ${updatedPlayer.profileImgPath}');
 
-    LogUtil.debug('Updated player-> player name: ${updatedPlayer.playerName}, level: ${updatedPlayer.level}, topScore: ${updatedPlayer.topScore}, dob: ${updatedPlayer.dateOfBirth}, img: ${updatedPlayer.profileImgPath}');
+      await _playerAuthManager.updatePlayerData(updatedPlayer);
+      await _playerAuthManager.saveProfileImgPath(profileImage!, updatedPlayer.playerName);
 
-    await _playerAuthManager.updatePlayerData(updatedPlayer);
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Player profile updated!')),
+        );
+      }
+      if (mounted) {
+        Navigator.of(context).pop(updatedPlayer); // Close the dialog
+      }
 
-    if (mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Player profile updated!')),
-      );
-    }
-    if (mounted) {
-      Navigator.of(context).pop(); // Close the dialog
-    }
-    
+      LogUtil.debug('Succesfully updated the player data');
+    } catch (e) {
+      LogUtil.debug('Exception -> $e');
+    }      
   }
 
   FutureBuilder _futureBuilderProfile() {
@@ -197,14 +258,13 @@ class _PlayerSignedupEditState extends State<PlayerSignedupEdit> {
             ),
             const SizedBox(height: 16,),
             Row(
-              children: [
-                profileImg.isNotEmpty
-                    ? CircleAvatar( 
-                        backgroundImage: FileImage(File(profileImg)),
+              children: [                
+                    CircleAvatar( 
+                        backgroundImage: FileImage(File(profileImage!.path)),
                         radius: 40,
-                      )
-                    : const CircleAvatar(radius: 40, 
-                      child: Icon(Icons.person, size: 40),),
+                      ),
+                /*    : const CircleAvatar(radius: 40, 
+                      child: Icon(Icons.person, size: 40),),*/
                 const SizedBox(width: 16),
                 ElevatedButton.icon(
                   onPressed: _pickImage,
