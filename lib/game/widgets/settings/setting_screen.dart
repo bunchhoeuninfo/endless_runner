@@ -42,6 +42,8 @@ class SettingScreen extends StatelessWidget {
       return FutureBuilder(
         future: _playerAuthManager.loadPlayerData(), 
         builder: (context, snapshot) {
+          final pd = snapshot.data as PlayerData;
+          LogUtil.debug('Iterating player data -> name: ${pd.playerName}, dob: ${pd.dateOfBirth}, level: ${pd.level}, score: ${pd.topScore}, gender: ${pd.gender}, img: ${pd.profileImgPath}');
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator(),);
           } else if (snapshot.hasError) {
@@ -49,7 +51,7 @@ class SettingScreen extends StatelessWidget {
           } else if(snapshot.hasData && snapshot.data is PlayerData) {
             final playerData = snapshot.data as PlayerData;
             LogUtil.debug('Player Data-> name: ${playerData.playerName}');
-            return _buildScrollableContent(playerData);            
+            return _buildScrollableContent(playerData,);            
           } else {
             return const Center(child: Text('Invalid data'),);
           }
@@ -60,7 +62,7 @@ class SettingScreen extends StatelessWidget {
       return FutureBuilder(
       future: null,
       builder: (context, snapshot) {
-        return const Center(child: Text('Invalid data'),);
+        return const Center(child: Text('Exception'),);
       });
     }
     
@@ -74,7 +76,7 @@ class SettingScreen extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            ProfileSection(playerData: playerData,),
+            ProfileSection(playerData: playerData),
             const SizedBox(height: 40),
             GameOption(playerData: playerData,),
             const SizedBox(height: 40),

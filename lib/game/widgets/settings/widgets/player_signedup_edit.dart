@@ -1,27 +1,31 @@
+import 'dart:io';
+
 import 'package:endless_runner/auth/data/player_data.dart';
 import 'package:endless_runner/auth/managers/player_auth_manager.dart';
 import 'package:endless_runner/auth/services/player_auth_service.dart';
+import 'package:endless_runner/game/utils/log_util.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
+import 'package:path_provider/path_provider.dart';
 
 class PlayerSignedupEdit extends StatefulWidget {
-  final PlayerAuthManager playerAuthManager = PlayerAuthService();
 
-  //const PlayerSignedupEdit({super.key, required this.playerAuthManager});
 
   final PlayerData playerData;
-  PlayerSignedupEdit({super.key, required this.playerData});
+  const PlayerSignedupEdit({super.key, required this.playerData});
   
   @override
   State<PlayerSignedupEdit> createState() => _PlayerSignedupEditState();
 
-  
 }
 
 class _PlayerSignedupEditState extends State<PlayerSignedupEdit> {
   final TextEditingController nameController = TextEditingController();
   DateTime? selectedDate;
   String? gender;
+  File? profileImage; // Variable to hold the selected image
+  final PlayerAuthManager _playerAuthManager = PlayerAuthService();
   
 
   @override
@@ -32,12 +36,10 @@ class _PlayerSignedupEditState extends State<PlayerSignedupEdit> {
   
   void _loadPlayerData() {
     final pd = widget.playerData;
+    LogUtil.debug('_loadPlayerData player-> player name: ${pd.playerName}, level: ${pd.level}, topScore: ${pd.topScore}, gender: ${pd.gender} ,dob: ${pd.dateOfBirth}, img: ${pd.profileImgPath}');
     nameController.text = pd.playerName;
     selectedDate = pd.dateOfBirth;
-    gender = pd.gender;
-
-    
-
+    gender = pd.gender;    
   }
 
   Future<void> _selectDate(BuildContext context) async {
@@ -50,6 +52,24 @@ class _PlayerSignedupEditState extends State<PlayerSignedupEdit> {
     if (picked != null) {
       setState(() {
         selectedDate = picked;
+      });
+    }
+  }
+
+  Future<void> _pickImage() async {
+    final ImagePicker picker = ImagePicker();
+    final XFile? pickedFile = await picker.pickImage(source: ImageSource.gallery);
+
+    if (pickedFile != null) {
+      final directory = await getApplicationDocumentsDirectory();
+      final String fileName = 'profile_${nameController.text}.jpg';
+      final String filePath = '${directory.path}/$fileName';
+
+      // Save the image locally
+      final File savedFile = await File(pickedFile.path).copy(filePath);
+
+      setState(() {
+        profileImage = savedFile; // Update the profile image
       });
     }
   }
@@ -68,11 +88,13 @@ class _PlayerSignedupEditState extends State<PlayerSignedupEdit> {
       level: 1,
       topScore: 0,
       dateOfBirth: selectedDate!,
-      gender: gender!,
-      profileImgPath: 'assets',
+      gender: gender ?? 'Other',
+      profileImgPath: profileImage?.path ?? 'assets/images/player_1.png',
     );
 
-    await widget.playerAuthManager.updatePlayerData(updatedPlayer);
+    LogUtil.debug('Updated player-> player name: ${updatedPlayer.playerName}, level: ${updatedPlayer.level}, topScore: ${updatedPlayer.topScore}, dob: ${updatedPlayer.dateOfBirth}, img: ${updatedPlayer.profileImgPath}');
+
+    await _playerAuthManager.updatePlayerData(updatedPlayer);
 
     if (mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -85,16 +107,50 @@ class _PlayerSignedupEditState extends State<PlayerSignedupEdit> {
     
   }
 
-  @override
-  Widget build(BuildContext context) {
+  FutureBuilder _futureBuilderProfile() {
+    LogUtil.debug('Inside future build method');
+    try {
+      return FutureBuilder(
+        future: _playerAuthManager.getProfileImgPath(nameController.text), 
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator(),);
+          } else if (snapshot.hasError) {
+            return const Center(child: Text('Error loading progress'),);
+          } else {
+            LogUtil.debug('Player Data-> profileImg: ${snapshot.hasData}');             
+            return _buildDialog('/data/user/0/ch.chhoeun.endless.runner/app_flutter/profile_yyyyyy1.jpg');
+          } /*else if (snapshot.hasData) {
+            //final profileImg = snapshot.data as String;
+            LogUtil.debug('Player Data-> profileImg: ${snapshot.hasData}');
+            //return _buildRow(context, '/data/user/0/ch.chhoeun.endless.runner/app_flutter/profile_yyyyyy1.jpg');     
+            return _buildDialog('/data/user/0/ch.chhoeun.endless.runner/app_flutter/profile_yyyyyy1.jpg');
+          }  else {
+            LogUtil.debug('Snapshot has data-> ${snapshot.data}');
+            return const Center(child: Text('Unexpected data returned'),);
+          }*/
+        }
+      );
+    } catch (e) {
+      LogUtil.error('Exception -> $e');
+      return FutureBuilder(
+      future: null,
+      builder: (context, snapshot) {
+        return const Center(child: Text('Exception Block'),);
+      });
+    }
+  }
+
+  Dialog _buildDialog(String profileImg) {
+    LogUtil.debug('Start building dialog for updating player data');
     return Dialog(
-      insetPadding: const EdgeInsets.all(16),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: SingleChildScrollView(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
+        insetPadding: const EdgeInsets.all(16),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -139,17 +195,58 @@ class _PlayerSignedupEditState extends State<PlayerSignedupEdit> {
                   .toList(),
               onChanged: (value) => setState(() => gender = value),
             ),
-            const SizedBox(height: 20),
-            Center(
-              child: ElevatedButton(
-                onPressed: _updateInfo,
-                child: const Text('Update Info'),
-              ),
+            const SizedBox(height: 16,),
+            Row(
+              children: [
+                profileImg.isNotEmpty
+                    ? CircleAvatar( 
+                        backgroundImage: FileImage(File(profileImg)),
+                        radius: 40,
+                      )
+                    : const CircleAvatar(radius: 40, 
+                      child: Icon(Icons.person, size: 40),),
+                const SizedBox(width: 16),
+                ElevatedButton.icon(
+                  onPressed: _pickImage,
+                  icon: const Icon(Icons.upload),
+                  label: const Text('Select Image'),
+                ),
+              ],
             ),
+            const SizedBox(height: 20),
+            _buildElevatedBtn(),
           ],
         ),
       ),
     );
+  }
+
+  Center _buildElevatedBtn() {
+    return Center(
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget> [
+          ElevatedButton(
+            onPressed: _updateInfo,
+            child: const Text('Update Info'),
+          ),
+          const SizedBox(width: 16),
+          ElevatedButton(
+            onPressed: () => Navigator.of(context).pop(),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.red,
+            ),
+            child: const Text('Close'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    LogUtil.debug('Start trying to initiate future builder');
+    return _futureBuilderProfile();
   }
 
 }

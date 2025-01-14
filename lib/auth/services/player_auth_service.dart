@@ -27,6 +27,7 @@ class PlayerAuthService implements PlayerAuthManager {
       LogUtil.error('Exception -> $e');
     }
 
+    LogUtil.debug('Return null');
     return null;        
   }
 
@@ -44,24 +45,26 @@ class PlayerAuthService implements PlayerAuthManager {
   }
   
   @override
-  Future<void> updatePlayerData(PlayerData updatedPlayerData) async {
+  Future<void> updatePlayerData(PlayerData upd) async {
+    LogUtil.debug('Try to update player data -> name: ${upd.playerName}, dob: ${upd.dateOfBirth}, level: ${upd.level}, score: ${upd.topScore}, gender: ${upd.gender}, img: ${upd.profileImgPath}');
     try {
       final prefs = await SharedPreferences.getInstance();
-    final playerDataString = prefs.getString('playerData');
+      final playerDataString = prefs.getString(playerKey);
 
-    if (playerDataString != null) {
-      final Map<String, dynamic> currentPlayerData = jsonDecode(playerDataString);
-      currentPlayerData['playerName'] = updatedPlayerData.playerName;
-      currentPlayerData['dateOfBirth'] = updatedPlayerData.dateOfBirth.toIso8601String();
-      currentPlayerData['gender'] = updatedPlayerData.gender;
+      if (playerDataString != null) {
+        final Map<String, dynamic> currentPlayerData = jsonDecode(playerDataString);
+        currentPlayerData['playerName'] = upd.playerName;
+        currentPlayerData['dateOfBirth'] = upd.dateOfBirth.toIso8601String();
+        currentPlayerData['gender'] = upd.gender;
+        currentPlayerData['profileImgPath'] = upd.profileImgPath;
+        
+        final updatedDataString = jsonEncode(currentPlayerData);
+        await prefs.setString(playerKey, updatedDataString);
 
-      final updatedDataString = jsonEncode(currentPlayerData);
-      await prefs.setString('playerData', updatedDataString);
-
-      LogUtil.debug('Updated player data successfully');
-    } else {
-      LogUtil.error('No existing player data to update');
-    }
+        LogUtil.debug('Updated player data successfully');
+      } else {
+        LogUtil.error('No existing player data to update');
+      }
     } catch (e) {
       LogUtil.error('Exception -> $e');
     }
@@ -81,15 +84,21 @@ class PlayerAuthService implements PlayerAuthManager {
 
   @override
   Future<String?> getProfileImgPath(String playerName) async {
-    final directory = await getApplicationDocumentsDirectory();
-    final String fileName = 'profile_$playerName.jpg';
-    final String filePath = '${directory.path}/$fileName';
+    LogUtil.debug('Try to get profile image path , player name-> $playerName');
+    try {
+      final directory = await getApplicationDocumentsDirectory();
+      final String fileName = 'profile_$playerName.jpg';
+      final String filePath = '${directory.path}/$fileName';
 
-    final file = File(filePath);
-    if (await file.exists()) {
-      return filePath; // Return the path if the file exists
+      final file = File(filePath);
+      if (await file.exists()) {
+        LogUtil.debug('File does exist -> $file');
+        return filePath; // Return the path if the file exists
+      }
+    } catch (e) {
+      LogUtil.error('Exception -> $e');
     }
-
+    
     return null; // Return null if no image is found
   }
 
