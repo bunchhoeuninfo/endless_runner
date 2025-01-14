@@ -2,6 +2,8 @@ import 'package:endless_runner/auth/data/player_data.dart';
 import 'package:endless_runner/auth/managers/player_auth_manager.dart';
 import 'package:endless_runner/auth/services/player_auth_service.dart';
 import 'package:endless_runner/game/utils/log_util.dart';
+import 'package:endless_runner/game/widgets/settings/widgets/about_me/developer_profile_card.dart';
+import 'package:endless_runner/game/widgets/settings/widgets/about_me/developer_profile_widget.dart';
 import 'package:endless_runner/game/widgets/settings/widgets/player_signup.dart';
 import 'package:flutter/material.dart';
 
@@ -58,12 +60,22 @@ class GameOption extends StatelessWidget {
       ),
       ListTile(
         leading: Icon(Icons.person, color: Colors.blue, size: 28),
-        title: Text('About Us'),
+        title: Text('About Me'),
         onTap: () {
           // Trigger game reset
+          _aboutMe(context);
         },
       ),
     ];
+  }
+
+  void _aboutMe(BuildContext context) {    
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => DeveloperProfileWidget(),
+      ),
+    );  
   }
 
   List<Widget> _buildMenuLisSignUp(BuildContext context) {
@@ -109,9 +121,10 @@ class GameOption extends StatelessWidget {
       ),
       ListTile(
         leading: Icon(Icons.person, color: Colors.blue, size: 28),
-        title: Text('About Us'),
+        title: Text('About Me'),
         onTap: () {
           // Trigger game reset
+          _aboutMe(context);
         },
       ),
     ];

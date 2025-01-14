@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:endless_runner/auth/managers/player_auth_manager.dart';
 import 'package:endless_runner/auth/data/player_data.dart';
 import 'package:endless_runner/game/utils/log_util.dart';
+import 'package:flutter/services.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -28,7 +29,23 @@ class PlayerAuthService implements PlayerAuthManager {
     }
 
     LogUtil.debug('Return null');
-    return null;        
+    DateTime now = DateTime.now(); // Get the current date and time
+    String currentDate = now.toIso8601String().split('T').first; // Extract the date in ISO 8601 format (YYYY-MM-DD)    
+    return PlayerData(playerName: 'UNKNOWN', level: 1, topScore: 0, gender: 'Other', dateOfBirth: DateTime.parse(currentDate), profileImgPath: await _getDefaultProfileImage());        
+  }
+
+   Future<String> _getDefaultProfileImage() async {
+      // Load the asset image
+    final byteData = await rootBundle.load('assets/images/player_1.png');
+
+    // Save the asset image as a temporary file
+    final directory = await getApplicationDocumentsDirectory();
+    final String filePath = '${directory.path}/default_profile_image.png';
+    final File file = File(filePath);
+    await file.writeAsBytes(byteData.buffer.asUint8List());
+
+    return file.path;   
+
   }
 
   @override

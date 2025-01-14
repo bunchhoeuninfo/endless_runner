@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:endless_runner/auth/data/player_data.dart';
 import 'package:endless_runner/auth/managers/player_auth_manager.dart';
 import 'package:endless_runner/auth/services/player_auth_service.dart';
+import 'package:endless_runner/components/players/player.dart';
 import 'package:endless_runner/game/utils/log_util.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -33,9 +34,12 @@ class _PlayerSignedupEditState extends State<PlayerSignedupEdit> {
   @override
   void initState() {
     super.initState();
-    _loadPlayerData();
+    final playerData = widget.playerData;
+    initSavedPlayer(playerData);
+    //_loadPlayerData();
   }
   
+  /*
   Future<void> _loadPlayerData() async {
     try {
       final pd = widget.playerData;
@@ -62,7 +66,7 @@ class _PlayerSignedupEditState extends State<PlayerSignedupEdit> {
     } catch (e) {
       LogUtil.error('Exception -> $e');
     }    
-  }
+  }*/
 
   Future<void> _selectDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
@@ -78,6 +82,8 @@ class _PlayerSignedupEditState extends State<PlayerSignedupEdit> {
     }
   }
 
+  /*
+
   Future<File> _getDefaultProfileImage() async {
       // Load the asset image
     final byteData = await rootBundle.load('assets/images/player_1.png');
@@ -90,37 +96,32 @@ class _PlayerSignedupEditState extends State<PlayerSignedupEdit> {
 
     return file;   
 
-  }
+  }*/
 
   Future<void> _pickImage() async {
-    try {
+    try {    
+
       LogUtil.debug('Try to pick profile image');
       final ImagePicker picker = ImagePicker();
       final XFile? pickedFile = await picker.pickImage(source: ImageSource.gallery);
-      
-      // Check if the file already exists and delete it
-     
 
       if (pickedFile != null) {
         final directory = await getApplicationDocumentsDirectory();
-        final String fileName = 'profile_${nameController.text}.jpg';
+        final String fileName = 'profile_${nameController.text}_${DateTime.now().millisecondsSinceEpoch}.jpg';
         final String filePath = '${directory.path}/$fileName';
-
-         // Check if the destination file exists and delete it
-         /*
-        final File destinationFile = File(filePath);
-        if (destinationFile.existsSync()) {
-          await destinationFile.delete();
-          LogUtil.debug('Existing file deleted: $filePath');
-        }*/
 
         // Save the image locally
         File savedFile = await File(pickedFile.path).copy(filePath);
-
+        setState(() {
+          profileImage = savedFile;
+          LogUtil.debug('Profile img->$profileImage');
+        });
+        
+        /*
         setState(() {
           profileImage = savedFile;// Update the profile image
           LogUtil.debug('Pick image: -> $profileImage');
-        });
+        });*/
       }
     
     } catch(e) {
@@ -139,57 +140,46 @@ class _PlayerSignedupEditState extends State<PlayerSignedupEdit> {
         return;
       }
 
-      final updatedPlayer = PlayerData(
-        playerName: name,
-        level: 1,
-        topScore: 0,
-        dateOfBirth: selectedDate!,
-        gender: gender ?? 'Other',
-        profileImgPath: profileImage?.path ?? 'assets/images/player_1.png',
-      );
+      final updatedPlayer = PlayerData(playerName: name, level: 1, topScore: 0, dateOfBirth: selectedDate!, gender: gender!, profileImgPath: profileImage!.path,);
 
       LogUtil.debug('Updated player-> player name: ${updatedPlayer.playerName}, level: ${updatedPlayer.level}, topScore: ${updatedPlayer.topScore}, dob: ${updatedPlayer.dateOfBirth}, img: ${updatedPlayer.profileImgPath}');
 
-      await _playerAuthManager.updatePlayerData(updatedPlayer);
-      await _playerAuthManager.saveProfileImgPath(profileImage!, updatedPlayer.playerName);
+      await _playerAuthManager.updatePlayerData(updatedPlayer);      
 
       if (mounted) {
+        LogUtil.debug('Succesfully updated the player data');
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Player profile updated!')),
         );
-      }
-      if (mounted) {
         Navigator.of(context).pop(updatedPlayer); // Close the dialog
-      }
-
-      LogUtil.debug('Succesfully updated the player data');
+      }      
     } catch (e) {
       LogUtil.debug('Exception -> $e');
     }      
   }
 
+/*
   FutureBuilder _futureBuilderProfile() {
     LogUtil.debug('Inside future build method');
     try {
       return FutureBuilder(
-        future: _playerAuthManager.getProfileImgPath(nameController.text), 
+        //future: _playerAuthManager.getProfileImgPath(nameController.text), 
+        future: _playerAuthManager.loadPlayerData(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator(),);
           } else if (snapshot.hasError) {
             return const Center(child: Text('Error loading progress'),);
-          } else {
-            LogUtil.debug('Player Data-> profileImg: ${snapshot.hasData}');             
-            return _buildDialog('/data/user/0/ch.chhoeun.endless.runner/app_flutter/profile_yyyyyy1.jpg');
-          } /*else if (snapshot.hasData) {
-            //final profileImg = snapshot.data as String;
-            LogUtil.debug('Player Data-> profileImg: ${snapshot.hasData}');
-            //return _buildRow(context, '/data/user/0/ch.chhoeun.endless.runner/app_flutter/profile_yyyyyy1.jpg');     
-            return _buildDialog('/data/user/0/ch.chhoeun.endless.runner/app_flutter/profile_yyyyyy1.jpg');
+          } else if (snapshot.hasData && snapshot.data is PlayerData) {
+            final pd = snapshot.hasData as PlayerData;
+            LogUtil.debug('Future builder profile loaded -> name: ${pd.playerName}, dob: ${pd.dateOfBirth}, level: ${pd.level}, score: ${pd.topScore}, gender: ${pd.gender}, img: ${pd.profileImgPath}');
+            //return _buildRow(context, '/data/user/0/ch.chhoeun.endless.runner/app_flutter/profile_yyyyyy1.jpg');
+            initSavedPlayer(pd);
+            return _buildDialog(pd);
           }  else {
             LogUtil.debug('Snapshot has data-> ${snapshot.data}');
             return const Center(child: Text('Unexpected data returned'),);
-          }*/
+          }
         }
       );
     } catch (e) {
@@ -200,10 +190,19 @@ class _PlayerSignedupEditState extends State<PlayerSignedupEdit> {
         return const Center(child: Text('Exception Block'),);
       });
     }
+  }*/
+
+  void initSavedPlayer(PlayerData pd) {
+    LogUtil.debug('Try to load saved player information');
+    nameController.text = pd.playerName;
+    profileImage = File(pd.profileImgPath!);
+    gender = pd.gender;
+    selectedDate = pd.dateOfBirth;
   }
 
-  Dialog _buildDialog(String profileImg) {
+  Dialog _buildDialog() {
     LogUtil.debug('Start building dialog for updating player data');
+    LogUtil.debug('After set state profile image ->$profileImage');    
     return Dialog(
         insetPadding: const EdgeInsets.all(16),
         shape: RoundedRectangleBorder(
@@ -239,10 +238,8 @@ class _PlayerSignedupEditState extends State<PlayerSignedupEdit> {
                   border: Border.all(color: Colors.grey),
                   borderRadius: BorderRadius.circular(8),
                 ),
-                child: Text(
-                  selectedDate == null
-                      ? 'Select Date of Birth'
-                      : DateFormat('yyyy-MM-dd').format(selectedDate!),
+                child: Text(                      
+                  DateFormat('yyyy-MM-dd').format(selectedDate!),
                   style: const TextStyle(fontSize: 16),
                 ),
               ),
@@ -258,11 +255,17 @@ class _PlayerSignedupEditState extends State<PlayerSignedupEdit> {
             ),
             const SizedBox(height: 16,),
             Row(
-              children: [                
+              children: [
+                
+                profileImage != null
+                ?      
                     CircleAvatar( 
-                        backgroundImage: FileImage(File(profileImage!.path)),
+                        backgroundImage: FileImage(profileImage!),
                         radius: 40,
-                      ),
+                        key: ValueKey(DateTime.now().millisecondsSinceEpoch), // Force refresh with a unique key
+                      )
+                :
+                  const CircleAvatar(radius: 40, child: Icon(Icons.person, size: 40,),),
                 /*    : const CircleAvatar(radius: 40, 
                       child: Icon(Icons.person, size: 40),),*/
                 const SizedBox(width: 16),
@@ -306,7 +309,12 @@ class _PlayerSignedupEditState extends State<PlayerSignedupEdit> {
   @override
   Widget build(BuildContext context) {
     LogUtil.debug('Start trying to initiate future builder');
-    return _futureBuilderProfile();
+
+    
+    
+    return _buildDialog();
+
+    //return _futureBuilderProfile();
   }
 
 }

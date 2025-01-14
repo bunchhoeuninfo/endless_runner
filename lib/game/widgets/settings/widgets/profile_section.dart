@@ -30,7 +30,8 @@ class _ProfileSectionState extends State<ProfileSection> {
   @override
   Widget build(BuildContext context) {
     LogUtil.debug('Loaded player-> player name: ${playerData.playerName}, level: ${playerData.level}, topScore: ${playerData.topScore}, dob: ${playerData.dateOfBirth}, img: ${playerData.profileImgPath}');
-    return _futureBuildProfile();
+    //return _futureBuildProfile();
+    return _buildRow(context, playerData.profileImgPath!);
   }
 
   FutureBuilder _futureBuildProfile() {
@@ -49,7 +50,7 @@ class _ProfileSectionState extends State<ProfileSection> {
           } else if (snapshot.hasData) {
             //final profileImg = snapshot.data as String;
             LogUtil.debug('Player Data-> player name: ${playerData.playerName}, profileImg: ${snapshot.data}');
-            return _buildRow(context, snapshot.data);     
+            return _buildRow(context, '/data/user/0/ch.chhoeun.endless.runner/app_flutter/profile_yyyy11s1uf1fe1aqq.jpg');     
           } else {
             LogUtil.debug('Received data -> ${snapshot.data}');
             return const Center(child: Text('Invalid data received'),);
@@ -67,7 +68,7 @@ class _ProfileSectionState extends State<ProfileSection> {
   }
 
   Row _buildRow(BuildContext context, String profileImg) {
-    LogUtil.debug('Start building Setting - Profile Section');
+    LogUtil.debug('Start building Setting - Profile Section, profileImg -> $profileImg');
     return Row(
       children: [
         profileImg.isNotEmpty 
@@ -99,21 +100,28 @@ class _ProfileSectionState extends State<ProfileSection> {
   }
 
   Future<void> showPlayerEditDialog(BuildContext context, PlayerData playerData) async {
-    final upd = await showDialog<PlayerData>(
+    try {
+      final upd = await showDialog<PlayerData>(
         context: context,
         builder: (BuildContext context) {
           return PlayerSignedupEdit(playerData: playerData);
         }
-      );
-    
-    if (upd != null) {
-      playerData.playerName = upd.playerName;
-      playerData.profileImgPath = upd.profileImgPath;
-      playerData.dateOfBirth = upd.dateOfBirth;
-      playerData.gender = upd.gender;
-      // Trigger a rebuild
-      (context as Element).markNeedsBuild();
-    }
+      );      
+
+      if (upd != null) {
+        LogUtil.debug('Updated player after player clicked Update Info-> player name: ${upd.playerName}, level: ${upd.level}, topScore: ${upd.topScore}, dob: ${upd.dateOfBirth}, img: ${upd.profileImgPath}');
+        playerData.playerName = upd.playerName;
+        playerData.profileImgPath = upd.profileImgPath;
+        playerData.dateOfBirth = upd.dateOfBirth;
+        playerData.gender = upd.gender;
+        playerData.profileImgPath = upd.profileImgPath;
+        //await _playerAuthManager.updatePlayerData(upd);
+        // Trigger a rebuild
+        (context as Element).markNeedsBuild();
+      }
+    } catch (e) {
+      LogUtil.error('Exception -> $e');
+    }    
   }
   
 }
