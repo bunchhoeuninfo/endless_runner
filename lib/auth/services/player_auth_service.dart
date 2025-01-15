@@ -31,7 +31,9 @@ class PlayerAuthService implements PlayerAuthManager {
     LogUtil.debug('Return null');
     DateTime now = DateTime.now(); // Get the current date and time
     String currentDate = now.toIso8601String().split('T').first; // Extract the date in ISO 8601 format (YYYY-MM-DD)    
-    return PlayerData(playerName: 'UNKNOWN', level: 1, topScore: 0, gender: 'Other', dateOfBirth: DateTime.parse(currentDate), profileImgPath: await _getDefaultProfileImage());        
+    
+    return null;
+    //return PlayerData(playerName: 'UNKNOWN', level: 1, topScore: 0, gender: 'Other', dateOfBirth: DateTime.parse(currentDate), profileImgPath: await _getDefaultProfileImage());        
   }
 
    Future<String> _getDefaultProfileImage() async {

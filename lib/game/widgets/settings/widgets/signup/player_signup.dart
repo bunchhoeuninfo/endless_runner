@@ -22,6 +22,7 @@ class _PlayerSignupState extends State<PlayerSignup> {
   DateTime? selectedDate;
   String? gender;
   File? profileImage; // Variable to hold the selected image
+  late Map<String, dynamic> _settings;
 
   Future<void> _selectDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
@@ -70,7 +71,8 @@ class _PlayerSignupState extends State<PlayerSignup> {
       topScore: 0,
       dateOfBirth: selectedDate ?? DateTime.now(),
       gender: gender ?? 'Other',
-      profileImgPath: profileImage?.path ?? 'assets/images/player_1.png'
+      profileImgPath: profileImage?.path ?? 'assets/images/player_1.png',
+      settings: _settings,
     );
 
     await widget.playerAuthManager.savePlayerData(player);

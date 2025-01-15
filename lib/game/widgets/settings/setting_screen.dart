@@ -7,8 +7,8 @@ import 'package:endless_runner/core/services/game_service_manager.dart';
 import 'package:endless_runner/core/services/game_service_service.dart';
 import 'package:endless_runner/game/endless_runner_game.dart';
 import 'package:endless_runner/game/utils/log_util.dart';
-import 'package:endless_runner/game/widgets/settings/widgets/game_option.dart';
-import 'package:endless_runner/game/widgets/settings/widgets/profile_section.dart';
+import 'package:endless_runner/game/widgets/settings/widgets/menu_settings/menu_section.dart';
+import 'package:endless_runner/game/widgets/settings/widgets/profiles/profile_section.dart';
 import 'package:flutter/material.dart';
 
 class SettingScreen extends StatelessWidget {
@@ -86,7 +86,7 @@ class SettingScreen extends StatelessWidget {
           children: [
             ProfileSection(playerData: playerData),
             const SizedBox(height: 40),
-            GameOption(playerData: playerData,),
+            MenuSection(playerData: playerData,),
             const SizedBox(height: 40),
             //const SignInButton(isSignedIn: false),            
           ],
