@@ -42,6 +42,12 @@ dependencies:
   connectivity_plus: ^6.1.1
   shared_preferences: ^2.3.4
   font_awesome_flutter: ^10.8.0
+  intl: ^0.20.1
+  image_picker: ^1.1.2
+  path_provider: ^2.1.5
+  google_fonts: ^6.2.1
+  firebase_app_check: ^0.3.1+6
+  firebase_crashlytics: ^4.2.0
 
 dev_dependencies:
   flutter_test:
@@ -67,21 +73,49 @@ flutter:
 
   # To add assets to your application, add an assets section, like this:
   assets:
-     - assets/images/player_1.png
+    - assets/images/player_1.png
     # coin images
-     - assets/images/coin.jpg
-     - assets/images/coins/coin_flip.jpg
-     - assets/images/coins/blue.jpg
-     - assets/images/coins/red.jpg
-     - assets/images/coins/gold.jpg
-     - assets/images/coins/rocket_coin.jpg
+    - assets/images/coin.jpg
+    - assets/images/coins/coin_flip.jpg
+    - assets/images/coins/blue.jpg
+    - assets/images/coins/red.jpg
+    - assets/images/coins/gold.jpg
+    - assets/images/coins/rocket_coin.jpg
     # obstacle images
-     - assets/images/rock.jpg
+    - assets/images/rock.jpg
     # background scrolling
-     - assets/images/background_object.PNG
-     - assets/images/background_2d.jpg
-     - assets/images/background_tile.jpg
-  #   - images/a_dot_ham.jpeg
+    - assets/images/background_object.PNG
+    - assets/images/background_2d.jpg
+    - assets/images/background_tile.jpg
+  #   - images/a_dot_ham.jpeg    
+    # about me data
+    - assets/data/developer_profile.json
+    - assets/images/profile.jpeg
+
+  fonts:
+    - family: KhmerOS
+      fonts:
+        - asset: assets/fonts/KhmerOS.ttf
+    - family: KhmerOS-Reg
+      fonts:
+        - asset: assets/fonts/KhmerOSNew-Regular.ttf      
+    - family: KhmerOS-Regular
+      fonts:
+        - asset: assets/fonts/KhmerOSNew-Regular.ttf
+    - family: KhmerOS-Bold
+      fonts:
+        - asset: assets/fonts/KhmerOSNew-Bold.ttf
+          weight: 700
+    - family: KhmerOSMouli
+      fonts:
+        - asset: assets/fonts/KhmerOSMoulpali.ttf
+        - asset: assets/fonts/KhmerOSMoulLight.ttf
+        - asset: assets/fonts/KhmerOSMetalchrieng.ttf
+        - asset: assets/fonts/KhmerOSContent-Regular.ttf
+        - asset: assets/fonts/KhmerOSContent-Bold.ttf      
+    - family: OpenSans-Regular
+      fonts:
+        - asset: assets/fonts/OpenSans-Regular.ttf
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images

@@ -12,4 +12,5 @@ class GameStateManager {
   bool isMenu() => _state == GameState.menu;
   bool isPlaying() => _state == GameState.playing;
   bool isPaused() => _state == GameState.paused;
+  bool isGameOver() => _state == GameState.gameOver;
 }

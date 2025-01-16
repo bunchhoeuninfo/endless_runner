@@ -11,6 +11,7 @@ import 'package:endless_runner/components/ui/game_overs/game_over_screen.dart';
 
 import 'package:endless_runner/components/coins/coin_services.dart';
 import 'package:endless_runner/components/obstacles/obstacle_services.dart';
+import 'package:endless_runner/core/game_state.dart';
 import 'package:endless_runner/core/game_state_manager.dart';
 import 'package:endless_runner/core/services/game_service_manager.dart';
 import 'package:endless_runner/core/services/game_service_service.dart';
@@ -66,9 +67,10 @@ class EndlessRunnerGame extends FlameGame with HasCollisionDetection, TapDetecto
       camera.viewport = FixedResolutionViewport(resolution: Vector2(800, 600));      
        // pre-load image assets to optimize the performance
       await _imageAssetManager.preLoadImgAssets(images);
+      gameStateManager.setState(GameState.menu);
       _gameServiceManager.setupBackground(this);
       _gameServiceManager.addEntities(this);
-      add(player);
+      add(player);      
     } catch (e) {
       LogUtil.error('Exception -> $e');
     }    

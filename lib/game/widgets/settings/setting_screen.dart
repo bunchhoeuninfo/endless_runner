@@ -1,10 +1,14 @@
+
+import 'package:endless_runner/auth/data/player_data.dart';
+import 'package:endless_runner/auth/managers/player_auth_manager.dart';
+import 'package:endless_runner/auth/services/player_auth_service.dart';
+import 'package:endless_runner/core/game_state.dart';
 import 'package:endless_runner/core/services/game_service_manager.dart';
 import 'package:endless_runner/core/services/game_service_service.dart';
 import 'package:endless_runner/game/endless_runner_game.dart';
 import 'package:endless_runner/game/utils/log_util.dart';
-import 'package:endless_runner/game/widgets/settings/widgets/game_option.dart';
-import 'package:endless_runner/game/widgets/settings/widgets/profile_section.dart';
-import 'package:endless_runner/game/widgets/settings/widgets/sign_in_button.dart';
+import 'package:endless_runner/game/widgets/settings/widgets/menu_settings/menu_section.dart';
+import 'package:endless_runner/game/widgets/settings/widgets/profiles/profile_section.dart';
 import 'package:flutter/material.dart';
 
 class SettingScreen extends StatelessWidget {
@@ -12,26 +16,67 @@ class SettingScreen extends StatelessWidget {
 
   final EndlessRunnerGame gameRef;
   final GameServiceManager _gameServiceManager = GameServiceService();
+  final PlayerAuthManager _playerAuthManager = PlayerAuthService();
 
   @override
   Widget build(BuildContext context) {
+
+    LogUtil.debug('Initiate game setting');
+    gameRef.gameStateManager.setState(GameState.menu);
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Setting'),
         leading: IconButton(
-          onPressed: () {       
+          onPressed: () { 
             // Resume game
-            _gameServiceManager.resumeGame(gameRef);
+            LogUtil.debug('Game state -> ${gameRef.gameStateManager.state}');
+            gameRef.gameStateManager.isPaused() 
+              ? _gameServiceManager.resumeGame(gameRef)
+              : gameRef.gameStateManager.setState(GameState.menu);
             Navigator.pop(context);
           }, 
-          icon: const Icon(Icons.arrow_back)
+          icon: const Icon(Icons.arrow_back),
+          color: Colors.blue,
         ),
       ),
-      body: _buildScrollableContent(),
+      body: _futureLoadPlayer(),
     );
   }
 
-  Widget _buildScrollableContent() {
+  FutureBuilder _futureLoadPlayer() {
+    LogUtil.debug('Inside future build method');
+    try {
+      return FutureBuilder(
+        future: _playerAuthManager.loadPlayerData(), 
+        builder: (context, snapshot) {
+          final pd = snapshot.data as PlayerData;
+          LogUtil.debug('Iterating player data -> name: ${pd.playerName}, dob: ${pd.dateOfBirth}, level: ${pd.level}, score: ${pd.topScore}, gender: ${pd.gender}, img: ${pd.profileImgPath}');
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator(),);
+          } else if (snapshot.hasError) {
+            return const Center(child: Text('Error loading progress'),);
+          } else if(snapshot.hasData && snapshot.data is PlayerData) {
+            final playerData = snapshot.data as PlayerData;
+            LogUtil.debug('Player Data-> name: ${playerData.playerName}');
+            return _buildScrollableContent(playerData,);            
+          } else {
+            return const Center(child: Text('Invalid data'),);
+          }
+        }
+      );
+    } catch (e) {
+      LogUtil.error('Exception -> $e');
+      return FutureBuilder(
+      future: null,
+      builder: (context, snapshot) {
+        return const Center(child: Text('Exception'),);
+      });
+    }
+    
+  }
+
+  Widget _buildScrollableContent(PlayerData playerData) {
     LogUtil.debug('Start building Setting.');
     return SingleChildScrollView(
       child: Padding(
@@ -39,32 +84,14 @@ class SettingScreen extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            ProfileSection(),
-            SizedBox(height: 40),
-            GameOption(),
-            SizedBox(height: 40),
-            SignInButton(isSignedIn: false),            
+            ProfileSection(playerData: playerData),
+            const SizedBox(height: 40),
+            MenuSection(playerData: playerData,),
+            const SizedBox(height: 40),
+            //const SignInButton(isSignedIn: false),            
           ],
         ),
       ),
-    );
-  }
-
-  Padding _buildPadding() {
-    LogUtil.debug('Start building Setting.');
-    return Padding(
-      padding: const EdgeInsets.all(16.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          ProfileSection(),
-          SizedBox(height: 40),
-          GameOption(),
-          SizedBox(height: 40),
-          SignInButton(isSignedIn: false,),
-          SizedBox(height: 40),
-        ],
-      )
     );
   }
   
