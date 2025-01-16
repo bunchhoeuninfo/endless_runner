@@ -3,21 +3,21 @@ import 'dart:io';
 
 import 'package:endless_runner/auth/managers/player_auth_manager.dart';
 import 'package:endless_runner/auth/data/player_data.dart';
+import 'package:endless_runner/constants/game_constant.dart';
 import 'package:endless_runner/game/utils/log_util.dart';
 import 'package:flutter/services.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class PlayerAuthService implements PlayerAuthManager {
-
-  static const String playerKey = 'player_data';
+class PlayerAuthService implements PlayerAuthManager {  
 
   @override
   Future<PlayerData?> loadPlayerData() async {
     try {
       LogUtil.debug('Try to load player data');
       final prefs = await SharedPreferences.getInstance();
-      final playerDataString = prefs.getString(playerKey);
+      //final playerDataString = prefs.getString(playerKey);
+      final playerDataString = prefs.getString(GameConstant.playerKey);
       if (playerDataString != null) {
         final Map<String, dynamic> playerDataMap = jsonDecode(playerDataString);
         final pd = PlayerData.fromMap(playerDataMap);
@@ -56,7 +56,7 @@ class PlayerAuthService implements PlayerAuthManager {
     try {
       final prefs = await SharedPreferences.getInstance();
       final playerData = jsonEncode(player.toMap());
-      await prefs.setString(playerKey, playerData);
+      await prefs.setString(GameConstant.playerKey, playerData);
       LogUtil.debug('Saved player data succesfully');
     } catch (e) {
       LogUtil.error('Exception -> $e');
@@ -68,7 +68,7 @@ class PlayerAuthService implements PlayerAuthManager {
     LogUtil.debug('Try to update player data -> name: ${upd.playerName}, dob: ${upd.dateOfBirth}, level: ${upd.level}, score: ${upd.topScore}, gender: ${upd.gender}, img: ${upd.profileImgPath}');
     try {
       final prefs = await SharedPreferences.getInstance();
-      final playerDataString = prefs.getString(playerKey);
+      final playerDataString = prefs.getString(GameConstant.playerKey);
 
       if (playerDataString != null) {
         final Map<String, dynamic> currentPlayerData = jsonDecode(playerDataString);
@@ -78,7 +78,7 @@ class PlayerAuthService implements PlayerAuthManager {
         currentPlayerData['profileImgPath'] = upd.profileImgPath;
         
         final updatedDataString = jsonEncode(currentPlayerData);
-        await prefs.setString(playerKey, updatedDataString);
+        await prefs.setString(GameConstant.playerKey, updatedDataString);
 
         LogUtil.debug('Updated player data successfully');
       } else {
