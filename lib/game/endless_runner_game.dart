@@ -1,13 +1,12 @@
 
 import 'dart:math';
 
-import 'package:endless_runner/components/backgrounds/scrolling_background.dart';
 import 'package:endless_runner/components/obstacles/obstacle_manager.dart';
 import 'package:endless_runner/components/players/player.dart';
 import 'package:endless_runner/components/powerups/speed_boost_manager.dart';
 import 'package:endless_runner/components/powerups/speed_boost_services.dart';
 import 'package:endless_runner/components/coins/coin_manager.dart';
-import 'package:endless_runner/components/ui/game_overs/game_over_screen.dart';
+import 'package:endless_runner/game/widgets/game_overs/game_over_screen.dart';
 
 import 'package:endless_runner/components/coins/coin_services.dart';
 import 'package:endless_runner/components/obstacles/obstacle_services.dart';

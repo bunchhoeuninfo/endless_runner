@@ -22,10 +22,14 @@ class PlayerData {
             "buttonClickSound": true,
             "gameOverSound": true,
           },
-          "appearance": {
-            "background": "default",
-            "playerSkin": "classic",
+          "playerAppearance": {            
+            "playerSkin1": "classic",
+            "playerSkin2": "Modern",
           },
+          "gameThemse": {
+            "background1": "default",
+            "background2": "modern",
+          }
         };
 
   factory PlayerData.fromMap(Map<String, dynamic> data) {

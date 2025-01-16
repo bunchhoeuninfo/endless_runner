@@ -1,8 +1,8 @@
 
 import 'package:endless_runner/components/scoreboards/live_score_board.dart';
-import 'package:endless_runner/components/ui/buttons/restart_button_overlay.dart';
-import 'package:endless_runner/components/ui/buttons/setting_button_overlay.dart';
-import 'package:endless_runner/components/ui/buttons/start_reset_button_overlay.dart';
+import 'package:endless_runner/game/widgets/game_controls/restart_button_overlay.dart';
+import 'package:endless_runner/game/widgets/settings/setting_button_overlay.dart';
+import 'package:endless_runner/game/widgets/game_controls/start_reset_button_overlay.dart';
 import 'package:endless_runner/game/endless_runner_game.dart';
 import 'package:endless_runner/game/utils/log_util.dart';
 import 'package:flame/game.dart';

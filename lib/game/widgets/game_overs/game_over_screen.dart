@@ -1,5 +1,5 @@
 
-import 'package:endless_runner/components/ui/game_overs/tap_blocker.dart';
+import 'package:endless_runner/game/widgets/game_overs/tap_blocker.dart';
 import 'package:endless_runner/core/services/game_service_manager.dart';
 import 'package:endless_runner/core/services/game_service_service.dart';
 import 'package:endless_runner/game/endless_runner_game.dart';

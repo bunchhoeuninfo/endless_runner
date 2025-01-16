@@ -1,4 +1,5 @@
 import 'package:endless_runner/auth/data/player_data.dart';
+import 'package:endless_runner/auth/data/sound_effect_option.dart';
 import 'package:endless_runner/auth/managers/player_auth_manager.dart';
 import 'package:endless_runner/auth/services/player_auth_service.dart';
 import 'package:endless_runner/game/utils/log_util.dart';
@@ -43,7 +44,7 @@ class MenuSection extends StatelessWidget {
             _menuItem(
               context,
               icon: Icons.music_note,
-              text: 'Background Music',
+              text: 'Player Skin',
               trailing: _switchWidget(
                 value: true,
                 onChanged: (value) => LogUtil.debug('Background Music: $value'),
@@ -53,6 +54,16 @@ class MenuSection extends StatelessWidget {
               context,
               icon: Icons.volume_up,
               text: 'Sound Effects',
+              trailing: const Icon(Icons.chevron_right, color: Colors.blue,),
+              onTap: () => _navigateTo(
+                context,
+                SoundEffectOption(),
+              ),
+            ),
+            _menuItem(
+              context,
+              icon: Icons.games_sharp,
+              text: 'Game Themse',
               trailing: _switchWidget(
                 value: true,
                 onChanged: (value) => LogUtil.debug('Sound Effects: $value'),

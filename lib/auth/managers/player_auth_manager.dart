@@ -15,4 +15,10 @@ abstract class PlayerAuthManager {
 
   //Delete profile image by player name
   Future<void> deleteProfileImg(String playerName);
+
+  // Save player settings
+  Future<void> savePlayerSettings(PlayerData playerData);
+
+  //Update player settings
+  Future<void> updatePlayerSettings(PlayerData playerData);
 }

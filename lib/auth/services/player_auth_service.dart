@@ -10,14 +10,15 @@ import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class PlayerAuthService implements PlayerAuthManager {  
-
+  static const String playerKey = 'player_data';
+  
   @override
   Future<PlayerData?> loadPlayerData() async {
     try {
       LogUtil.debug('Try to load player data');
       final prefs = await SharedPreferences.getInstance();
-      //final playerDataString = prefs.getString(playerKey);
-      final playerDataString = prefs.getString(GameConstant.playerKey);
+      final playerDataString = prefs.getString(playerKey);
+      //final playerDataString = prefs.getString(GameConstant.playerKey);
       if (playerDataString != null) {
         final Map<String, dynamic> playerDataMap = jsonDecode(playerDataString);
         final pd = PlayerData.fromMap(playerDataMap);
@@ -32,8 +33,8 @@ class PlayerAuthService implements PlayerAuthManager {
     DateTime now = DateTime.now(); // Get the current date and time
     String currentDate = now.toIso8601String().split('T').first; // Extract the date in ISO 8601 format (YYYY-MM-DD)    
     
-    return null;
-    //return PlayerData(playerName: 'UNKNOWN', level: 1, topScore: 0, gender: 'Other', dateOfBirth: DateTime.parse(currentDate), profileImgPath: await _getDefaultProfileImage());        
+    //return null;
+    return PlayerData(playerName: 'Unknown', level: 1, topScore: 0, gender: 'Other', dateOfBirth: DateTime.parse(currentDate), profileImgPath: await _getDefaultProfileImage(), settings: null);        
   }
 
    Future<String> _getDefaultProfileImage() async {
@@ -56,7 +57,7 @@ class PlayerAuthService implements PlayerAuthManager {
     try {
       final prefs = await SharedPreferences.getInstance();
       final playerData = jsonEncode(player.toMap());
-      await prefs.setString(GameConstant.playerKey, playerData);
+      await prefs.setString(playerKey, playerData);
       LogUtil.debug('Saved player data succesfully');
     } catch (e) {
       LogUtil.error('Exception -> $e');
@@ -76,9 +77,10 @@ class PlayerAuthService implements PlayerAuthManager {
         currentPlayerData['dateOfBirth'] = upd.dateOfBirth.toIso8601String();
         currentPlayerData['gender'] = upd.gender;
         currentPlayerData['profileImgPath'] = upd.profileImgPath;
+        currentPlayerData['settings'] = upd.settings;
         
         final updatedDataString = jsonEncode(currentPlayerData);
-        await prefs.setString(GameConstant.playerKey, updatedDataString);
+        await prefs.setString(playerKey, updatedDataString);
 
         LogUtil.debug('Updated player data successfully');
       } else {
@@ -131,6 +133,18 @@ class PlayerAuthService implements PlayerAuthManager {
     await imgFile.copy(filePath);
 
     return filePath; // Return the saved image path
+  }
+  
+  @override
+  Future<void> savePlayerSettings(PlayerData playerData) {
+    // TODO: implement savePlayerSettings
+    throw UnimplementedError();
+  }
+  
+  @override
+  Future<void> updatePlayerSettings(PlayerData playerData) {
+    // TODO: implement updatePlayerSettings
+    throw UnimplementedError();
   }
  
 

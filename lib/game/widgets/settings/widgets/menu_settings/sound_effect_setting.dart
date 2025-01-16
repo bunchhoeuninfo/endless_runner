@@ -1,11 +1,11 @@
+import 'package:endless_runner/auth/data/player_data.dart';
 import 'package:endless_runner/auth/data/sound_effect_option.dart';
 import 'package:flutter/material.dart';
 
 class SoundEffectSetting extends StatefulWidget {
-  const SoundEffectSetting({super.key, required this.soundEffectOption, required this.onSettingsChanged});
+  const SoundEffectSetting({super.key, required this.playerData,});
 
-  final SoundEffectOption soundEffectOption;
-  final Function(SoundEffectOption) onSettingsChanged;
+  final PlayerData playerData;
 
   @override
   State<SoundEffectSetting> createState() => _SoundEffectSettingState();
@@ -13,12 +13,11 @@ class SoundEffectSetting extends StatefulWidget {
 }
 
 class _SoundEffectSettingState extends State<SoundEffectSetting> {
-  late SoundEffectOption _soundEffectOption;
-
+  late PlayerData _playerData;
   @override
   void initState() {
     super.initState();
-    _soundEffectOption = widget.soundEffectOption;
+    _playerData = widget.playerData;
   }
 
   @override
@@ -31,7 +30,7 @@ class _SoundEffectSettingState extends State<SoundEffectSetting> {
           children: [
             SwitchListTile(
               title: Text('Background Music'),
-              value: _soundEffectOption.backgroundMusic,
+              value: _playerData.settings.map(convert),
               onChanged: (bool value) {
                 setState(() {
                   _soundEffectOption.backgroundMusic = value;
