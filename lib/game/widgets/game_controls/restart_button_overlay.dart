@@ -1,8 +1,10 @@
 import 'package:endless_runner/components/coins/coin.dart';
 import 'package:endless_runner/components/obstacles/obstacle.dart';
 import 'package:endless_runner/components/powerups/speed_boost.dart';
-import 'package:endless_runner/core/game_state.dart';
-import 'package:endless_runner/core/services/game_service_manager.dart';
+import 'package:endless_runner/core/managers/live_score_manager.dart';
+import 'package:endless_runner/core/services/live_score_service.dart';
+import 'package:endless_runner/core/state/game_state.dart';
+import 'package:endless_runner/core/managers/game_service_manager.dart';
 import 'package:endless_runner/core/services/game_service_service.dart';
 import 'package:endless_runner/game/endless_runner_game.dart';
 import 'package:endless_runner/game/utils/log_util.dart';
@@ -12,6 +14,7 @@ import 'package:flutter/material.dart';
 class RestartButtonOverlay extends StatelessWidget {
   final EndlessRunnerGame game;
   final GameServiceManager _gameServiceManager = GameServiceService();
+  final LiveScoreManager _liveScoreManager = LiveScoreService();
 
   RestartButtonOverlay({
     super.key,
@@ -36,6 +39,7 @@ class RestartButtonOverlay extends StatelessWidget {
           ElevatedButton(
             onPressed: () {
               _gameServiceManager.restartGame(game);
+              _liveScoreManager.saveLiveScoreBoard();
              // game.add(PlayPauseButton());
             },
             style: ElevatedButton.styleFrom(
@@ -62,8 +66,6 @@ class RestartButtonOverlay extends StatelessWidget {
     game.resumeEngine();  //Resume the game loop              
     game.isFirstRun = false;        
     game.overlays.remove('restart');    
-    game.coinScore = 0;
-    game.coinCollected = 0;
     
     // Remove all objects from game screen
     game.children.whereType<Obstacle>().forEach((obstacle) => obstacle.removeFromParent());        

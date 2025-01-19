@@ -1,6 +1,6 @@
 import 'dart:math';
 
-import 'package:endless_runner/components/obstacles/obstacle_manager.dart';
+import 'package:endless_runner/core/managers/obstacle_manager.dart';
 import 'package:endless_runner/components/obstacles/obstacle.dart';
 import 'package:endless_runner/game/endless_runner_game.dart';
 import 'package:flame/game.dart';

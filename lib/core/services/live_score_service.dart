@@ -1,6 +1,6 @@
 import 'package:endless_runner/auth/managers/player_auth_manager.dart';
 import 'package:endless_runner/auth/services/player_auth_service.dart';
-import 'package:endless_runner/components/scoreboards/live_score_manager.dart';
+import 'package:endless_runner/core/managers/live_score_manager.dart';
 import 'package:endless_runner/constants/game_constant.dart';
 import 'package:endless_runner/game/utils/log_util.dart';
 import 'package:flutter/material.dart';
@@ -28,6 +28,19 @@ class LiveScoreService implements LiveScoreManager {
 
   @override
   final ValueNotifier<String> playerNameNotifier = ValueNotifier<String>('Unknown');
+
+  // New method to listen to highScoreNotifier
+  void listenToHighScore(void Function(int) onHighScoreChanged) {
+    highScoreNotifier.addListener(() {
+      onHighScoreChanged(highScoreNotifier.value);
+    });
+  }
+
+  void listentoLevel(void Function(int) onLevelChanged) {
+    levelNotifier.addListener(() {
+      onLevelChanged(levelNotifier.value);
+    });
+  }
   
   @override
   Future<void> updateScore(int increment) async {
@@ -39,10 +52,6 @@ class LiveScoreService implements LiveScoreManager {
         highScoreNotifier.value = scoreNotifier.value;
       }
 
-      // Save the new high score in persistent storage
-      final prefs = await SharedPreferences.getInstance();
-      await prefs.setInt('highScore', highScoreNotifier.value);
-
     } catch (e) {
       LogUtil.error('Exception -> $e');
     }
@@ -53,8 +62,11 @@ class LiveScoreService implements LiveScoreManager {
   Future<void> loadHighScore() async {
     try {
       LogUtil.debug('Try to load high score');
-      final prefs = await SharedPreferences.getInstance();
-      highScoreNotifier.value = prefs.getInt('highScore') ?? 0;
+      final pd = await _playerAuthManager.loadPlayerData();
+      if (pd == null) {
+        return;
+      }
+      highScoreNotifier.value = pd.topScore;
     } catch (e) {
       LogUtil.error('Exception -> $e');
     }
@@ -70,11 +82,6 @@ class LiveScoreService implements LiveScoreManager {
     } catch (e) {
       LogUtil.error('Exception -> $e');
     }
-  }
-
-  @override
-  void resetScore() {
-    scoreNotifier.value = 0;
   }
 
   @override
@@ -111,6 +118,7 @@ class LiveScoreService implements LiveScoreManager {
       if (playerData == null) {
         return;
       }
+      //scoreNotifier.value = 0;  // Reset current score
       playerNameNotifier.value = playerData.playerName;  // Load player name
       highScoreNotifier.value = playerData.topScore;  // Load high score
       levelNotifier.value = playerData.level;  // Load current level, default 0
@@ -122,5 +130,39 @@ class LiveScoreService implements LiveScoreManager {
   @override
 
   ValueNotifier<String> encouragementNotifier = ValueNotifier<String>(GameConstant.encouragementNotifier);
+  
+  @override
+  Future<void> saveLiveScoreBoard() async {
+    try {
+      
+      scoreNotifier.value = 0; // Reset current score
+      final playerData = await _playerAuthManager.loadPlayerData();
+      if (playerData == null) {
+        LogUtil.error('No player data found');
+        return;
+      }
+
+      listenToHighScore((newHighScore) {
+        highScoreNotifier.value = newHighScore;
+      });
+
+      listentoLevel((newLevel) {
+        levelNotifier.value = newLevel;
+      });
+
+      if (highScoreNotifier.value > playerData.topScore) {
+        playerData.topScore = highScoreNotifier.value;
+      }
+      if (levelNotifier.value > playerData.level) {
+        playerData.level = levelNotifier.value;
+      }
+
+      LogUtil.debug('Try to update live score board, high score: ${highScoreNotifier.value}, level: ${levelNotifier.value}');
+      await _playerAuthManager.updatePlayerData(playerData);
+      LogUtil.debug('Successfully updated live score board to shared preferences');
+    } catch (e) {
+      LogUtil.error('Exception -> $e');
+    }
+  }
 
 }

@@ -1,14 +1,18 @@
+import 'package:endless_runner/auth/managers/player_auth_manager.dart';
+import 'package:endless_runner/auth/services/player_auth_service.dart';
 import 'package:endless_runner/components/backgrounds/scrolling_background.dart';
 import 'package:endless_runner/components/coins/coin.dart';
 import 'package:endless_runner/components/obstacles/obstacle.dart';
 import 'package:endless_runner/components/powerups/speed_boost.dart';
-import 'package:endless_runner/core/game_state.dart';
-import 'package:endless_runner/core/services/game_service_manager.dart';
+import 'package:endless_runner/core/state/game_state.dart';
+import 'package:endless_runner/core/managers/game_service_manager.dart';
 import 'package:endless_runner/game/endless_runner_game.dart';
 import 'package:endless_runner/game/utils/log_util.dart';
 import 'package:flame/components.dart';
 
 class GameServiceService implements GameServiceManager {
+
+  final PlayerAuthManager _playerAuthManager = PlayerAuthService();
 
   @override
   void setupBackground(EndlessRunnerGame game) {
@@ -121,5 +125,7 @@ class GameServiceService implements GameServiceManager {
       }
     }    
   }
+  
+
 
 }

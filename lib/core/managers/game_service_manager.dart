@@ -12,4 +12,5 @@ abstract class GameServiceManager {
   void addEntities(EndlessRunnerGame game);
   void resumeGame(EndlessRunnerGame game);  
   
+  
 }

@@ -1,4 +1,4 @@
-import 'package:endless_runner/core/game_state.dart';
+import 'package:endless_runner/core/state/game_state.dart';
 
 class GameStateManager {
   GameState _state = GameState.start;

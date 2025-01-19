@@ -26,7 +26,7 @@ abstract class LiveScoreManager {
   Future<void> updateScore(int increment);
 
   /// Resets the current score to zero.
-  void resetScore();
+  //void resetScore();
 
   /// Calculates the score needed for the next level.
   int getScoreThresholdForNextLevel(int currentLevel);
@@ -51,4 +51,7 @@ abstract class LiveScoreManager {
 
   /// Loads the saved game progress, including high score and level.
   Future<void> loadGameProgress();
+
+  // Update live score board
+  Future<void> saveLiveScoreBoard();
 }

@@ -1,18 +1,18 @@
 
 import 'dart:math';
 
-import 'package:endless_runner/components/obstacles/obstacle_manager.dart';
+import 'package:endless_runner/core/managers/obstacle_manager.dart';
 import 'package:endless_runner/components/players/player.dart';
-import 'package:endless_runner/components/powerups/speed_boost_manager.dart';
-import 'package:endless_runner/components/powerups/speed_boost_services.dart';
-import 'package:endless_runner/components/coins/coin_manager.dart';
+import 'package:endless_runner/core/managers/speed_boost_manager.dart';
+import 'package:endless_runner/core/services/speed_boost_services.dart';
+import 'package:endless_runner/core/managers/coin_manager.dart';
 import 'package:endless_runner/game/widgets/game_overs/game_over_screen.dart';
 
-import 'package:endless_runner/components/coins/coin_services.dart';
-import 'package:endless_runner/components/obstacles/obstacle_services.dart';
-import 'package:endless_runner/core/game_state.dart';
-import 'package:endless_runner/core/game_state_manager.dart';
-import 'package:endless_runner/core/services/game_service_manager.dart';
+import 'package:endless_runner/core/services/coin_services.dart';
+import 'package:endless_runner/core/services/obstacle_services.dart';
+import 'package:endless_runner/core/state/game_state.dart';
+import 'package:endless_runner/core/managers/game_state_manager.dart';
+import 'package:endless_runner/core/managers/game_service_manager.dart';
 import 'package:endless_runner/core/services/game_service_service.dart';
 
 import 'package:endless_runner/game/assets/image_asset_manager.dart';
