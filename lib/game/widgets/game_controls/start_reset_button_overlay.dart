@@ -1,6 +1,6 @@
 
-import 'package:endless_runner/components/scoreboards/live_score_service.dart';
-import 'package:endless_runner/core/services/game_service_manager.dart';
+import 'package:endless_runner/core/services/live_score_service.dart';
+import 'package:endless_runner/core/managers/game_service_manager.dart';
 import 'package:endless_runner/core/services/game_service_service.dart';
 import 'package:endless_runner/game/endless_runner_game.dart';
 import 'package:endless_runner/game/utils/log_util.dart';
@@ -48,6 +48,8 @@ class StartResetButtonOverlay extends StatelessWidget {
           // Player information at the top
           Column(
             children: [
+              _buildRow(null, _liveScoreService.encouragementNotifier, Colors.amber),
+              const SizedBox(height: 5),
               _buildRow('Player', _liveScoreService.playerNameNotifier, Colors.yellow),
               const SizedBox(height: 5),
               _buildRow('Top Score', _liveScoreService.highScoreNotifier, Colors.green),
@@ -80,7 +82,7 @@ class StartResetButtonOverlay extends StatelessWidget {
     );
   }
 
-  Widget _buildRow<T>(String label, ValueNotifier<T> notifier, Color valueColor) {
+  Widget _buildRow<T>(String? label, ValueNotifier<T> notifier, Color valueColor) {
     LogUtil.debug('Inside _buildRow method');
     return ValueListenableBuilder<T>(
       valueListenable: notifier,
@@ -89,7 +91,7 @@ class StartResetButtonOverlay extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             Text(
-              '$label: ',
+              label != null ? '$label: ' : '',
               style: const TextStyle(
                 color: Colors.white,
                 fontSize: 18,

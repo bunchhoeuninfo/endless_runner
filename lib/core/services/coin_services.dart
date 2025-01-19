@@ -1,6 +1,6 @@
 import 'dart:math';
 
-import 'package:endless_runner/components/coins/coin_manager.dart';
+import 'package:endless_runner/core/managers/coin_manager.dart';
 import 'package:endless_runner/components/coins/coin.dart';
 import 'package:endless_runner/components/coins/coin_type.dart';
 import 'package:endless_runner/components/players/player.dart';

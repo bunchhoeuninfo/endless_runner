@@ -17,7 +17,7 @@ void main() async {
     LogUtil.info("Succesfully initialized game app...");
     
   } catch (e) {
-    appWidget = MaterialApp(
+    appWidget = MaterialApp( 
       debugShowCheckedModeBanner: false,
       home: NoInternetWidget(
         onRetry: () {

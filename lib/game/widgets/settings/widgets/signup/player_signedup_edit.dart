@@ -103,6 +103,7 @@ class _PlayerSignedupEditState extends State<PlayerSignedupEdit> {
 
   void initSavedPlayer(PlayerData pd) {
     LogUtil.debug('Try to load saved player information');
+    LogUtil.debug('message -> ${pd.playerName}, ${pd.dateOfBirth}, _setting: ${pd.settings}');
     nameController.text = pd.playerName;
     profileImage = File(pd.profileImgPath!);
     gender = pd.gender;

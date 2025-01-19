@@ -1,5 +1,5 @@
 import 'package:endless_runner/game/endless_runner_game.dart';
-import 'package:endless_runner/core/game_state.dart';
+import 'package:endless_runner/core/state/game_state.dart';
 import 'package:endless_runner/game/utils/log_util.dart';
 import 'package:flame/components.dart';
 
@@ -42,11 +42,11 @@ class ScrollingBackground extends SpriteComponent with HasGameRef<EndlessRunnerG
 
   void updateSpeed(double newSpeed) {
     currentSpeed = newSpeed;
-    LogUtil.debug('ScrollingBackground speed updated to $newSpeed');
+    //LogUtil.debug('ScrollingBackground speed updated to $newSpeed');
   }
 
   void resetSpeed() {
     currentSpeed = baseSpeed;
-    LogUtil.debug('ScrollingBackground speed reset to $baseSpeed');
+    //LogUtil.debug('ScrollingBackground speed reset to $baseSpeed');
   }
 }

@@ -1,6 +1,6 @@
 
-import 'package:endless_runner/components/scoreboards/live_score_manager.dart';
-import 'package:endless_runner/components/scoreboards/live_score_service.dart';
+import 'package:endless_runner/core/managers/live_score_manager.dart';
+import 'package:endless_runner/core/services/live_score_service.dart';
 import 'package:endless_runner/game/utils/log_util.dart';
 import 'package:flutter/material.dart';
 
@@ -13,7 +13,8 @@ class LiveScoreBoard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     LogUtil.debug('Inside build method');
-    return _futureBuilder();
+    //return _futureBuilder();
+    return _liveScoreBoard();
   }
 
   FutureBuilder _futureBuilder() {
@@ -42,10 +43,8 @@ class LiveScoreBoard extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           _buildRow('Player', _liveScoreManager.playerNameNotifier, Colors.amber),
-          _buildRow('Score', _liveScoreManager.scoreNotifier, Colors.yellow),
-          //const SizedBox(height: 5), // Space between rows
-          _buildRow('High Score', _liveScoreManager.highScoreNotifier, Colors.green),
-          //const SizedBox(height: 5,),
+          _buildRow('Score', _liveScoreManager.scoreNotifier, Colors.yellow),          
+          _buildRow('High Score', _liveScoreManager.highScoreNotifier, Colors.green),          
           _buildRow('Level', _liveScoreManager.levelNotifier, Colors.blue),
         ],
       ),

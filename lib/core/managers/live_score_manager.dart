@@ -17,13 +17,16 @@ abstract class LiveScoreManager {
   /// Notifier for the player's name.
   ValueNotifier<String> get playerNameNotifier;
 
+  // Encourage the player to keep playing
+  ValueNotifier<String> get encouragementNotifier;
+
   // --- Score Management ---
 
   /// Updates the current score and manages the high score logic.
   Future<void> updateScore(int increment);
 
   /// Resets the current score to zero.
-  void resetScore();
+  //void resetScore();
 
   /// Calculates the score needed for the next level.
   int getScoreThresholdForNextLevel(int currentLevel);
@@ -48,4 +51,7 @@ abstract class LiveScoreManager {
 
   /// Loads the saved game progress, including high score and level.
   Future<void> loadGameProgress();
+
+  // Update live score board
+  Future<void> saveLiveScoreBoard();
 }

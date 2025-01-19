@@ -1,8 +1,11 @@
 import 'dart:io';
 
 import 'package:endless_runner/auth/data/player_data.dart';
+import 'package:endless_runner/auth/managers/player_auth_manager.dart';
+import 'package:endless_runner/auth/services/player_auth_service.dart';
 import 'package:endless_runner/game/utils/log_util.dart';
 import 'package:endless_runner/game/widgets/settings/widgets/signup/player_signedup_edit.dart';
+import 'package:endless_runner/theme/endless_runner_theme.dart';
 import 'package:flutter/material.dart';
 
 class ProfileSection extends StatefulWidget {
@@ -16,7 +19,8 @@ class ProfileSection extends StatefulWidget {
 
 class _ProfileSectionState extends State<ProfileSection> {
   
-  late PlayerData playerData;  
+  late PlayerData playerData; 
+  final PlayerAuthManager _playerAuthManager = PlayerAuthService(); 
   
   @override
   void initState() {
@@ -51,7 +55,7 @@ class _ProfileSectionState extends State<ProfileSection> {
           children: [
             Text(
               playerData.playerName,              
-              style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              style: EndlessRunnerTheme.of(context).titleH2TextStyle,
             ),
             Row(
               children: [                
@@ -60,7 +64,7 @@ class _ProfileSectionState extends State<ProfileSection> {
                     // Open dialog to edit player name/image
                     showPlayerEditDialog(context, playerData);
                   },
-                  child: const Text('Edit Profile', selectionColor: Colors.blue,),
+                  child: Text('Edit Profile', style: EndlessRunnerTheme.of(context).normalTextStyle,),
                 ),
                 const SizedBox(width: 10), // Spacing between buttons
                 TextButton(
@@ -82,7 +86,30 @@ class _ProfileSectionState extends State<ProfileSection> {
   void _signOut(BuildContext context) {
     // Implement your sign-out logic here
     LogUtil.debug('Executing sign-out logic');
-    Navigator.pop(context); // Example: Close the current screen
+    showDialog(context: context, builder: (BuildContext context) => _alertDialog(context));
+  }
+
+  AlertDialog _alertDialog(BuildContext context) {
+    return AlertDialog(
+      title: Text('Sign Out', style: EndlessRunnerTheme.of(context).titleH4TextStyle,),
+      content: Text('Are you sure you want to sign out?', style: EndlessRunnerTheme.of(context).normalTextStyle,),
+      actions: [
+        TextButton(
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+          child: Text('Cancel', style: EndlessRunnerTheme.of(context).normalTextStyle,),
+        ),
+        TextButton(
+          onPressed: () async {
+            Navigator.of(context).pop();
+            LogUtil.debug('Executing sign-out logic');
+            await _playerAuthManager.deletePlayerData();
+          },
+          child: Text('Sign Out', style: EndlessRunnerTheme.of(context).normalTextStyle,),
+        ),
+      ],
+    );
   }
 
   Future<void> showPlayerEditDialog(BuildContext context, PlayerData playerData) async {

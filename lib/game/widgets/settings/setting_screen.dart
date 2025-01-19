@@ -2,8 +2,8 @@
 import 'package:endless_runner/auth/data/player_data.dart';
 import 'package:endless_runner/auth/managers/player_auth_manager.dart';
 import 'package:endless_runner/auth/services/player_auth_service.dart';
-import 'package:endless_runner/core/game_state.dart';
-import 'package:endless_runner/core/services/game_service_manager.dart';
+import 'package:endless_runner/core/state/game_state.dart';
+import 'package:endless_runner/core/managers/game_service_manager.dart';
 import 'package:endless_runner/core/services/game_service_service.dart';
 import 'package:endless_runner/game/endless_runner_game.dart';
 import 'package:endless_runner/game/utils/log_util.dart';
