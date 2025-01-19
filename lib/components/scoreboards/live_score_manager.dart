@@ -17,6 +17,9 @@ abstract class LiveScoreManager {
   /// Notifier for the player's name.
   ValueNotifier<String> get playerNameNotifier;
 
+  // Encourage the player to keep playing
+  ValueNotifier<String> get encouragementNotifier;
+
   // --- Score Management ---
 
   /// Updates the current score and manages the high score logic.

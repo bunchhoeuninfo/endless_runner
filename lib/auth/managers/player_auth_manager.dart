@@ -21,4 +21,8 @@ abstract class PlayerAuthManager {
 
   //Update player settings
   Future<void> updatePlayerSettings(PlayerData playerData);
+
+  // Delete player data
+  Future<void> deletePlayerData();
+
 }

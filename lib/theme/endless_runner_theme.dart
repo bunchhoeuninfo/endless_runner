@@ -142,9 +142,17 @@ class EndlessRunnerTheme {
     //fontWeight: FontWeight.bold,
   ); 
 
-  TextStyle get audioTitleH4TextStyle => const TextStyle(
+  TextStyle get normalTextStyle => const TextStyle(
+    fontFamily: 'OpenSans-Regular', // Apply custom font to unselected label
+    fontSize: 14, // Adjust the font size if needed
+    fontWeight: FontWeight.normal,
+    color: Colors.black
+  );
+
+  TextStyle get titleH4TextStyle => const TextStyle(
     fontFamily: 'OpenSans-Regular', // Apply custom font to unselected label
     fontSize: 16, // Adjust the font size if needed
+    color: Colors.black
     //fontWeight: FontWeight.bold,
   );
 
@@ -155,10 +163,26 @@ class EndlessRunnerTheme {
     fontWeight: FontWeight.normal,
   );
 
+  TextStyle get menuSubTitleTextStyle => const TextStyle(
+    fontFamily: 'OpenSans-Regular', // Apply custom font to unselected label
+    fontSize: 14, // Adjust the font size if needed
+    fontWeight: FontWeight.normal,
+    color: Colors.blue,
+  );
+
+  TextStyle get menuTitleH4TextStyle => const TextStyle(
+    fontFamily: 'OpenSans-Regular', // Apply custom font to unselected label
+    fontSize: 16, // Adjust the font size if needed
+    fontWeight: FontWeight.bold,
+    color: Colors.black
+  );
+
+
   TextStyle get audioLengthTextStyle => const TextStyle(
     fontFamily: 'OpenSans-Regular', // Apply custom font to unselected label
     fontSize: 12, // Adjust the font size if needed
     fontWeight: FontWeight.normal,
+    color: Colors.blue
   );
 
   TextStyle get audioDateTimeTextStyle => const TextStyle(
@@ -180,7 +204,8 @@ class EndlessRunnerTheme {
   TextStyle get titleH2TextStyle => const TextStyle(
     fontFamily: 'OpenSans-Regular', // Apply custom font to unselected label
     fontSize: 24, // Adjust the font size if needed
-    //fontWeight: FontWeight.bold,
+    fontWeight: FontWeight.bold,
+    color: Colors.black,
   );
 
   TextStyle get titleH2KhTextStyle {

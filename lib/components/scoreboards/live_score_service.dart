@@ -1,4 +1,7 @@
+import 'package:endless_runner/auth/managers/player_auth_manager.dart';
+import 'package:endless_runner/auth/services/player_auth_service.dart';
 import 'package:endless_runner/components/scoreboards/live_score_manager.dart';
+import 'package:endless_runner/constants/game_constant.dart';
 import 'package:endless_runner/game/utils/log_util.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -9,6 +12,8 @@ class LiveScoreService implements LiveScoreManager {
   factory LiveScoreService() => _instance;
   LiveScoreService._internal();
 
+  final PlayerAuthManager _playerAuthManager = PlayerAuthService();
+
     // Notifiers
   @override
   final ValueNotifier<int> scoreNotifier = ValueNotifier<int>(0);
@@ -18,6 +23,8 @@ class LiveScoreService implements LiveScoreManager {
 
   @override
   final ValueNotifier<int> levelNotifier = ValueNotifier<int>(1);
+
+  
 
   @override
   final ValueNotifier<String> playerNameNotifier = ValueNotifier<String>('Unknown');
@@ -98,13 +105,22 @@ class LiveScoreService implements LiveScoreManager {
 
   @override
   Future<void> loadGameProgress() async {
-    try {
-      final prefs = await SharedPreferences.getInstance();
-      highScoreNotifier.value = prefs.getInt('highScore') ?? 0;  // Load high score
-      levelNotifier.value = prefs.getInt('currentLevel') ?? 1;  // Load current level, default 0
+    try {      
+      LogUtil.debug('Try to load game progress');
+      final playerData = await _playerAuthManager.loadPlayerData();
+      if (playerData == null) {
+        return;
+      }
+      playerNameNotifier.value = playerData.playerName;  // Load player name
+      highScoreNotifier.value = playerData.topScore;  // Load high score
+      levelNotifier.value = playerData.level;  // Load current level, default 0
     } catch (e) {
       LogUtil.error('Exception -> $e');
     }
   }
+  
+  @override
+
+  ValueNotifier<String> encouragementNotifier = ValueNotifier<String>(GameConstant.encouragementNotifier);
 
 }

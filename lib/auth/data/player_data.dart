@@ -1,3 +1,5 @@
+import 'package:endless_runner/constants/game_constant.dart';
+
 class PlayerData {
   String playerName;
   int level;
@@ -18,17 +20,16 @@ class PlayerData {
     required Map<String, dynamic>? settings, // Accept nullable settings
   })  : settings = settings ?? {
           "soundEffects": {
-            "backgroundMusic": true,
-            "buttonClickSound": true,
-            "gameOverSound": true,
+            GameConstant.backgroundMusicKey: true,
+            GameConstant.buttonClickSoundKey: true,
+            GameConstant.gameOverSoundKey: true,
+            GameConstant.disableAllSoundEffects: false,
           },
           "playerAppearance": {            
-            "playerSkin1": "classic",
-            "playerSkin2": "Modern",
+            GameConstant.playerSkinKey: GameConstant.playerSkinClassic,
           },
-          "gameThemse": {
-            "background1": "default",
-            "background2": "modern",
+          "gameTheme": {
+            GameConstant.gameThemeKey: GameConstant.gameThemeLight,
           }
         };
 
