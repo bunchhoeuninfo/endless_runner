@@ -5,6 +5,7 @@ import 'package:endless_runner/auth/managers/player_auth_manager.dart';
 import 'package:endless_runner/auth/services/player_auth_service.dart';
 import 'package:endless_runner/constants/game_constant.dart';
 import 'package:endless_runner/game/utils/log_util.dart';
+import 'package:endless_runner/game/widgets/commons/screen_widget.dart';
 import 'package:endless_runner/game/widgets/settings/widgets/about_me/developer_profile_widget.dart';
 import 'package:endless_runner/game/widgets/settings/widgets/menu_settings/game_theme_setting.dart';
 import 'package:endless_runner/game/widgets/settings/widgets/menu_settings/player_appearance_setting.dart';
@@ -49,12 +50,22 @@ class _MenuSectionState extends State<MenuSection> {
             context,
             icon: Icons.person_add,
             text: 'Sign Up',
-
+            subtitle: 'Register now and enjoy the benefits',
             onTap: () => _navigateTo(
               context,
               PlayerSignup(playerAuthManager: _playerAuthManager),
             ),
-          )]
+          ),
+          _menuItem(
+            context,
+            icon: Icons.play_arrow,
+            text: 'Return to Game',
+            subtitle: 'Continue your adventure',
+            onTap: () {
+              Navigator.of(context).pop();
+            },
+          ),
+          ]
         : [
             _menuItem(
               context,
@@ -124,6 +135,18 @@ class _MenuSectionState extends State<MenuSection> {
               subtitle: 'Developer Profile',
               trailing: const Icon(Icons.chevron_right, color: Colors.blue,),
               onTap: () => _navigateTo(context, DeveloperProfileWidget()),
+            ),
+            _menuItem(
+              context,
+              icon: Icons.person,
+              text: 'Restart Game',
+              subtitle: 'Restart Game Progress',
+              trailing: const Icon(Icons.chevron_right, color: Colors.blue,),
+              onTap: () {
+                Navigator.of(context).pushReplacement(
+                MaterialPageRoute(builder: (context) => const ScreenWidget()),
+              );
+              },
             ),
           ];
   }

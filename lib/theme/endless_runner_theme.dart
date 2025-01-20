@@ -202,7 +202,7 @@ class EndlessRunnerTheme {
   }
 
   TextStyle get titleH2TextStyle => const TextStyle(
-    fontFamily: 'OpenSans-Regular', // Apply custom font to unselected label
+    fontFamily: 'OpenSans-Bold', // Apply custom font to unselected label
     fontSize: 24, // Adjust the font size if needed
     fontWeight: FontWeight.bold,
     color: Colors.black,

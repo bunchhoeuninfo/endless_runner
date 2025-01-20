@@ -66,8 +66,8 @@ class EndlessRunnerGame extends FlameGame with HasCollisionDetection, TapDetecto
       camera.viewport = FixedResolutionViewport(resolution: Vector2(800, 600));      
        // pre-load image assets to optimize the performance
       await _imageAssetManager.preLoadImgAssets(images);
-      gameStateManager.setState(GameState.menu);
       _gameServiceManager.setupBackground(this);
+      gameStateManager.setState(GameState.menu);
       _gameServiceManager.addEntities(this);
       add(player);      
     } catch (e) {
@@ -121,7 +121,8 @@ class EndlessRunnerGame extends FlameGame with HasCollisionDetection, TapDetecto
       LogUtil.debug('Game method gameStateManager.isPaused() -> {$gameStateManager.isPaused()}');
       _gameServiceManager.pauseGame(this);
     } else if (gameStateManager.isMenu()) {
-      _gameServiceManager.pauseGame(this);
+      //_gameServiceManager.pauseGame(this);
+      pauseEngine();
       LogUtil.debug('Game method gameStateManager.isMenu() -> {$gameStateManager.isMenu()}');
     }
     

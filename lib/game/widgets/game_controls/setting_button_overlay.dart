@@ -13,7 +13,7 @@ class SettingButtonOverlay extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return _buildTopRight(context);
+    return !game.overlays.isActive('restart') ? _buildTopRight(context) : Container();
   }
 
   Positioned _buildTopRight(BuildContext context) {
@@ -22,7 +22,7 @@ class SettingButtonOverlay extends StatelessWidget {
       top: 20,
       right: 20,
       child: GestureDetector(
-        onTap: () {          
+        onTap: () {
           _gameServiceManager.pauseGame(game);
           Navigator.push(
             context,

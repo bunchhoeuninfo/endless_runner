@@ -91,7 +91,7 @@ class GameServiceService implements GameServiceManager {
       //Overlay button
       game.overlays.add('start');      
       game.overlays.add('setting');
-
+      game.overlays.add('playPause');
       // Add collision detection
       game.add(ScreenHitbox());
       

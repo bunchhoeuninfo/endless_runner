@@ -4,6 +4,7 @@ class GameConstant {
 
   // shared preference key
   static const String playerKey = 'player_data';
+  static const String playerUknown = 'Unknown';
 
   // Sound effect setting key
   static const String backgroundMusicKey = 'backgroundMusic';

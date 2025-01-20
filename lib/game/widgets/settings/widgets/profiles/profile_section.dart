@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:endless_runner/auth/data/player_data.dart';
 import 'package:endless_runner/auth/managers/player_auth_manager.dart';
 import 'package:endless_runner/auth/services/player_auth_service.dart';
+import 'package:endless_runner/constants/game_constant.dart';
 import 'package:endless_runner/game/utils/log_util.dart';
 import 'package:endless_runner/game/widgets/settings/widgets/signup/player_signedup_edit.dart';
 import 'package:endless_runner/theme/endless_runner_theme.dart';
@@ -38,7 +39,6 @@ class _ProfileSectionState extends State<ProfileSection> {
     LogUtil.debug('Start building Setting - Profile Section, profileImg -> $profileImg');
     return Row(
       children: [
-        
           profileImg.isNotEmpty 
             ? GestureDetector(
                 onTap: () => _showPicDialog(context, profileImg),
@@ -50,33 +50,43 @@ class _ProfileSectionState extends State<ProfileSection> {
                         child: Icon(Icons.person, size: 40),),
                 
         const SizedBox(width: 20),
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              playerData.playerName,              
-              style: EndlessRunnerTheme.of(context).titleH2TextStyle,
+        playerData.playerName == GameConstant.playerUknown
+            ? Text(
+                playerData.playerName,              
+                style: EndlessRunnerTheme.of(context).titleH2TextStyle,
+              )
+            : _buildEditProfileSignOut(),        
+      ],
+    );
+  }
+
+  Column _buildEditProfileSignOut() {
+    LogUtil.debug('Building Edit Profile and Sign Out buttons');
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          playerData.playerName,              
+          style: EndlessRunnerTheme.of(context).titleH2TextStyle,
+        ),
+        Row(
+          children: [                
+            TextButton(
+              onPressed: () {
+                // Open dialog to edit player name/image
+                showPlayerEditDialog(context, playerData);
+              },
+              child: Text('Edit Profile', style: EndlessRunnerTheme.of(context).normalTextStyle,),
             ),
-            Row(
-              children: [                
-                TextButton(
-                  onPressed: () {
-                    // Open dialog to edit player name/image
-                    showPlayerEditDialog(context, playerData);
-                  },
-                  child: Text('Edit Profile', style: EndlessRunnerTheme.of(context).normalTextStyle,),
-                ),
-                const SizedBox(width: 10), // Spacing between buttons
-                TextButton(
-                  onPressed: () {
-                    // Sign-out logic
-                    LogUtil.debug('Sign-out button tapped');
-                    _signOut(context);
-                  },
-                  child: const Text('Sign Out', style: TextStyle(color: Colors.red)),
-                ),                
-              ],
-            ),
+            const SizedBox(width: 10), // Spacing between buttons
+            TextButton(
+              onPressed: () {
+                // Sign-out logic
+                LogUtil.debug('Sign-out button tapped');
+                _signOut(context);
+              },
+              child: const Text('Sign Out', style: TextStyle(color: Colors.red)),
+            ),                
           ],
         ),
       ],

@@ -50,16 +50,16 @@ class SettingScreen extends StatelessWidget {
       return FutureBuilder(
         future: _playerAuthManager.loadPlayerData(), 
         builder: (context, snapshot) {
-          final pd = snapshot.data as PlayerData;
-          LogUtil.debug('Iterating player data -> name: ${pd.playerName}, dob: ${pd.dateOfBirth}, level: ${pd.level}, score: ${pd.topScore}, gender: ${pd.gender}, img: ${pd.profileImgPath}');
+          //final pd = snapshot.data as PlayerData;
+          //LogUtil.debug('Iterating player data -> name: ${pd.playerName}, dob: ${pd.dateOfBirth}, level: ${pd.level}, score: ${pd.topScore}, gender: ${pd.gender}, img: ${pd.profileImgPath}');
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator(),);
           } else if (snapshot.hasError) {
             return const Center(child: Text('Error loading progress'),);
           } else if(snapshot.hasData && snapshot.data is PlayerData) {
-            final playerData = snapshot.data as PlayerData;
-            LogUtil.debug('Player Data-> name: ${playerData.playerName}');
-            return _buildScrollableContent(playerData,);            
+            final pd = snapshot.data as PlayerData;
+            LogUtil.debug('Iterating player data -> name: ${pd.playerName}, dob: ${pd.dateOfBirth}, level: ${pd.level}, score: ${pd.topScore}, gender: ${pd.gender}, img: ${pd.profileImgPath}');
+            return _buildScrollableContent(pd,);                        
           } else {
             return const Center(child: Text('Invalid data'),);
           }

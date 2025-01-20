@@ -1,4 +1,5 @@
 
+import 'package:endless_runner/constants/game_constant.dart';
 import 'package:endless_runner/core/services/live_score_service.dart';
 import 'package:endless_runner/core/managers/game_service_manager.dart';
 import 'package:endless_runner/core/services/game_service_service.dart';
@@ -74,10 +75,30 @@ class StartResetButtonOverlay extends StatelessWidget {
                   'Start',
                   style: TextStyle(fontSize: 24, color: Colors.white),
                 ),
-              ),              
+              ),   
+              const SizedBox(width: 20), 
+              _liveScoreService.playerNameNotifier.value == GameConstant.playerUknown 
+                ? _buildSignupButton() : Container(),           
             ],
           ),
         ],
+      ),
+    );
+  }
+
+  ElevatedButton _buildSignupButton() {
+    LogUtil.debug('Building sign up button');
+    return ElevatedButton(
+      onPressed: () {
+        _gameServiceManager.startGame(game);                                    
+      },
+      style: ElevatedButton.styleFrom(
+        backgroundColor: Colors.blue,
+        padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 10),
+      ),
+      child: const Text(
+        'Sign Up',
+        style: TextStyle(fontSize: 24, color: Colors.white),
       ),
     );
   }
