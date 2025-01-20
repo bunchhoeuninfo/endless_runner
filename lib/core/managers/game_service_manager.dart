@@ -10,7 +10,8 @@ abstract class GameServiceManager {
   void startGame(EndlessRunnerGame game);
   void pauseGame(EndlessRunnerGame game);
   void addEntities(EndlessRunnerGame game);
-  void resumeGame(EndlessRunnerGame game);  
+  void resumeGame(EndlessRunnerGame game); 
+  void levelUp(EndlessRunnerGame game);
   
   
 }

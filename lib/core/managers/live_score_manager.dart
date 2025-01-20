@@ -8,6 +8,9 @@ abstract class LiveScoreManager {
   /// Notifier for the current score.
   ValueNotifier<int> get scoreNotifier;
 
+  // Reset notifier
+  ValueNotifier<bool> get resetNotifier;
+
   /// Notifier for the high score.
   ValueNotifier<int> get highScoreNotifier;
 
@@ -54,4 +57,10 @@ abstract class LiveScoreManager {
 
   // Update live score board
   Future<void> saveLiveScoreBoard();
+
+  // Reset live score board
+  Future<void> resetLiveScoreBoard();
+
+  // Reset current score and total score
+  Future<void> resetScore();
 }

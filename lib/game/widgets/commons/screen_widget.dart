@@ -1,5 +1,6 @@
 
 import 'package:endless_runner/components/scoreboards/live_score_board.dart';
+import 'package:endless_runner/game/widgets/game_controls/level_up_overlay.dart';
 import 'package:endless_runner/game/widgets/game_controls/restart_button_overlay.dart';
 import 'package:endless_runner/game/widgets/settings/setting_button_overlay.dart';
 import 'package:endless_runner/game/widgets/game_controls/start_reset_button_overlay.dart';
@@ -25,6 +26,7 @@ class ScreenWidget extends StatelessWidget {
               'setting': (context, game) => SettingButtonOverlay(game: game as EndlessRunnerGame),
               //'liveScoreBoard': (context, game) => LiveScoreBoard(scoreNotifier: _liveScoreService.scoreNotifier, highScoreNotifier: _liveScoreService.highScoreNotifier, levelNotifier: _liveScoreService.levelNotifier,),
               'liveScoreBoard': (context, game) => LiveScoreBoard(),
+              'levelUp': (context, game) => LevelUpOverlay(game: game as EndlessRunnerGame),
             },
             // Show the play overlay initially
             //initialActiveOverlays: const ['start', 'setting'],

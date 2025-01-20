@@ -7,32 +7,50 @@ import 'package:flutter/material.dart';
 class LiveScoreBoard extends StatelessWidget {
   LiveScoreBoard({super.key});
 
-  //final LiveScoreService _liveScoreService = LiveScoreService();
   final LiveScoreManager _liveScoreManager = LiveScoreService();
-
+  final ValueNotifier<bool> _resetNotifier = ValueNotifier<bool>(false);
   @override
   Widget build(BuildContext context) {
     LogUtil.debug('Inside build method');
-    //return _futureBuilder();
     return _liveScoreBoard();
+    //return _congrateStack();
   }
 
-  FutureBuilder _futureBuilder() {
-    LogUtil.debug('Inside future builder method');
-    return FutureBuilder(
-      future: _liveScoreManager.loadGameProgress(), 
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Center(child: CircularProgressIndicator(),);
-        } else if (snapshot.hasError) {
-          return const Center(child: Text('Error loading progress'),);
-        } else {
-          return _liveScoreBoard();
-        }        
-      },
+  Stack _congrateStack() {
+    LogUtil.debug('Inside _stack method');
+    return Stack(
+      children: [
+        _liveScoreBoard(),
+        ValueListenableBuilder<int>(
+          valueListenable: _liveScoreManager.levelNotifier,
+          builder: (context, level, child) {
+            if (level > 0) {
+              WidgetsBinding.instance.addPostFrameCallback((_) {
+                showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return AlertDialog(
+                      title: Text('Congratulations!'),
+                      content: Text('You have leveled up!'),
+                      actions: <Widget>[
+                        TextButton(
+                          child: Text('OK'),
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                        ),
+                      ],
+                    );
+                  },
+                );
+              });
+            }
+            return const SizedBox.shrink(); // Return an empty widget
+          },
+        ),
+      ],
     );
   }
-
 
   Positioned _liveScoreBoard() {
     LogUtil.debug('Build live score board position to display score: ${_liveScoreManager.scoreNotifier}, high score: ${_liveScoreManager.highScoreNotifier}, level: ${_liveScoreManager.levelNotifier}');

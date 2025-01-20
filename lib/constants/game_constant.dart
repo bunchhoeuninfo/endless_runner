@@ -1,3 +1,5 @@
+
+
 class GameConstant {
 
   // shared preference key
@@ -25,5 +27,7 @@ class GameConstant {
 
   // Encorage player to play more
   static const String encouragementNotifier = 'Welcome back, Champion! Let\'s see how far you can go this time!';
-  
+  static const String encouragementNotifierLevel1 = 'You are doing great! Keep it up!';  
+  static const String encouragementNotifierLevel2 = 'You are on fire! Keep going!';
+  static const String encouragementNotifierLevel3 = 'You are unstoppable! Keep running!';
 }

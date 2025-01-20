@@ -1,5 +1,4 @@
-import 'package:endless_runner/auth/managers/player_auth_manager.dart';
-import 'package:endless_runner/auth/services/player_auth_service.dart';
+
 import 'package:endless_runner/components/backgrounds/scrolling_background.dart';
 import 'package:endless_runner/components/coins/coin.dart';
 import 'package:endless_runner/components/obstacles/obstacle.dart';
@@ -11,8 +10,6 @@ import 'package:endless_runner/game/utils/log_util.dart';
 import 'package:flame/components.dart';
 
 class GameServiceService implements GameServiceManager {
-
-  final PlayerAuthManager _playerAuthManager = PlayerAuthService();
 
   @override
   void setupBackground(EndlessRunnerGame game) {
@@ -71,6 +68,9 @@ class GameServiceService implements GameServiceManager {
       try {
         LogUtil.debug('Try to start game.');
         game.overlays.remove('start');
+        game.overlays.remove('levelUp');
+        game.overlays.remove('restart');
+        game.overlays.remove('gameOver');
         game.overlays.add('liveScoreBoard');
         game.isFirstRun = false;
         game.resumeEngine();
@@ -124,6 +124,18 @@ class GameServiceService implements GameServiceManager {
         LogUtil.error('Exception -> $e');
       }
     }    
+  }
+  
+  @override
+  void levelUp(EndlessRunnerGame game) {
+    try {
+      LogUtil.debug('Level Up!');
+      game.gameStateManager.setState(GameState.menu);
+      game.overlays.add('levelUp');
+      game.pauseEngine();
+    } catch (e) {
+      LogUtil.error('Exception -> $e');
+    }
   }
   
 

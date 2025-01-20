@@ -42,13 +42,20 @@ class PlayerCollision implements PlayerManager {
       }
       //LogUtil.debug('Collected coin score: $pointToAdd');
       _liveScoreService.updateScore(pointToAdd);
-      other.removeFromParent();   //Remove the coin after colleciton
+      other.removeFromParent();   //Remove the coin after collection
     } else if (other is SpeedBoost) {
       LogUtil.debug('Speed Boost Activated.');
       double speedMultiplier = 5.0;
       _speedBoostManager.applySpeedBoost(speedMultiplier, gameRef);
       other.removeFromParent();
     }
+
+    // Check if player has leveled up
+    _liveScoreService.listentoLevel((newLevel) {
+      LogUtil.debug('Player leveled up to $newLevel');
+      _gameServiceManager.levelUp(gameRef);
+      //_liveScoreService.levelNotifier.value = newLevel;
+    });
   }
 
   @override
