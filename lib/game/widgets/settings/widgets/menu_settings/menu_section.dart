@@ -65,6 +65,18 @@ class _MenuSectionState extends State<MenuSection> {
               Navigator.of(context).pop();
             },
           ),
+          _menuItem(
+              context,
+              icon: Icons.close,
+              text: 'Quite',
+              subtitle: 'Quite game',
+              trailing: const Icon(Icons.chevron_right, color: Colors.blue,),
+              onTap: () {
+                Navigator.of(context).pushReplacement(
+                MaterialPageRoute(builder: (context) => const ScreenWidget()),
+              );
+              },
+            ),
           ]
         : [
             _menuItem(
@@ -138,9 +150,9 @@ class _MenuSectionState extends State<MenuSection> {
             ),
             _menuItem(
               context,
-              icon: Icons.person,
-              text: 'Restart Game',
-              subtitle: 'Restart Game Progress',
+              icon: Icons.close,
+              text: 'Quite',
+              subtitle: 'Quite game',
               trailing: const Icon(Icons.chevron_right, color: Colors.blue,),
               onTap: () {
                 Navigator.of(context).pushReplacement(
