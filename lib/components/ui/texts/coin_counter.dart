@@ -14,7 +14,7 @@ class CoinCounter extends TextComponent with HasGameRef<EndlessRunnerGame> {
   @override
   void update(double dt) {
     super.update(dt);
-    text = 'Coins: ${gameRef.coinCollected}';   // Update text with current coin count
+    //text = 'Coins: ${gameRef.coinCollected}';   // Update text with current coin count
   }
 
 }

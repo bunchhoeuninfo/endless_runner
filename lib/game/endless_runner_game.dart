@@ -4,6 +4,7 @@ import 'dart:math';
 import 'package:endless_runner/core/managers/obstacle_manager.dart';
 import 'package:endless_runner/components/players/player.dart';
 import 'package:endless_runner/core/managers/speed_boost_manager.dart';
+import 'package:endless_runner/core/services/game_state_service.dart';
 import 'package:endless_runner/core/services/speed_boost_services.dart';
 import 'package:endless_runner/core/managers/coin_manager.dart';
 import 'package:endless_runner/game/widgets/game_overs/game_over_screen.dart';
@@ -27,26 +28,8 @@ class EndlessRunnerGame extends FlameGame with HasCollisionDetection, TapDetecto
   
   //Image assets
   final ImageAssetManager _imageAssetManager = ImageAssetServices();
-
-  // Obstacles
-  double obstacleTimer = 0;  
-  final double obstacleSpawnInterval = 2.0; // Obstacle Spawn every 2 seconds
-  final ObstacleManager _obstacleManager = ObstacleServices();
-
-  // Coins
-  int coinCollected = 0;
-  int coinScore = 0;
-  final double coinSpawnInterval = 2.0; // Coin Spawn every 2 seconds
-  final CoinManager _coinManager = CoinServices();
-  double coinTimer = 0;
-
-  // Speed boost 
-  final SpeedBoostManager _speedBoostManager = SpeedBoostServices();
-  double speedBoostTimer = 0;
-  final double speedBoostSpawnInterval = 2.0; // speed boost spawn every 2 seconds
-
   // State management
-  final GameStateManager gameStateManager = GameStateManager();
+  final GameStateManager _gameStateManager = GameStateService();
   //Player
   late Player player;
   // Game service
@@ -66,8 +49,7 @@ class EndlessRunnerGame extends FlameGame with HasCollisionDetection, TapDetecto
       camera.viewport = FixedResolutionViewport(resolution: Vector2(800, 600));      
        // pre-load image assets to optimize the performance
       await _imageAssetManager.preLoadImgAssets(images);
-      _gameServiceManager.setupBackground(this);
-      gameStateManager.setState(GameState.menu);
+      _gameServiceManager.setupBackground(this);  
       _gameServiceManager.addEntities(this);
       add(player);      
     } catch (e) {
@@ -75,14 +57,16 @@ class EndlessRunnerGame extends FlameGame with HasCollisionDetection, TapDetecto
     }    
   }
 
+  
+
   @override
   void onTapDown(TapDownInfo info) {
     super.onTapDown(info);        
     if (GameOverScreen().isVisible) return;
     
     try {
-      LogUtil.debug('Try to jump');
-      if (gameStateManager.isPlaying()) {      
+      LogUtil.debug('Try to jump');     
+      if (_gameStateManager.stateNotifier.value == GameState.playing) {
         LogUtil.debug('Screen tapped - Player jumps');
         player.jump();
       }
@@ -94,37 +78,8 @@ class EndlessRunnerGame extends FlameGame with HasCollisionDetection, TapDetecto
   @override
   void update(double dt) {
     super.update(dt);    
-    
-    if (gameStateManager.isPlaying()) {
-      //LogUtil.debug('Game method gameStateManager.isPlaying() -> {$gameStateManager.isPlaying()}');  
-      obstacleTimer += dt;
-      if (obstacleTimer >= obstacleSpawnInterval) {
-        obstacleTimer = 0;
-        _obstacleManager.spawnObstacle(this);        
-      }
-
-      //spawn coin at intervals
-      coinTimer += dt;
-      if (coinTimer >= coinSpawnInterval) {
-        coinTimer = 0;
-        _coinManager.spawnCoins(this);        
-      }
-
-      //spawn speed boost at intervals
-      speedBoostTimer += dt;
-      if (speedBoostTimer >= speedBoostSpawnInterval) {
-        speedBoostTimer = 0;
-        _speedBoostManager.spawnSpeedBoostCoin(this);
-        LogUtil.debug('Spawned speed boost coin');
-      }
-    } else if (gameStateManager.isPaused()) {
-      LogUtil.debug('Game method gameStateManager.isPaused() -> {$gameStateManager.isPaused()}');
-      _gameServiceManager.pauseGame(this);
-    } else if (gameStateManager.isMenu()) {
-      //_gameServiceManager.pauseGame(this);
-      pauseEngine();
-      LogUtil.debug('Game method gameStateManager.isMenu() -> {$gameStateManager.isMenu()}');
-    }
-    
+    //LogUtil.debug('Game method update -> $dt');
+    final state = _gameStateManager.stateNotifier.value;
+    _gameServiceManager.onGameStateChanged(dt, state, this);
   }  
 }

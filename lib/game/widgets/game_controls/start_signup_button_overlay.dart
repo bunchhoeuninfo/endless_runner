@@ -1,19 +1,23 @@
 
 import 'package:endless_runner/constants/game_constant.dart';
+import 'package:endless_runner/core/managers/game_state_manager.dart';
+import 'package:endless_runner/core/services/game_state_service.dart';
 import 'package:endless_runner/core/services/live_score_service.dart';
 import 'package:endless_runner/core/managers/game_service_manager.dart';
 import 'package:endless_runner/core/services/game_service_service.dart';
+import 'package:endless_runner/core/state/game_state.dart';
 import 'package:endless_runner/game/endless_runner_game.dart';
 import 'package:endless_runner/game/utils/log_util.dart';
 
 import 'package:flutter/material.dart';
 
-class StartResetButtonOverlay extends StatelessWidget {
+class StartSignupButtonOverlay extends StatelessWidget {
   final EndlessRunnerGame game;
   final GameServiceManager _gameServiceManager = GameServiceService();
   final LiveScoreService _liveScoreService = LiveScoreService();
-
-  StartResetButtonOverlay({
+  final GameStateManager _gameStateManager = GameStateService();
+  
+  StartSignupButtonOverlay({
     super.key,
     required this.game,
   });
@@ -34,6 +38,8 @@ class StartResetButtonOverlay extends StatelessWidget {
         } else if (snapshot.hasError) {
           return const Center(child: Text('Error loading progress'),);
         } else {
+          LogUtil.debug('Inside future builder else');
+          _gameStateManager.stateNotifier.value = GameState.menu;
           return _buildPlayerProgresInfo();
         }    
       }

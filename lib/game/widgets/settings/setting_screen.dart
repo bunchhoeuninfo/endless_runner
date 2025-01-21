@@ -2,6 +2,8 @@
 import 'package:endless_runner/auth/data/player_data.dart';
 import 'package:endless_runner/auth/managers/player_auth_manager.dart';
 import 'package:endless_runner/auth/services/player_auth_service.dart';
+import 'package:endless_runner/core/managers/game_state_manager.dart';
+import 'package:endless_runner/core/services/game_state_service.dart';
 import 'package:endless_runner/core/state/game_state.dart';
 import 'package:endless_runner/core/managers/game_service_manager.dart';
 import 'package:endless_runner/core/services/game_service_service.dart';
@@ -17,12 +19,15 @@ class SettingScreen extends StatelessWidget {
   final EndlessRunnerGame gameRef;
   final GameServiceManager _gameServiceManager = GameServiceService();
   final PlayerAuthManager _playerAuthManager = PlayerAuthService();
+  final GameStateManager _gameStateManager = GameStateService();
+
 
   @override
   Widget build(BuildContext context) {
 
     LogUtil.debug('Initiate game setting');
-    gameRef.gameStateManager.setState(GameState.menu);
+    //gameRef.gameStateManager.setState(GameState.menu);
+    _gameStateManager.stateNotifier.value = GameState.menu;
 
     return Scaffold(
       appBar: AppBar(
@@ -30,10 +35,11 @@ class SettingScreen extends StatelessWidget {
         leading: IconButton(
           onPressed: () { 
             // Resume game
-            LogUtil.debug('Game state -> ${gameRef.gameStateManager.state}');
-            gameRef.gameStateManager.isPaused() 
+            LogUtil.debug('Game state -> ${_gameStateManager.stateNotifier.value}');
+            _gameStateManager.stateNotifier.value == GameState.paused 
               ? _gameServiceManager.resumeGame(gameRef)
-              : gameRef.gameStateManager.setState(GameState.menu);
+              : //gameRef.gameStateManager.setState(GameState.menu);
+                _gameStateManager.stateNotifier.value = GameState.menu;
             Navigator.pop(context);
           }, 
           icon: const Icon(Icons.arrow_back),

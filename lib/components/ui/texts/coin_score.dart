@@ -13,6 +13,6 @@ class CoinScore extends TextComponent with HasGameRef<EndlessRunnerGame> {
   @override
   void update(double dt) {
     super.update(dt);
-    text = 'Score: ${gameRef.coinScore}';
+    //text = 'Score: ${gameRef.coinScore}';
   }
 }

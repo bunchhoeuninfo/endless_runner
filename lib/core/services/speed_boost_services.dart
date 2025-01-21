@@ -2,7 +2,9 @@ import 'dart:math';
 
 import 'package:endless_runner/components/backgrounds/scrolling_background.dart';
 import 'package:endless_runner/components/powerups/speed_boost.dart';
+import 'package:endless_runner/core/managers/game_state_manager.dart';
 import 'package:endless_runner/core/managers/speed_boost_manager.dart';
+import 'package:endless_runner/core/services/game_state_service.dart';
 import 'package:endless_runner/game/endless_runner_game.dart';
 import 'package:endless_runner/game/utils/log_util.dart';
 import 'package:flame/components.dart';
@@ -10,10 +12,11 @@ import 'package:flame/components.dart';
 class SpeedBoostServices implements SpeedBoostManager {
   final List<SpeedBoost> _speedBoosts = [];
   final Random _random = Random();
+  final GameStateManager _gameStateManager = GameStateService();
 
   @override
   void spawnSpeedBoostCoin(EndlessRunnerGame game) {
-    LogUtil.debug('Start method spawnSpeedBoostCoin in game state ${game.gameStateManager.state}');
+    LogUtil.debug('Start method spawnSpeedBoostCoin in game state ${_gameStateManager.stateNotifier.value}');
 
     try {
       LogUtil.debug('Try to initialize speed boost coin');

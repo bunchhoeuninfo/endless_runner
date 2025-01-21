@@ -1,3 +1,5 @@
+import 'package:endless_runner/core/managers/game_state_manager.dart';
+import 'package:endless_runner/core/services/game_state_service.dart';
 import 'package:endless_runner/game/endless_runner_game.dart';
 import 'package:endless_runner/core/state/game_state.dart';
 import 'package:endless_runner/game/utils/log_util.dart';
@@ -6,6 +8,8 @@ import 'package:flame/components.dart';
 class ScrollingBackground extends SpriteComponent with HasGameRef<EndlessRunnerGame> {
   double baseSpeed; // Speed of the background movement
   double currentSpeed;
+
+  final GameStateManager _gameStateManager = GameStateService();
   
   ScrollingBackground({required Vector2 position , required this.baseSpeed})
       : currentSpeed = baseSpeed,
@@ -29,7 +33,8 @@ class ScrollingBackground extends SpriteComponent with HasGameRef<EndlessRunnerG
   @override
   void update(double dt) {
     super.update(dt);
-    if (gameRef.gameStateManager.state != GameState.playing) return;
+    //if (gameRef.gameStateManager.state != GameState.playing) return;
+    if (_gameStateManager.stateNotifier.value != GameState.playing) return;
 
     // Move the background to the left
     position.x -= currentSpeed * dt;
