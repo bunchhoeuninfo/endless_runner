@@ -17,26 +17,28 @@ class PlayPauseButtonOverlay extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    
-    /*
-    return ValueListenableBuilder<GameState>(
+     return ValueListenableBuilder<GameState>(
       valueListenable: _gameStateManager.stateNotifier,
       builder: (context, state, child) {
         LogUtil.debug('Building play pause button overlay, state: $state');
-        if (state == GameState.paused) {
-          return _buildTopCenter(context, state == GameState.playing);
-        } else if (state == GameState.playing) {
-          return _buildTopCenter(context, state == GameState.paused);
-        } else {
-          return Container();
-        }
+        LogUtil.debug('Game state: ${_gameStateManager.stateNotifier.value}');
+        return Container();
       },
     );
+    
+    /*
+   
     
     return 
       widget.game.overlays.isActive('start') || widget.game.overlays.isActive('restart')
       ? Container()
       :  _buildTopCenter(context);*/
+  }
+
+  void listenToGameState(void Function(GameState) onGameStateChanged) {
+    _gameStateManager.stateNotifier.addListener(() {
+      onGameStateChanged(_gameStateManager.stateNotifier.value);
+    });
   }
 
   Align _buildTopCenter(BuildContext context, bool isPaused) {
