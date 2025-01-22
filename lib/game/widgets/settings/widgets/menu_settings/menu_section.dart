@@ -6,7 +6,6 @@ import 'package:endless_runner/auth/managers/player_auth_manager.dart';
 import 'package:endless_runner/auth/services/player_auth_service.dart';
 import 'package:endless_runner/constants/game_constant.dart';
 import 'package:endless_runner/game/utils/log_util.dart';
-import 'package:endless_runner/game/widgets/commons/screen_widget.dart';
 import 'package:endless_runner/game/widgets/settings/widgets/about_me/developer_profile_widget.dart';
 import 'package:endless_runner/game/widgets/settings/widgets/menu_settings/game_theme_setting.dart';
 import 'package:endless_runner/game/widgets/settings/widgets/menu_settings/player_appearance_setting.dart';
