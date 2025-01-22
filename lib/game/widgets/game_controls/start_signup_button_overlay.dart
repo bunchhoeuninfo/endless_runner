@@ -1,13 +1,20 @@
 
+import 'package:endless_runner/auth/data/player_data.dart';
+import 'package:endless_runner/auth/managers/player_auth_manager.dart';
+import 'package:endless_runner/auth/services/player_auth_service.dart';
 import 'package:endless_runner/constants/game_constant.dart';
 import 'package:endless_runner/core/managers/game_state_manager.dart';
+import 'package:endless_runner/core/managers/player_data_notifier_manager.dart';
 import 'package:endless_runner/core/services/game_state_service.dart';
 import 'package:endless_runner/core/services/live_score_service.dart';
 import 'package:endless_runner/core/managers/game_service_manager.dart';
 import 'package:endless_runner/core/services/game_service_service.dart';
+import 'package:endless_runner/core/services/player_data_notifier_service.dart';
 import 'package:endless_runner/core/state/game_state.dart';
 import 'package:endless_runner/game/endless_runner_game.dart';
 import 'package:endless_runner/game/utils/log_util.dart';
+import 'package:endless_runner/game/widgets/settings/setting_screen.dart';
+import 'package:endless_runner/game/widgets/settings/widgets/signup/player_signup.dart';
 
 import 'package:flutter/material.dart';
 
@@ -16,6 +23,8 @@ class StartSignupButtonOverlay extends StatelessWidget {
   final GameServiceManager _gameServiceManager = GameServiceService();
   final LiveScoreService _liveScoreService = LiveScoreService();
   final GameStateManager _gameStateManager = GameStateService();
+  final PlayerAuthManager _playerAuthManager = PlayerAuthService();
+  final PlayerDataNotifierManager _playerDataNotifierManager = PlayerDataNotifierService();
   
   StartSignupButtonOverlay({
     super.key,
@@ -40,13 +49,13 @@ class StartSignupButtonOverlay extends StatelessWidget {
         } else {
           LogUtil.debug('Inside future builder else');
           _gameStateManager.stateNotifier.value = GameState.menu;
-          return _buildPlayerProgresInfo();
+          return _buildPlayerProgresInfo(context);
         }    
       }
     );
   }
 
-  Center _buildPlayerProgresInfo() {
+  Center _buildPlayerProgresInfo(BuildContext context) {
     LogUtil.debug('Inside build player progress info method');
     return Center(
       child: Column(
@@ -57,11 +66,33 @@ class StartSignupButtonOverlay extends StatelessWidget {
             children: [
               _buildRow(null, _liveScoreService.encouragementNotifier, Colors.amber),
               const SizedBox(height: 5),
-              _buildRow('Player', _liveScoreService.playerNameNotifier, Colors.yellow),
+              //_buildRow('Player', _liveScoreService.playerNameNotifier, Colors.yellow),
+              //_buildItem('Top Score', _playerDataNotifierManager.playerDataNotifier.value.playerName, Colors.yellow),
+              ValueListenableBuilder<PlayerData>(
+                valueListenable: _playerDataNotifierManager.playerDataNotifier,
+                builder: (context, playerData, child) {
+                  return _buildItem('Player', playerData.playerName, Colors.blue);
+                },
+              ),
               const SizedBox(height: 5),
-              _buildRow('Top Score', _liveScoreService.highScoreNotifier, Colors.green),
+              //_buildRow('Top Score', _liveScoreService.highScoreNotifier, Colors.green),
+              //_buildItem('Top Score', _playerDataNotifierManager.playerDataNotifier.value.topScore, Colors.yellow),
+              ValueListenableBuilder<PlayerData>(
+                valueListenable: _playerDataNotifierManager.playerDataNotifier,
+                builder: (context, playerData, child) {
+                  return _buildItem('Top Score', playerData.topScore, Colors.yellow);
+                },
+              ),
               const SizedBox(height: 5,),
-              _buildRow('Level', _liveScoreService.levelNotifier, Colors.blue),
+              //_buildRow('Level', _liveScoreService.levelNotifier, Colors.blue),
+              //_buildItem('Level', _playerDataNotifierManager.playerDataNotifier.value.level, Colors.green),
+              ValueListenableBuilder<PlayerData>(
+                valueListenable: _playerDataNotifierManager.playerDataNotifier,
+                builder: (context, playerData, child) {
+                  return _buildItem('Level', playerData.level, Colors.green);
+                },
+              ),
+
               const SizedBox(height: 20,),
             ],
           ),
@@ -71,7 +102,8 @@ class StartSignupButtonOverlay extends StatelessWidget {
             children: [              
               ElevatedButton(
                 onPressed: () {
-                  _gameServiceManager.startGame(game);                                    
+                  _gameServiceManager.startGame(game);   
+                  _gameStateManager.stateNotifier.value = GameState.playing;                         
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.blue,
@@ -83,8 +115,16 @@ class StartSignupButtonOverlay extends StatelessWidget {
                 ),
               ),   
               const SizedBox(width: 20), 
-              _liveScoreService.playerNameNotifier.value == GameConstant.playerUknown 
-                ? _buildSignupButton() : Container(),           
+              ValueListenableBuilder<PlayerData>(
+                valueListenable: _playerDataNotifierManager.playerDataNotifier,
+                builder: (context, playerData, child) {
+                  //return _buildItem('Player', playerData.playerName, Colors.blue);
+                  return playerData.playerName == GameConstant.playerUknown 
+                    ? _buildSignupButton(context) : Container();
+                },
+              ),
+              /*_liveScoreService.playerNameNotifier.value == GameConstant.playerUknown 
+                ? _buildSignupButton(context) : Container(),   */        
             ],
           ),
         ],
@@ -92,11 +132,16 @@ class StartSignupButtonOverlay extends StatelessWidget {
     );
   }
 
-  ElevatedButton _buildSignupButton() {
+  ElevatedButton _buildSignupButton(BuildContext context) {
     LogUtil.debug('Building sign up button');
     return ElevatedButton(
       onPressed: () {
-        _gameServiceManager.startGame(game);                                    
+        //_gameServiceManager.startGame(game);   
+        _gameStateManager.stateNotifier.value = GameState.setting;       
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => PlayerSignup(playerAuthManager: _playerAuthManager),),
+        );                          
       },
       style: ElevatedButton.styleFrom(
         backgroundColor: Colors.blue,
@@ -108,6 +153,8 @@ class StartSignupButtonOverlay extends StatelessWidget {
       ),
     );
   }
+
+
 
   Widget _buildRow<T>(String? label, ValueNotifier<T> notifier, Color valueColor) {
     LogUtil.debug('Inside _buildRow method');
@@ -137,6 +184,31 @@ class StartSignupButtonOverlay extends StatelessWidget {
         );
       },
     );
+  }
+
+  Widget _buildItem<T>(String? label, dynamic value, Color valueColor) {
+    LogUtil.debug('Inside _buildRow method');
+        return Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              label != null ? '$label: ' : '',
+              style: const TextStyle(
+                color: Colors.white,
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            Text(
+              '$value',
+              style: TextStyle(
+                color: valueColor,
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ],
+        );
   }
 
 }

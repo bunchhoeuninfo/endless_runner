@@ -4,13 +4,30 @@ import 'dart:io';
 import 'package:endless_runner/auth/managers/player_auth_manager.dart';
 import 'package:endless_runner/auth/data/player_data.dart';
 import 'package:endless_runner/constants/game_constant.dart';
+import 'package:endless_runner/core/managers/player_data_notifier_manager.dart';
+import 'package:endless_runner/core/services/player_data_notifier_service.dart';
+
 import 'package:endless_runner/game/utils/log_util.dart';
 import 'package:flutter/services.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class PlayerAuthService implements PlayerAuthManager {  
+
+/*
+  // Singleton
+  static final PlayerAuthService _instance = PlayerAuthService._internal();
+  factory PlayerAuthService() => _instance;
+  PlayerAuthService._internal();*/
+
+
+
+  //DateTime now = DateTime.now(); // Get the current date and time
+  //String currentDate = DateTime.now().toIso8601String().split('T').first; // Extract the date in ISO 8601 format (YYYY-MM-DD)    
   
+  //final LiveScoreManager _liveScoreManager = LiveScoreService();
+  final PlayerDataNotifierManager _playerDataNotifierManager = PlayerDataNotifierService();
+
   @override
   Future<PlayerData?> loadPlayerData() async {
     try {
@@ -22,6 +39,7 @@ class PlayerAuthService implements PlayerAuthManager {
         final Map<String, dynamic> playerDataMap = jsonDecode(playerDataString);
         final pd = PlayerData.fromMap(playerDataMap);
         LogUtil.debug('Player data loaded succesfully -> name: ${pd.playerName}, dob: ${pd.dateOfBirth}, level: ${pd.level}, score: ${pd.topScore}, gender: ${pd.gender}, img: ${pd.profileImgPath}, settings: ${pd.settings}');
+        _playerDataNotifierManager.playerDataNotifier.value = pd;
         return pd;
       }         
     } catch (e) {
@@ -56,6 +74,8 @@ class PlayerAuthService implements PlayerAuthManager {
     try {
       final prefs = await SharedPreferences.getInstance();
       final playerData = jsonEncode(player.toMap());
+      //_liveScoreManager.playerDataNotifier.value = player;
+      _playerDataNotifierManager.playerDataNotifier.value = player;
       await prefs.setString(GameConstant.playerKey, playerData);
       LogUtil.debug('Saved player data succesfully');
     } catch (e) {
@@ -81,6 +101,8 @@ class PlayerAuthService implements PlayerAuthManager {
         currentPlayerData['settings'] = upd.settings;
         
         final updatedDataString = jsonEncode(currentPlayerData);
+        //_liveScoreManager.playerDataNotifier.value = upd;
+        _playerDataNotifierManager.playerDataNotifier.value = upd;
         await prefs.setString(GameConstant.playerKey, updatedDataString);
 
         LogUtil.debug('Updated player data successfully');
@@ -156,12 +178,15 @@ class PlayerAuthService implements PlayerAuthManager {
       LogUtil.debug('Try to delete player data');
       final prefs = SharedPreferences.getInstance();
       prefs.then((value) => value.remove(GameConstant.playerKey));
+      _playerDataNotifierManager.playerDataNotifier.value = PlayerData(playerName: 'Unknown', level: 1, topScore: 0, gender: 'Other', dateOfBirth: DateTime.parse(DateTime.now().toIso8601String().split('T').first), profileImgPath: null, settings: null);
       LogUtil.debug('Player data deleted successfully');
     } catch (e) {
       LogUtil.error('Exception -> $e');
     }
   }
-  
- 
+
+  //@override
+  // TODO: implement playerDataNotifier
+  //ValueNotifier<PlayerData> playerDataNotifier = ValueNotifier<PlayerData>(PlayerData(playerName: 'Unknown', level: 1, topScore: 0, gender: 'Other', dateOfBirth: DateTime.parse(DateTime.now().toIso8601String().split('T').first), profileImgPath: null, settings: null)  );
 
 }

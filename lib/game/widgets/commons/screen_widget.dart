@@ -23,6 +23,7 @@ class ScreenWidget extends StatelessWidget {
             game: EndlessRunnerGame(),
             overlayBuilderMap: {              
               'start': (context, game) => StartSignupButtonOverlay(game: game as EndlessRunnerGame),
+              //'start': (context, game) => StartSignupButtonOverlay(),
               'restart': (context, game) => RestartButtonOverlay(game: game as EndlessRunnerGame),
               'setting': (context, game) => SettingButtonOverlay(game: game as EndlessRunnerGame),
               'playPause': (context, game) => ResumePauseButtonOverlay(gameRef: game as EndlessRunnerGame),

@@ -1,3 +1,4 @@
+import 'package:endless_runner/auth/data/player_data.dart';
 import 'package:endless_runner/auth/managers/player_auth_manager.dart';
 import 'package:endless_runner/auth/services/player_auth_service.dart';
 import 'package:endless_runner/core/managers/live_score_manager.dart';
@@ -20,6 +21,12 @@ class LiveScoreService implements LiveScoreManager {
 
   @override
   final ValueNotifier<int> highScoreNotifier = ValueNotifier<int>(0);
+
+  @override
+  // TODO: implement playerProfileImg
+  //ValueNotifier<PlayerData> playerDataNotifier = ValueNotifier<PlayerData>('');
+  ValueNotifier<PlayerData> playerDataNotifier = ValueNotifier<PlayerData>(PlayerData(playerName: 'Unknown', level: 1, topScore: 0, gender: 'Other', dateOfBirth: DateTime.parse(DateTime.now().toIso8601String().split('T').first), profileImgPath: null, settings: null)  );
+
 
   @override
   final ValueNotifier<int> levelNotifier = ValueNotifier<int>(1);
@@ -235,6 +242,8 @@ class LiveScoreService implements LiveScoreManager {
       LogUtil.error('Exception -> $e');
     }
   }
+  
+  
   
   
 }

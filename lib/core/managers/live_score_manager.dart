@@ -1,4 +1,5 @@
 
+import 'package:endless_runner/auth/data/player_data.dart';
 import 'package:flutter/material.dart';
 
 abstract class LiveScoreManager {
@@ -22,6 +23,9 @@ abstract class LiveScoreManager {
 
   // Encourage the player to keep playing
   ValueNotifier<String> get encouragementNotifier;
+
+  // Notifier for the player's data
+  ValueNotifier<PlayerData> get playerDataNotifier;
 
   // --- Score Management ---
 

@@ -159,8 +159,6 @@ class GameServiceService implements GameServiceManager {
   void levelUp(EndlessRunnerGame game) {
     try {
       LogUtil.debug('Level Up!');
-     //game.gameStateManager.setState(GameState.menu);
-      //_gameStateManager.setState(GameState.menu);
       _gameStateManager.stateNotifier.value = GameState.menu;
       game.overlays.add('levelUp');
       game.pauseEngine();
@@ -173,12 +171,7 @@ class GameServiceService implements GameServiceManager {
   void onGameStateChanged(double dt, GameState state, EndlessRunnerGame game) {
    // LogUtil.debug('Game method gameStateManager.stateNotifier.value -> ${_gameStateManager.stateNotifier.value}');
     if (state == GameState.playing) {
-      
-      //LogUtil.debug('Game method gameStateManager.isPlaying() -> {$gameStateManager.isPlaying()}'); 
-      //initialize player
-      //game.player = Player(position: Vector2(game.size.x * 0.02, game.size.y / 2)); // Starting position
-      //game.add(game.player);
-        
+      //startGame(game);       
       _spawnObstacle(dt, game);
       //spawn coin at intervals
       _spawnCoin(dt, game);
@@ -195,6 +188,9 @@ class GameServiceService implements GameServiceManager {
     else if (_gameStateManager.stateNotifier.value == GameState.menu) {
       game.pauseEngine();
       LogUtil.debug('Game method gameStateManager.isMenu() -> ${_gameStateManager.stateNotifier.value}');
+    } else if (state == GameState.setting) {
+      LogUtil.debug('Try to pause the game engine when player goto setting section');
+      pauseGame(game);
     }
   }
 
