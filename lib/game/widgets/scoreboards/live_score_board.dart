@@ -1,6 +1,9 @@
 
+import 'package:endless_runner/auth/data/player_data.dart';
 import 'package:endless_runner/core/managers/live_score_manager.dart';
+import 'package:endless_runner/core/managers/player_data_notifier_manager.dart';
 import 'package:endless_runner/core/services/live_score_service.dart';
+import 'package:endless_runner/core/services/player_data_notifier_service.dart';
 import 'package:endless_runner/game/utils/log_util.dart';
 import 'package:flutter/material.dart';
 
@@ -9,47 +12,13 @@ class LiveScoreBoard extends StatelessWidget {
 
   final LiveScoreManager _liveScoreManager = LiveScoreService();
   final ValueNotifier<bool> _resetNotifier = ValueNotifier<bool>(false);
+  final PlayerDataNotifierManager _playerDataNotifierManager = PlayerDataNotifierService();
+
   @override
   Widget build(BuildContext context) {
     LogUtil.debug('Inside build method');
     return _liveScoreBoard();
     //return _congrateStack();
-  }
-
-  Stack _congrateStack() {
-    LogUtil.debug('Inside _stack method');
-    return Stack(
-      children: [
-        _liveScoreBoard(),
-        ValueListenableBuilder<int>(
-          valueListenable: _liveScoreManager.levelNotifier,
-          builder: (context, level, child) {
-            if (level > 0) {
-              WidgetsBinding.instance.addPostFrameCallback((_) {
-                showDialog(
-                  context: context,
-                  builder: (BuildContext context) {
-                    return AlertDialog(
-                      title: Text('Congratulations!'),
-                      content: Text('You have leveled up!'),
-                      actions: <Widget>[
-                        TextButton(
-                          child: Text('OK'),
-                          onPressed: () {
-                            Navigator.of(context).pop();
-                          },
-                        ),
-                      ],
-                    );
-                  },
-                );
-              });
-            }
-            return const SizedBox.shrink(); // Return an empty widget
-          },
-        ),
-      ],
-    );
   }
 
   Positioned _liveScoreBoard() {
@@ -60,12 +29,52 @@ class LiveScoreBoard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _buildRow('Player', _liveScoreManager.playerNameNotifier, Colors.amber),
-          _buildRow('Score', _liveScoreManager.scoreNotifier, Colors.yellow),          
-          _buildRow('High Score', _liveScoreManager.highScoreNotifier, Colors.green),          
+          //_buildRow('Player1', _liveScoreManager.playerNameNotifier, Colors.amber),
+          ValueListenableBuilder<PlayerData>(
+            valueListenable: _playerDataNotifierManager.playerDataNotifier, 
+            builder: (context, playerData, child) {
+              return _buildScoreItem('Player', playerData.playerName, Colors.blue);
+            }
+          ),
+          //_buildRow('Score', _liveScoreManager.scoreNotifier, Colors.yellow),          
+          ValueListenableBuilder(
+            valueListenable: _liveScoreManager.scoreNotifier, 
+            builder: (context, score, child) {
+              return _buildScoreItem('Score', score, Colors.yellow);
+            }
+          ),
+          _buildRow('High Score', _liveScoreManager.highScoreNotifier, Colors.green),   
+                 
+          
           _buildRow('Level', _liveScoreManager.levelNotifier, Colors.blue),
+          
         ],
       ),
+    );
+  }
+
+  Widget _buildScoreItem<T>(String? label, dynamic value, Color valueColor) {
+    LogUtil.debug('Inside _buildScoreItem');
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Text(
+          '$label: ',
+          style: const TextStyle(
+            color: Colors.white,
+            fontSize: 14,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        Text(
+          '$value',
+          style: TextStyle(
+            color: valueColor,
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+      ],
     );
   }
 

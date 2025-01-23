@@ -4,6 +4,8 @@ import 'package:endless_runner/auth/data/player_data.dart';
 import 'package:endless_runner/auth/managers/player_auth_manager.dart';
 import 'package:endless_runner/auth/services/player_auth_service.dart';
 import 'package:endless_runner/constants/game_constant.dart';
+import 'package:endless_runner/core/managers/player_data_notifier_manager.dart';
+import 'package:endless_runner/core/services/player_data_notifier_service.dart';
 import 'package:endless_runner/game/utils/log_util.dart';
 import 'package:endless_runner/game/widgets/settings/widgets/signup/player_signedup_edit.dart';
 import 'package:endless_runner/theme/endless_runner_theme.dart';
@@ -20,25 +22,30 @@ class ProfileSection extends StatefulWidget {
 
 class _ProfileSectionState extends State<ProfileSection> {
   
-  late PlayerData playerData; 
+  //late PlayerData playerData; 
   final PlayerAuthManager _playerAuthManager = PlayerAuthService(); 
+  final PlayerDataNotifierManager _playerDataNotifierManager = PlayerDataNotifierService();
   
   @override
   void initState() {
     super.initState();
-    playerData = widget.playerData;
+    //playerData = widget.playerData;
   }
 
   @override
   Widget build(BuildContext context) {
-    LogUtil.debug('Loaded player-> player name: ${playerData.playerName}, level: ${playerData.level}, topScore: ${playerData.topScore}, dob: ${playerData.dateOfBirth}, img: ${playerData.profileImgPath}');    
-    return _buildRow(context, playerData.profileImgPath!);
+    //LogUtil.debug('Loaded player-> player name: ${playerData.playerName}, level: ${playerData.level}, topScore: ${playerData.topScore}, dob: ${playerData.dateOfBirth}, img: ${playerData.profileImgPath}');    
+    return _buildRow(context);
   }
 
-  Row _buildRow(BuildContext context, String profileImg) {
-    LogUtil.debug('Start building Setting - Profile Section, profileImg -> $profileImg');
+  Row _buildRow(BuildContext context,) {
+    LogUtil.debug('Start building Setting - Profile Section, profileImg ->');
     return Row(
       children: [
+        _buildProfileImg(),
+        const SizedBox(width: 20,),
+        _buildPlayerName(),
+        /*
           profileImg.isNotEmpty 
             ? GestureDetector(
                 onTap: () => _showPicDialog(context, profileImg),
@@ -55,8 +62,42 @@ class _ProfileSectionState extends State<ProfileSection> {
                 playerData.playerName,              
                 style: EndlessRunnerTheme.of(context).titleH2TextStyle,
               )
-            : _buildEditProfileSignOut(),        
+            : _buildEditProfileSignOut(),    */    
       ],
+    );
+  }
+
+  Widget _buildProfileImg() {
+    return ValueListenableBuilder<PlayerData>(
+      valueListenable: _playerDataNotifierManager.playerDataNotifier, 
+      builder: (context, pd, child) {
+        //LogUtil.debug('Porifle -> ${pd.profileImgPath}');
+        return 
+          pd.playerName != GameConstant.playerUknown ?
+          GestureDetector(
+                onTap: () => _showPicDialog(context, pd.profileImgPath!),
+                child: CircleAvatar( 
+                          backgroundImage: FileImage(File(pd.profileImgPath!)),
+                          radius: 40,
+                        ))
+          : const CircleAvatar(radius: 40, 
+                        child: Icon(Icons.person, size: 40),);
+        
+      }
+    );
+  }
+
+  Widget _buildPlayerName() {
+    return ValueListenableBuilder<PlayerData>(
+      valueListenable: _playerDataNotifierManager.playerDataNotifier, 
+      builder: (context, playerData, child) {
+        return playerData.playerName == GameConstant.playerUknown
+        ? Text(
+                playerData.playerName,              
+                style: EndlessRunnerTheme.of(context).titleH2TextStyle,
+              )
+            : _buildEditProfileSignOut();
+      }
     );
   }
 
@@ -65,19 +106,31 @@ class _ProfileSectionState extends State<ProfileSection> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          playerData.playerName,              
-          style: EndlessRunnerTheme.of(context).titleH2TextStyle,
+        ValueListenableBuilder<PlayerData>(
+          valueListenable: _playerDataNotifierManager.playerDataNotifier, 
+          builder: (context, pd, child) {
+            return Text(          
+              pd.playerName,              
+              style: EndlessRunnerTheme.of(context).titleH2TextStyle,
+            );
+          }
         ),
+        
         Row(
-          children: [                
-            TextButton(
-              onPressed: () {
-                // Open dialog to edit player name/image
-                showPlayerEditDialog(context, playerData);
-              },
-              child: Text('Edit Profile', style: EndlessRunnerTheme.of(context).normalTextStyle,),
-            ),
+          children: [         
+            ValueListenableBuilder<PlayerData>(
+              valueListenable: _playerDataNotifierManager.playerDataNotifier, 
+              builder: (context, pd, child) {
+                return TextButton(
+                  onPressed: () {
+                    // Open dialog to edit player name/image
+                    showPlayerEditDialog(context, pd);
+                  },
+                  child: Text('Edit Profile', style: EndlessRunnerTheme.of(context).normalTextStyle,),
+                );
+              }
+            ) ,
+            
             const SizedBox(width: 10), // Spacing between buttons
             TextButton(
               onPressed: () {

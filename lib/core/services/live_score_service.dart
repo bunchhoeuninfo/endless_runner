@@ -3,6 +3,8 @@ import 'package:endless_runner/auth/managers/player_auth_manager.dart';
 import 'package:endless_runner/auth/services/player_auth_service.dart';
 import 'package:endless_runner/core/managers/live_score_manager.dart';
 import 'package:endless_runner/constants/game_constant.dart';
+import 'package:endless_runner/core/managers/player_data_notifier_manager.dart';
+import 'package:endless_runner/core/services/player_data_notifier_service.dart';
 import 'package:endless_runner/game/utils/log_util.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -14,6 +16,8 @@ class LiveScoreService implements LiveScoreManager {
   LiveScoreService._internal();
 
   final PlayerAuthManager _playerAuthManager = PlayerAuthService();
+
+  final PlayerDataNotifierManager _playerDataNotifierManager = PlayerDataNotifierService();
 
     // Notifiers
   @override
@@ -158,10 +162,13 @@ class LiveScoreService implements LiveScoreManager {
       if (playerData == null) {
         return;
       }
-      //scoreNotifier.value = 0;  // Reset current score
+      scoreNotifier.value = 0;  // Reset current score
       playerNameNotifier.value = playerData.playerName;  // Load player name
       highScoreNotifier.value = playerData.topScore;  // Load high score
       levelNotifier.value = playerData.level;  // Load current level, default 0
+
+      //Notifier player data
+      _playerDataNotifierManager.playerDataNotifier.value = playerData;
     } catch (e) {
       LogUtil.error('Exception -> $e');
     }
@@ -196,6 +203,8 @@ class LiveScoreService implements LiveScoreManager {
       }
 
       LogUtil.debug('Try to update live score board, high score: ${highScoreNotifier.value}, level: ${levelNotifier.value}');
+      
+      _playerDataNotifierManager.playerDataNotifier.value = playerData;
       await _playerAuthManager.updatePlayerData(playerData);
       LogUtil.debug('Successfully updated live score board to shared preferences');
     } catch (e) {
@@ -217,6 +226,7 @@ class LiveScoreService implements LiveScoreManager {
       }
       playerData.topScore = 0;
       playerData.level = 1;
+      _playerDataNotifierManager.playerDataNotifier.value = playerData;
       await _playerAuthManager.updatePlayerData(playerData);
       LogUtil.debug('Successfully updated live score board to shared preferences');
     } catch (e) {
@@ -236,6 +246,7 @@ class LiveScoreService implements LiveScoreManager {
         return;
       }
       playerData.topScore = 0;
+      _playerDataNotifierManager.playerDataNotifier.value = playerData;
       await _playerAuthManager.updatePlayerData(playerData);
       LogUtil.debug('Successfully updated live score board to shared preferences');
     } catch (e) {

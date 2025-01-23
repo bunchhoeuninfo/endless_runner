@@ -5,6 +5,10 @@ import 'package:endless_runner/auth/data/player_data.dart';
 import 'package:endless_runner/auth/managers/player_auth_manager.dart';
 import 'package:endless_runner/auth/services/player_auth_service.dart';
 import 'package:endless_runner/constants/game_constant.dart';
+import 'package:endless_runner/core/managers/live_score_manager.dart';
+import 'package:endless_runner/core/managers/player_data_notifier_manager.dart';
+import 'package:endless_runner/core/services/live_score_service.dart';
+import 'package:endless_runner/core/services/player_data_notifier_service.dart';
 import 'package:endless_runner/game/utils/log_util.dart';
 import 'package:endless_runner/game/widgets/settings/widgets/about_me/developer_profile_widget.dart';
 import 'package:endless_runner/game/widgets/settings/widgets/menu_settings/game_theme_setting.dart';
@@ -27,6 +31,8 @@ class _MenuSectionState extends State<MenuSection> {
 
   late PlayerData _playerData;
   final PlayerAuthManager _playerAuthManager = PlayerAuthService();
+  final PlayerDataNotifierManager _playerDataNotifierManager = PlayerDataNotifierService();
+  final LiveScoreManager _liveScoreManager = LiveScoreService();
 
   @override
   void initState() {
@@ -37,15 +43,24 @@ class _MenuSectionState extends State<MenuSection> {
   @override
   Widget build(BuildContext context) {
     LogUtil.debug('Building menu seciton');
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: _buildMenuItems(context),
-    );
+
+   return ValueListenableBuilder(valueListenable: _playerDataNotifierManager.playerDataNotifier,
+      builder: (context, pd, child) {
+        return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: _buildMenuItems(context, pd),
+      );
+    },);
+    
+    
+    
+        //return _buildMenuItems(context);
   }
 
-  List<Widget> _buildMenuItems(BuildContext context) {
+  List<Widget> _buildMenuItems(BuildContext context, PlayerData pd) {
     LogUtil.debug('Building menu item');
-    return _playerData.playerName == 'Unknown' ? _unknownPlayerMenu(context) : _signedPlayerMenu(context);       
+    
+    return pd.playerName == GameConstant.playerUknown ? _unknownPlayerMenu(context) : _signedPlayerMenu(context);       
   }
 
   List<Widget> _signedPlayerMenu(BuildContext context) {
@@ -217,6 +232,9 @@ class _MenuSectionState extends State<MenuSection> {
             LogUtil.debug('Executing reset game logic');
             _playerData.level = 1;
             _playerData.topScore = 0;
+            _liveScoreManager.levelNotifier.value = 1;
+            _liveScoreManager.scoreNotifier.value = 0;
+            _liveScoreManager.highScoreNotifier.value = 0;
             await _playerAuthManager.updatePlayerData(_playerData);
           },
           child: Text('Confirm', style: EndlessRunnerTheme.of(context).normalTextStyle,),

@@ -3,7 +3,9 @@ import 'package:endless_runner/auth/data/player_data.dart';
 import 'package:endless_runner/auth/managers/player_auth_manager.dart';
 import 'package:endless_runner/auth/services/player_auth_service.dart';
 import 'package:endless_runner/core/managers/game_state_manager.dart';
+import 'package:endless_runner/core/managers/player_data_notifier_manager.dart';
 import 'package:endless_runner/core/services/game_state_service.dart';
+import 'package:endless_runner/core/services/player_data_notifier_service.dart';
 import 'package:endless_runner/core/state/game_state.dart';
 import 'package:endless_runner/core/managers/game_service_manager.dart';
 import 'package:endless_runner/core/services/game_service_service.dart';
@@ -20,6 +22,7 @@ class SettingScreen extends StatelessWidget {
   final GameServiceManager _gameServiceManager = GameServiceService();
   final PlayerAuthManager _playerAuthManager = PlayerAuthService();
   final GameStateManager _gameStateManager = GameStateService();
+  final PlayerDataNotifierManager _dataNotifierManager = PlayerDataNotifierService();
 
 
   @override
@@ -92,6 +95,7 @@ class SettingScreen extends StatelessWidget {
           children: [
             ProfileSection(playerData: playerData),
             const SizedBox(height: 40),
+            
             MenuSection(playerData: playerData,),
             const SizedBox(height: 40),
             //const SignInButton(isSignedIn: false),            

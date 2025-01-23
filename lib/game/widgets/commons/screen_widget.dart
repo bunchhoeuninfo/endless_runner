@@ -1,5 +1,5 @@
 
-import 'package:endless_runner/components/scoreboards/live_score_board.dart';
+import 'package:endless_runner/game/widgets/scoreboards/live_score_board.dart';
 import 'package:endless_runner/game/widgets/game_controls/level_up_overlay.dart';
 import 'package:endless_runner/game/widgets/game_controls/resume_pause_button_overlay.dart';
 import 'package:endless_runner/game/widgets/game_controls/restart_button_overlay.dart';
