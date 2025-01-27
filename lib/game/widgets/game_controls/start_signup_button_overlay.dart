@@ -13,7 +13,7 @@ import 'package:endless_runner/core/services/player_data_notifier_service.dart';
 import 'package:endless_runner/core/state/game_state.dart';
 import 'package:endless_runner/game/endless_runner_game.dart';
 import 'package:endless_runner/game/utils/log_util.dart';
-import 'package:endless_runner/game/widgets/settings/setting_screen.dart';
+
 import 'package:endless_runner/game/widgets/settings/widgets/signup/player_signup.dart';
 
 import 'package:flutter/material.dart';
