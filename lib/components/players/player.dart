@@ -10,6 +10,8 @@ import 'package:flutter/material.dart';
 
 class Player extends SpriteComponent with HasGameRef<EndlessRunnerGame>, CollisionCallbacks, GestureHitboxes   {
 
+
+
   Player({required Vector2 position})
       : super(size: Vector2(50, 50), position: position); // Fixed position
 
@@ -38,7 +40,7 @@ class Player extends SpriteComponent with HasGameRef<EndlessRunnerGame>, Collisi
 
        paint = Paint()..color = Colors.blue;
       // set initial position
-      //_playerMovement.resetPosition();
+      _playerMovement.resetPosition(gameRef, this);
 
       add(RectangleHitbox());
       priority = 100;
@@ -80,13 +82,13 @@ class Player extends SpriteComponent with HasGameRef<EndlessRunnerGame>, Collisi
     //LogUtil.debug('Called update method...');
     super.update(dt);
 
-    _playerMovement.applyGravity(dt);
+    _playerMovement.applyGravity(dt, this, gameRef);
   }
 
 
   void handleTap(Vector2 tapPosition) {
     LogUtil.debug('Called handleTap method...');
-    _playerMovement.handleTap(tapPosition);
+    _playerMovement.handleTap(tapPosition, gameRef);
   }
 
 }

@@ -16,6 +16,7 @@ class PlayerMovementService implements PlayerMovementManager {
   double _velocityY = 0;
   bool isGrounded = false;
 
+  @override
   void applyGravity(double dt, Player player ,EndlessRunnerGame gameRef) {
     try {
       //LogUtil.debug('Start inside $_className.applyGravity ...');
@@ -45,6 +46,7 @@ class PlayerMovementService implements PlayerMovementManager {
     }    
   }
 
+  @override
   void jump() {
     try {
       LogUtil.debug('Try to jump');
@@ -60,12 +62,14 @@ class PlayerMovementService implements PlayerMovementManager {
     }        
   }
 
+  @override
   void handleTap(Vector2 tapPosition, EndlessRunnerGame gameRef) {
     if (tapPosition.y < gameRef.size.y / 2) {
       jump();
     }
   }
 
+  @override
   void resetPosition(EndlessRunnerGame gameRef, Player player) {
     //LogUtil.debug('Start inside resetPosition ...');
     final screenLeftEdge = gameRef.size.x * 0.02;
