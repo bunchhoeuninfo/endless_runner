@@ -98,10 +98,12 @@ class GameServiceService implements GameServiceManager {
     //if (game.gameStateManager.isMenu() || game.gameStateManager.isGameOver() || game.gameStateManager.isPaused()) {
     try {
       LogUtil.debug('Try to start game.');
-      game.overlays.remove('start');
+      List<String> overlayTexts = ['start', 'levelUp', 'restart', 'gameOver'];
+      /*game.overlays.remove('start');
       game.overlays.remove('levelUp');
       game.overlays.remove('restart');
-      game.overlays.remove('gameOver');
+      game.overlays.remove('gameOver');*/
+      game.overlays.removeAll(overlayTexts);
       game.overlays.add('liveScoreBoard');
       game.isFirstRun = false;
       game.resumeEngine();
@@ -114,15 +116,19 @@ class GameServiceService implements GameServiceManager {
   }
   
   @override
-  void addEntities(EndlessRunnerGame game) {
+  void addEntities(EndlessRunnerGame game) {    
     try {
-      LogUtil.debug('Try to add entities to the game world.');      
-
+      LogUtil.debug('Try to add overlay control to the game world.');  
+      List<String> overlayBtns = ['start', 'setting', 'playPause','leftControlBtn','playerJumpBtn', 'boostPlayerSpeed'];
+    
+      game.overlays.addAll(overlayBtns);
       //Overlay button
-      game.overlays.add('start');      
+      /*game.overlays.add('start');      
       game.overlays.add('setting');
       game.overlays.add('playPause');
       game.overlays.add('leftControlBtn');
+      game.overlays.add(overlayName)*/
+
       // Add collision detection
       game.add(ScreenHitbox());
       

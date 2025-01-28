@@ -17,7 +17,7 @@ class PlayerMovementService implements PlayerMovementManager {
   bool isGrounded = false;
 
   @override
-  void applyGravity(double dt, Player player ,EndlessRunnerGame gameRef) {
+  void applyGravity(double dt, Player player, EndlessRunnerGame gameRef) {
     try {
       //LogUtil.debug('Start inside $_className.applyGravity ...');
       if (!isGrounded) {
