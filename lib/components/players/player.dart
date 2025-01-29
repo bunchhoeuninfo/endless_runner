@@ -21,7 +21,7 @@ class Player extends SpriteComponent with HasGameRef<EndlessRunnerGame>, Collisi
   double velocityY = 0;
   bool isGrounded = false;
 
-  late PlayerMovementManager _playerMovement = PlayerMovementService();
+  final PlayerMovementManager _playerMovement = PlayerMovementService();
   late PlayerCollision _collisionHandler;
 
   @override
@@ -77,6 +77,14 @@ class Player extends SpriteComponent with HasGameRef<EndlessRunnerGame>, Collisi
     _playerMovement.jump();
   }
 
+  void moveLeft() {
+    _playerMovement.moveLeft();
+  }
+
+  void moveRight() {
+    _playerMovement.moveRight();
+  }
+
   @override
   void update(double dt) {
     //LogUtil.debug('Called update method...');
@@ -88,7 +96,7 @@ class Player extends SpriteComponent with HasGameRef<EndlessRunnerGame>, Collisi
 
   void handleTap(Vector2 tapPosition) {
     LogUtil.debug('Called handleTap method...');
-    _playerMovement.handleTap(tapPosition, gameRef);
+    //_playerMovement.handleTap(tapPosition, gameRef);
   }
 
 }

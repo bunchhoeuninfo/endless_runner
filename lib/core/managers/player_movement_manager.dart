@@ -5,7 +5,11 @@ import 'package:flame/components.dart';
 abstract class PlayerMovementManager {
   void applyGravity(double dt, Player player, EndlessRunnerGame gameRef);
   void jump();
-  void handleTap(Vector2 tapPosition, EndlessRunnerGame gameRef);
+  //void handleTap(Vector2 tapPosition, EndlessRunnerGame gameRef);
   void resetPosition(EndlessRunnerGame gameRef, Player player);
+  void moveLeft();
+  void moveRight();
+  void stopMoving();
+  
 
 }

@@ -1,5 +1,7 @@
 import 'package:endless_runner/core/managers/game_state_manager.dart';
+import 'package:endless_runner/core/managers/player_movement_manager.dart';
 import 'package:endless_runner/core/services/game_state_service.dart';
+import 'package:endless_runner/core/services/player_movement_service.dart';
 import 'package:endless_runner/core/state/game_state.dart';
 import 'package:endless_runner/game/endless_runner_game.dart';
 import 'package:endless_runner/game/utils/log_util.dart';
@@ -10,6 +12,7 @@ class LeftControlButton extends StatelessWidget {
 
   final EndlessRunnerGame game;
   final GameStateManager _gameStateManager = GameStateService();
+  final PlayerMovementManager _playerMovementManager = PlayerMovementService();
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +32,7 @@ class LeftControlButton extends StatelessWidget {
 
   Align _buildLeftCenter(BuildContext context) {
     return Align(
-      alignment: Alignment.centerLeft,
+      alignment: const Alignment (-1, 0.5),
       child: Padding(
         padding: const EdgeInsets.only(left: 20),
         child: Row(
@@ -44,9 +47,12 @@ class LeftControlButton extends StatelessWidget {
 
   GestureDetector _leftButton() {
     return GestureDetector(
-      onTap: () {
-        LogUtil.debug('Click left button player control');
-      },
+      onTapDown: (_) {
+      _playerMovementManager.moveLeft();
+    },
+    onTapUp: (_) {
+      _playerMovementManager.stopMoving();
+    },
       child: const Icon(Icons.arrow_back, size: 50, color: Colors.white),
     ); 
   }

@@ -34,7 +34,15 @@ class StartSignupButtonOverlay extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     LogUtil.debug('Inside build method');
-    return _futureBuilder();
+    //return _futureBuilder();
+    return ValueListenableBuilder<GameState>(
+      valueListenable: _gameStateManager.stateNotifier, 
+      builder: (context, state, child) {
+        return state == GameState.menu ?
+         _buildPlayerProgresInfo(context)
+        : Container();
+      }
+    );
   }
 
   FutureBuilder _futureBuilder() {

@@ -34,7 +34,8 @@ class EndlessRunnerGame extends FlameGame with HasCollisionDetection, TapDetecto
 
   @override
   Future<void> onLoad() async {    
-    player = Player(position: Vector2(size.x * 0.02, size.y / 2)); // Starting position
+    //player = Player(position: Vector2(size.x * 0.02, size.y / 2)); // Starting position
+    player = Player(position: Vector2(50, 50)); // Starting position
     try {
       LogUtil.debug('Try to EndlessRunnerGame.onLoad...');   
            
@@ -45,10 +46,27 @@ class EndlessRunnerGame extends FlameGame with HasCollisionDetection, TapDetecto
       await _imageAssetManager.preLoadImgAssets(images);
       _gameServiceManager.setupBackground(this);  
       _gameServiceManager.addEntities(this);
-      add(player);      
+      initPlayer();     
     } catch (e) {
       LogUtil.error('Exception -> $e');
     }    
+  }
+
+  void initPlayer() {
+    // Listen for changes in game state
+    _gameStateManager.stateNotifier.addListener(() {
+      if (_gameStateManager.stateNotifier.value == GameState.playing) {
+        if (!children.contains(player)) {
+          add(player);
+          LogUtil.debug('Player added to the game world.');
+        }
+      } 
+    });
+
+    // If the game is already in playing state, add the player immediately
+    if (_gameStateManager.stateNotifier.value == GameState.playing) {
+      add(player);
+    } 
   }
 
   @override
@@ -60,7 +78,7 @@ class EndlessRunnerGame extends FlameGame with HasCollisionDetection, TapDetecto
       LogUtil.debug('Try to jump');     
       if (_gameStateManager.stateNotifier.value == GameState.playing) {
         LogUtil.debug('Screen tapped - Player jumps');
-        player.jump();
+        //player.jump();
       }
     } catch (e) {
       LogUtil.error('Exception -> $e');

@@ -1,58 +1,62 @@
 import 'package:endless_runner/core/managers/game_state_manager.dart';
+import 'package:endless_runner/core/managers/player_movement_manager.dart';
 import 'package:endless_runner/core/services/game_state_service.dart';
+import 'package:endless_runner/core/services/player_movement_service.dart';
 import 'package:endless_runner/core/state/game_state.dart';
 import 'package:endless_runner/game/endless_runner_game.dart';
 import 'package:endless_runner/game/utils/log_util.dart';
 import 'package:flutter/material.dart';
 
-class PlayerJumpBtn extends StatelessWidget {
-  
-  PlayerJumpBtn({super.key, required this.game});
-  
+class RightControlBtn extends StatelessWidget {
+
+  RightControlBtn({super.key, required this.game});
+
   final EndlessRunnerGame game;
   final GameStateManager _gameStateManager = GameStateService();
+  final PlayerMovementManager _playerMovementManager = PlayerMovementService();
 
   @override
   Widget build(BuildContext context) {
-    LogUtil.debug('Start PlaPlayerJumpControlButton build');
+    LogUtil.debug('Start RightControlButton build');
     return _buildButton();
   }
 
   Widget _buildButton() {
-    return ValueListenableBuilder<GameState>(
+    return ValueListenableBuilder(
       valueListenable: _gameStateManager.stateNotifier, 
       builder: (context, state, child) {
         return state == GameState.playing ?
-          _buildJumpBtn(context)
+          _buildRightControl(context)
         : Container();
       }
     );
   }
 
-  Align _buildJumpBtn(BuildContext context) {
+  Align _buildRightControl(BuildContext context) {
     return Align(
-      alignment: const Alignment (1, 0.5), // Align to the bottom-right of the screen
+      alignment: const Alignment (-1, 0.5),
       child: Padding(
-        padding: const EdgeInsets.only(right: 40), // Add padding for spacing
+        padding: const EdgeInsets.only(left: 120),
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            _jumpBtn(),
+            _rightButton(),
           ],
         ),
       ),
-    );
+    ); 
   }
 
-  GestureDetector _jumpBtn() {
+  GestureDetector _rightButton() {
     return GestureDetector(
-      onTap: () {
-        LogUtil.debug('Click player jump button control');
-        game.player.jump();
-      },
-      child: const Icon(Icons.power, size: 50, color: Colors.white,),
-    );
+      onTapDown: (_) {
+      _playerMovementManager.moveRight();
+    },
+    onTapUp: (_) {
+      _playerMovementManager.stopMoving();
+    },
+      child: const Icon(Icons.arrow_forward, size: 50, color: Colors.white),
+    ); 
   }
-
 
 }
