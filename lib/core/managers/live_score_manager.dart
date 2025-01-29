@@ -1,4 +1,5 @@
 
+import 'package:endless_runner/auth/data/player_data.dart';
 import 'package:flutter/material.dart';
 
 abstract class LiveScoreManager {
@@ -7,6 +8,9 @@ abstract class LiveScoreManager {
   
   /// Notifier for the current score.
   ValueNotifier<int> get scoreNotifier;
+
+  // Reset notifier
+  ValueNotifier<bool> get resetNotifier;
 
   /// Notifier for the high score.
   ValueNotifier<int> get highScoreNotifier;
@@ -19,6 +23,9 @@ abstract class LiveScoreManager {
 
   // Encourage the player to keep playing
   ValueNotifier<String> get encouragementNotifier;
+
+  // Notifier for the player's data
+  ValueNotifier<PlayerData> get playerDataNotifier;
 
   // --- Score Management ---
 
@@ -54,4 +61,10 @@ abstract class LiveScoreManager {
 
   // Update live score board
   Future<void> saveLiveScoreBoard();
+
+  // Reset live score board
+  Future<void> resetLiveScoreBoard();
+
+  // Reset current score and total score
+  Future<void> resetScore();
 }

@@ -112,11 +112,14 @@ flutter:
         - asset: assets/fonts/KhmerOSMoulLight.ttf
         - asset: assets/fonts/KhmerOSMetalchrieng.ttf
         - asset: assets/fonts/KhmerOSContent-Regular.ttf
-        - asset: assets/fonts/KhmerOSContent-Bold.ttf      
+        - asset: assets/fonts/KhmerOSContent-Bold.ttf    
+  # font OpenSans
     - family: OpenSans-Regular
       fonts:
         - asset: assets/fonts/OpenSans-Regular.ttf
-
+    - family: OpenSans-Bold
+      fonts:
+        - asset: assets/fonts/OpenSans-Bold.ttf
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images
 

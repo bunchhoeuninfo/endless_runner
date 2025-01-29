@@ -5,9 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 void main() async {
-
   Widget appWidget;
-  
   try {
     LogUtil.debug('Try to initialize main app');
     WidgetsFlutterBinding.ensureInitialized();

@@ -1,9 +1,14 @@
 
+import 'dart:io';
 
 import 'package:endless_runner/auth/data/player_data.dart';
 import 'package:endless_runner/auth/managers/player_auth_manager.dart';
 import 'package:endless_runner/auth/services/player_auth_service.dart';
 import 'package:endless_runner/constants/game_constant.dart';
+import 'package:endless_runner/core/managers/live_score_manager.dart';
+import 'package:endless_runner/core/managers/player_data_notifier_manager.dart';
+import 'package:endless_runner/core/services/live_score_service.dart';
+import 'package:endless_runner/core/services/player_data_notifier_service.dart';
 import 'package:endless_runner/game/utils/log_util.dart';
 import 'package:endless_runner/game/widgets/settings/widgets/about_me/developer_profile_widget.dart';
 import 'package:endless_runner/game/widgets/settings/widgets/menu_settings/game_theme_setting.dart';
@@ -26,6 +31,8 @@ class _MenuSectionState extends State<MenuSection> {
 
   late PlayerData _playerData;
   final PlayerAuthManager _playerAuthManager = PlayerAuthService();
+  final PlayerDataNotifierManager _playerDataNotifierManager = PlayerDataNotifierService();
+  final LiveScoreManager _liveScoreManager = LiveScoreService();
 
   @override
   void initState() {
@@ -36,98 +43,150 @@ class _MenuSectionState extends State<MenuSection> {
   @override
   Widget build(BuildContext context) {
     LogUtil.debug('Building menu seciton');
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: _buildMenuItems(context),
-    );
+
+   return ValueListenableBuilder(valueListenable: _playerDataNotifierManager.playerDataNotifier,
+      builder: (context, pd, child) {
+        return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: _buildMenuItems(context, pd),
+      );
+    },);
+    
+    
+    
+        //return _buildMenuItems(context);
   }
 
-  List<Widget> _buildMenuItems(BuildContext context) {
+  List<Widget> _buildMenuItems(BuildContext context, PlayerData pd) {
     LogUtil.debug('Building menu item');
-    return _playerData.playerName == 'Unknown'
-        ? [_menuItem(
-            context,
-            icon: Icons.person_add,
-            text: 'Sign Up',
-
-            onTap: () => _navigateTo(
-              context,
-              PlayerSignup(playerAuthManager: _playerAuthManager),
-            ),
-          )]
-        : [
-            _menuItem(
-              context,
-              icon: Icons.restore,
-              text: 'Reset Game',
-              subtitle: 'Reset Game Progress',
-              trailing: const Icon(Icons.chevron_right, color: Colors.blue,),
-              onTap: () {
-                LogUtil.debug('Reset Game');
-                showDialog(context: context, builder: (BuildContext context) => _resetGameDialog(context));
-              },
-            ),
-            _menuItem(
-              context,
-              icon: Icons.color_lens,
-              text: 'Player Skin',
-              //trailing: const Icon(Icons.chevron_right, color: Colors.blue),
-              
-              trailing: PlayerAppearanceSetting(currentSkin: _playerData.settings['playerAppearance'][GameConstant.playerSkinKey] ?? GameConstant.playerSkinClassic,
-                onAppearanceChanged: (appearance) {
-                  LogUtil.debug('Player Skin Changed -> $appearance');
-                  setState(() {
-                    _playerData.settings['playerAppearance'] = {GameConstant.playerSkinKey: appearance};                      
-                  });                  
-                  _playerAuthManager.updatePlayerData(_playerData);
-                }),
-              subtitle: _playerData.settings['playerAppearance'][GameConstant.playerSkinKey],
-            ),
-            
-            _menuItem(
-              context,
-              icon: Icons.style,
-              text: 'Game Theme',              
-              trailing: GameThemeSetting(currentTheme: _playerData.settings['gameTheme'][GameConstant.gameThemeKey] ?? GameConstant.gameThemeLight, 
-                onThemeChanged: (gameTheme) {
-                  setState(() { 
-                    _playerData.settings['gameTheme'] = {GameConstant.gameThemeKey: gameTheme};
-                  });
-                  _playerAuthManager.updatePlayerData(_playerData);
-                }),
-              subtitle: _playerData.settings['gameTheme'][GameConstant.gameThemeKey] ?? GameConstant.gameThemeLight,
-            ),
-            _menuItem(
-              context,
-              icon: Icons.volume_up,
-              text: 'Sound Effects',
-              subtitle: 'Sound Effects Settings',
-              trailing: const Icon(Icons.chevron_right, color: Colors.blue,),
-              onTap: () => _navigateTo(
-                context,
-                SoundEffectSetting(
-                  currentSoundEffectSettings: _playerData.settings[GameConstant.soundEffectsKey],
-                  onSettingsChanged: (soundEffectOption) {
-                    LogUtil.debug('Sound Effect Option -> $soundEffectOption');
-                    setState(() {
-                      _playerData.settings [GameConstant.soundEffectsKey]  = soundEffectOption;
-                    });
-                    _playerAuthManager.updatePlayerData(_playerData);
-                  },
-                ),
-              ),
-            ),
-            _menuItem(
-              context,
-              icon: Icons.person,
-              text: 'About Me',
-              subtitle: 'Developer Profile',
-              trailing: const Icon(Icons.chevron_right, color: Colors.blue,),
-              onTap: () => _navigateTo(context, DeveloperProfileWidget()),
-            ),
-          ];
+    
+    return pd.playerName == GameConstant.playerUknown ? _unknownPlayerMenu(context) : _signedPlayerMenu(context);       
   }
 
+  List<Widget> _signedPlayerMenu(BuildContext context) {
+    return [
+      _menuItem(
+        context,
+        icon: Icons.restore,
+        text: 'Reset Game',
+        subtitle: 'Reset Game Progress',
+        trailing: const Icon(Icons.chevron_right, color: Colors.blue),
+        onTap: () {
+          LogUtil.debug('Reset Game');
+          showDialog(
+            context: context,
+            builder: (BuildContext context) => _resetGameDialog(context),
+          );
+        },
+      ),
+      _menuItem(
+        context,
+        icon: Icons.color_lens,
+        text: 'Player Skin',
+        trailing: PlayerAppearanceSetting(
+          currentSkin: _playerData.settings['playerAppearance'][GameConstant.playerSkinKey] ??
+              GameConstant.playerSkinClassic,
+          onAppearanceChanged: (appearance) {
+            LogUtil.debug('Player Skin Changed -> $appearance');
+            setState(() {
+              _playerData.settings['playerAppearance'] = {GameConstant.playerSkinKey: appearance};
+            });
+            _playerAuthManager.updatePlayerData(_playerData);
+          },
+        ),
+        subtitle: _playerData.settings['playerAppearance'][GameConstant.playerSkinKey],
+      ),
+      _menuItem(
+        context,
+        icon: Icons.style,
+        text: 'Game Theme',
+        trailing: GameThemeSetting(
+          currentTheme: _playerData.settings['gameTheme'][GameConstant.gameThemeKey] ??
+              GameConstant.gameThemeLight,
+          onThemeChanged: (gameTheme) {
+            setState(() {
+              _playerData.settings['gameTheme'] = {GameConstant.gameThemeKey: gameTheme};
+            });
+            _playerAuthManager.updatePlayerData(_playerData);
+          },
+        ),
+        subtitle: _playerData.settings['gameTheme'][GameConstant.gameThemeKey] ??
+            GameConstant.gameThemeLight,
+      ),
+      _menuItem(
+        context,
+        icon: Icons.volume_up,
+        text: 'Sound Effects',
+        subtitle: 'Sound Effects Settings',
+        trailing: const Icon(Icons.chevron_right, color: Colors.blue),
+        onTap: () => _navigateTo(
+          context,
+          SoundEffectSetting(
+            currentSoundEffectSettings: _playerData.settings[GameConstant.soundEffectsKey],
+            onSettingsChanged: (soundEffectOption) {
+              LogUtil.debug('Sound Effect Option -> $soundEffectOption');
+              setState(() {
+                _playerData.settings[GameConstant.soundEffectsKey] = soundEffectOption;
+              });
+              _playerAuthManager.updatePlayerData(_playerData);
+            },
+          ),
+        ),
+      ),
+      _menuItem(
+        context,
+        icon: Icons.person,
+        text: 'About Me',
+        subtitle: 'Developer Profile',
+        trailing: const Icon(Icons.chevron_right, color: Colors.blue),
+        onTap: () => _navigateTo(context, DeveloperProfileWidget()),
+      ),
+      _menuItem(
+        context,
+        icon: Icons.close,
+        text: 'Quite',
+        subtitle: 'Quite game',
+        trailing: const Icon(Icons.chevron_right, color: Colors.blue),
+        onTap: () {
+          _quitApp();
+        },
+      ),
+    ];
+  }
+
+  List<Widget> _unknownPlayerMenu(BuildContext context) {
+    return [
+      _menuItem(
+        context,
+        icon: Icons.person_add,
+        text: 'Sign Up',
+        subtitle: 'Register now and enjoy the benefits',
+        onTap: () => _navigateTo(
+          context,
+          PlayerSignup(playerAuthManager: _playerAuthManager),
+        ),
+      ),
+      _menuItem(
+        context,
+        icon: Icons.arrow_back_sharp,
+        text: 'Return to Game',
+        subtitle: 'Continue your adventure',
+        onTap: () {
+          Navigator.of(context).pop();
+        },
+      ),
+      _menuItem(
+        context,
+        icon: Icons.close,
+        text: 'Quite',
+        subtitle: 'Quite game',
+        trailing: const Icon(Icons.chevron_right, color: Colors.blue),
+        onTap: () {
+          _quitApp();
+        },
+      ),
+    ];
+  }
 
   Widget _menuItem(BuildContext context,
       {required IconData icon,
@@ -151,6 +210,10 @@ class _MenuSectionState extends State<MenuSection> {
     );
   }
 
+  void _quitApp() {
+    exit(0); // Exits the app with a success code.
+  }
+
   AlertDialog _resetGameDialog(BuildContext context) {
     return AlertDialog(
       title: Text('Reset Game Progress', style: EndlessRunnerTheme.of(context).titleH4TextStyle,),
@@ -169,6 +232,9 @@ class _MenuSectionState extends State<MenuSection> {
             LogUtil.debug('Executing reset game logic');
             _playerData.level = 1;
             _playerData.topScore = 0;
+            _liveScoreManager.levelNotifier.value = 1;
+            _liveScoreManager.scoreNotifier.value = 0;
+            _liveScoreManager.highScoreNotifier.value = 0;
             await _playerAuthManager.updatePlayerData(_playerData);
           },
           child: Text('Confirm', style: EndlessRunnerTheme.of(context).normalTextStyle,),

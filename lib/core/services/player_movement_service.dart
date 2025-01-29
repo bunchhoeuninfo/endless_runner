@@ -1,12 +1,14 @@
+import 'package:endless_runner/components/players/player.dart';
 import 'package:endless_runner/core/managers/player_manager.dart';
+import 'package:endless_runner/core/managers/player_movement_manager.dart';
 import 'package:endless_runner/core/services/player_service.dart';
 import 'package:endless_runner/game/endless_runner_game.dart';
 import 'package:endless_runner/game/utils/log_util.dart';
 import 'package:flame/components.dart';
 
-class PlayerMovement {
-  final EndlessRunnerGame gameRef;
-  final SpriteComponent player;
+class PlayerMovementService implements PlayerMovementManager {
+  //final EndlessRunnerGame gameRef;
+  //final SpriteComponent player;
   final PlayerManager _playerManager = PlayerService();
   final double _jumpForce = -400;
   final double _gravity = 600;
@@ -14,9 +16,8 @@ class PlayerMovement {
   double _velocityY = 0;
   bool isGrounded = false;
 
-  PlayerMovement({required this.gameRef, required this.player});
-
-  void applyGravity(double dt) {
+  @override
+  void applyGravity(double dt, Player player, EndlessRunnerGame gameRef) {
     try {
       //LogUtil.debug('Start inside $_className.applyGravity ...');
       if (!isGrounded) {
@@ -45,6 +46,7 @@ class PlayerMovement {
     }    
   }
 
+  @override
   void jump() {
     try {
       LogUtil.debug('Try to jump');
@@ -60,13 +62,15 @@ class PlayerMovement {
     }        
   }
 
-  void handleTap(Vector2 tapPosition) {
+  @override
+  void handleTap(Vector2 tapPosition, EndlessRunnerGame gameRef) {
     if (tapPosition.y < gameRef.size.y / 2) {
       jump();
     }
   }
 
-  void resetPosition() {
+  @override
+  void resetPosition(EndlessRunnerGame gameRef, Player player) {
     //LogUtil.debug('Start inside resetPosition ...');
     final screenLeftEdge = gameRef.size.x * 0.02;
     final groundLevel = gameRef.size.y / 2;

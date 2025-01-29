@@ -1,8 +1,13 @@
 import 'dart:io';
 
 import 'package:endless_runner/auth/data/player_data.dart';
+import 'package:flutter/material.dart';
 
 abstract class PlayerAuthManager {
+
+  // --- Player Data Notifier
+  //ValueNotifier<PlayerData> get playerDataNotifier;
+
   Future<PlayerData?> loadPlayerData();
   Future<void> savePlayerData(PlayerData playerData);
   Future<void> updatePlayerData(PlayerData updatedPlayerData);

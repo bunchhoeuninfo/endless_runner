@@ -4,4 +4,7 @@ enum GameState {
   paused,
   gameOver,
   start,
+  resumed,
+  restart,
+  setting,
 }

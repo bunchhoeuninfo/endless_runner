@@ -7,12 +7,12 @@ import 'package:endless_runner/game/utils/log_util.dart';
 
 import 'package:flutter/material.dart';
 
-class StartResetButtonOverlay extends StatelessWidget {
+class LevelUpOverlay extends StatelessWidget {
   final EndlessRunnerGame game;
   final GameServiceManager _gameServiceManager = GameServiceService();
   final LiveScoreService _liveScoreService = LiveScoreService();
 
-  StartResetButtonOverlay({
+  LevelUpOverlay({
     super.key,
     required this.game,
   });
@@ -20,27 +20,11 @@ class StartResetButtonOverlay extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     LogUtil.debug('Inside build method');
-    return _futureBuilder();
+    return _buildLevelUpOverlay();
   }
 
-  FutureBuilder _futureBuilder() {
-    LogUtil.debug('Inside future builder');
-    return FutureBuilder(
-      future: _liveScoreService.loadGameProgress(), 
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Center(child: CircularProgressIndicator(),);
-        } else if (snapshot.hasError) {
-          return const Center(child: Text('Error loading progress'),);
-        } else {
-          return _buildPlayerProgresInfo();
-        }    
-      }
-    );
-  }
-
-  Center _buildPlayerProgresInfo() {
-    LogUtil.debug('Inside build player progress info method');
+  Center _buildLevelUpOverlay() {
+    LogUtil.debug('Inside build _buildLevelUpCongrateOverlay');
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -51,9 +35,6 @@ class StartResetButtonOverlay extends StatelessWidget {
               _buildRow(null, _liveScoreService.encouragementNotifier, Colors.amber),
               const SizedBox(height: 5),
               _buildRow('Player', _liveScoreService.playerNameNotifier, Colors.yellow),
-              const SizedBox(height: 5),
-              _buildRow('Top Score', _liveScoreService.highScoreNotifier, Colors.green),
-              const SizedBox(height: 5,),
               _buildRow('Level', _liveScoreService.levelNotifier, Colors.blue),
               const SizedBox(height: 20,),
             ],
@@ -63,15 +44,16 @@ class StartResetButtonOverlay extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [              
               ElevatedButton(
-                onPressed: () {
+                onPressed: () {                
                   _gameServiceManager.startGame(game);                                    
+                  _liveScoreService.resetScore();
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.blue,
                   padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 10),
                 ),
                 child: const Text(
-                  'Start',
+                  'Continue',
                   style: TextStyle(fontSize: 24, color: Colors.white),
                 ),
               ),              

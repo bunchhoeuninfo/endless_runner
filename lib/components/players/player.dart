@@ -1,6 +1,7 @@
 
 import 'package:endless_runner/components/players/player_collision.dart';
-import 'package:endless_runner/components/players/player_movement.dart';
+import 'package:endless_runner/core/managers/player_movement_manager.dart';
+import 'package:endless_runner/core/services/player_movement_service.dart';
 import 'package:endless_runner/game/endless_runner_game.dart';
 import 'package:endless_runner/game/utils/log_util.dart';
 import 'package:flame/collisions.dart';
@@ -8,6 +9,8 @@ import 'package:flame/components.dart';
 import 'package:flutter/material.dart';
 
 class Player extends SpriteComponent with HasGameRef<EndlessRunnerGame>, CollisionCallbacks, GestureHitboxes   {
+
+
 
   Player({required Vector2 position})
       : super(size: Vector2(50, 50), position: position); // Fixed position
@@ -18,8 +21,8 @@ class Player extends SpriteComponent with HasGameRef<EndlessRunnerGame>, Collisi
   double velocityY = 0;
   bool isGrounded = false;
 
-  late PlayerMovement movementHandler;
-  late PlayerCollision collisionHandler;
+  late PlayerMovementManager _playerMovement = PlayerMovementService();
+  late PlayerCollision _collisionHandler;
 
   @override
   Future<void> onLoad() async {
@@ -32,12 +35,12 @@ class Player extends SpriteComponent with HasGameRef<EndlessRunnerGame>, Collisi
       sprite = Sprite(gameRef.images.fromCache('rock.jpg'));
       LogUtil.debug('Player sprite loaded succesfully');
 
-      movementHandler = PlayerMovement(gameRef: gameRef, player: this);
-      collisionHandler = PlayerCollision(gameRef: gameRef, player: this);
+      //_playerMovement = PlayerMovement(gameRef: gameRef, player: this);
+      _collisionHandler = PlayerCollision(gameRef: gameRef, player: this);
 
        paint = Paint()..color = Colors.blue;
       // set initial position
-      movementHandler.resetPosition();
+      _playerMovement.resetPosition(gameRef, this);
 
       add(RectangleHitbox());
       priority = 100;
@@ -49,7 +52,7 @@ class Player extends SpriteComponent with HasGameRef<EndlessRunnerGame>, Collisi
   @override
   void onCollision(Set<Vector2> intersectionPoints, PositionComponent other) {    
     super.onCollision(intersectionPoints, other);    
-    collisionHandler.handleCollision(other);
+    _collisionHandler.handleCollision(other);
   }
 
   @override
@@ -71,7 +74,7 @@ class Player extends SpriteComponent with HasGameRef<EndlessRunnerGame>, Collisi
 
   void jump() {
     LogUtil.debug('Called jump method...');
-    movementHandler.jump();
+    _playerMovement.jump();
   }
 
   @override
@@ -79,13 +82,13 @@ class Player extends SpriteComponent with HasGameRef<EndlessRunnerGame>, Collisi
     //LogUtil.debug('Called update method...');
     super.update(dt);
 
-    movementHandler.applyGravity(dt);
+    _playerMovement.applyGravity(dt, this, gameRef);
   }
 
 
   void handleTap(Vector2 tapPosition) {
     LogUtil.debug('Called handleTap method...');
-    movementHandler.handleTap(tapPosition);
+    _playerMovement.handleTap(tapPosition, gameRef);
   }
 
 }

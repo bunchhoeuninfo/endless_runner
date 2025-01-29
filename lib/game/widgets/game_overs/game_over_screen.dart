@@ -93,8 +93,6 @@ class GameOverScreen extends PositionComponent
       LogUtil.debug('Restart text tapped.');
       hide();
       _gameServiceManager.restartGame(gameRef);
-      //gameRef.restartGame();
-      //gameRef.resumeEngine();
       event.handled = true; // Mark the event as handled      
     }    
   }

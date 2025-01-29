@@ -1,7 +1,9 @@
 import 'package:endless_runner/components/coins/coin.dart';
 import 'package:endless_runner/components/obstacles/obstacle.dart';
 import 'package:endless_runner/components/powerups/speed_boost.dart';
+import 'package:endless_runner/core/managers/game_state_manager.dart';
 import 'package:endless_runner/core/managers/live_score_manager.dart';
+import 'package:endless_runner/core/services/game_state_service.dart';
 import 'package:endless_runner/core/services/live_score_service.dart';
 import 'package:endless_runner/core/state/game_state.dart';
 import 'package:endless_runner/core/managers/game_service_manager.dart';
@@ -15,6 +17,7 @@ class RestartButtonOverlay extends StatelessWidget {
   final EndlessRunnerGame game;
   final GameServiceManager _gameServiceManager = GameServiceService();
   final LiveScoreManager _liveScoreManager = LiveScoreService();
+  final GameStateManager _gameStateManager = GameStateService();
 
   RestartButtonOverlay({
     super.key,
@@ -62,7 +65,8 @@ class RestartButtonOverlay extends StatelessWidget {
   void resumeGame() {
     LogUtil.debug('Start method restartGame...');
     //game.add(PlayPauseButton());
-    game.gameStateManager.setState(GameState.playing);
+    //game.gameStateManager.setState(GameState.playing);
+    _gameStateManager.stateNotifier.value = GameState.playing;
     game.resumeEngine();  //Resume the game loop              
     game.isFirstRun = false;        
     game.overlays.remove('restart');    
