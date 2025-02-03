@@ -21,9 +21,9 @@ class ScrollingBackground extends SpriteComponent with HasGameRef<EndlessRunnerG
     LogUtil.debug('Start onLoad method');
 
     try {
-      LogUtil.debug('Load sprite background_tile.jpg');      
+      LogUtil.debug('Load sprite upward_background.jpg');      
       size = gameRef.size;      
-      sprite = Sprite(gameRef.images.fromCache('background_tile.jpg'));
+      sprite = Sprite(gameRef.images.fromCache('bg.jpg'));
       LogUtil.debug('Scrolling background loaded successfully');
     } catch (e, stackTrace) {
       LogUtil.error('Exception -> $e, $stackTrace');
@@ -37,11 +37,17 @@ class ScrollingBackground extends SpriteComponent with HasGameRef<EndlessRunnerG
     if (_gameStateManager.stateNotifier.value != GameState.playing) return;
 
     // Move the background to the left
-    position.x -= currentSpeed * dt;
+    //position.x -= currentSpeed * dt;
+    position.y += currentSpeed * dt;
 
     // If the background moves completely off-screen, reset its position
-    if (position.x <= -size.x) {
+    /*if (position.x <= -size.x) {
       position.x += 2 * size.x; // Reset to the right of the screen
+    }*/
+
+    // If the background moves completely off-screen, reset its position above
+    if (position.y >= size.y) {
+      position.y -= 2 * size.y; // Move back up
     }
   }
 

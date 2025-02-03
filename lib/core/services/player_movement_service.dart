@@ -19,6 +19,7 @@ class PlayerMovementService implements PlayerMovementManager {
   late double _minX;
   late double _maxX;
 
+  @override
   void setMovementBounds(EndlessRunnerGame gameRef) {
     _minX = gameRef.size.x * 0.1;
     _maxX = gameRef.size.x * 0.9;
@@ -78,7 +79,7 @@ class PlayerMovementService implements PlayerMovementManager {
     //LogUtil.debug('Start inside resetPosition ...');
     //final screenLeftEdge = gameRef.size.x * 0.02;
     //final groundLevel = gameRef.size.y / 2;
-    setMovementBounds(gameRef);
+    //setMovementBounds(gameRef);
     final screenLeftEdge = gameRef.size.x * 0.45;
     final groundLevel = gameRef.size.y / 2;
 

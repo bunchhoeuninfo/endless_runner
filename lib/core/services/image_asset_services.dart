@@ -1,4 +1,4 @@
-import 'package:endless_runner/game/assets/image_asset_manager.dart';
+import 'package:endless_runner/core/managers/image_asset_manager.dart';
 import 'package:endless_runner/game/utils/log_util.dart';
 import 'package:flame/cache.dart';
 
@@ -13,7 +13,8 @@ class ImageAssetServices implements ImageAssetManager {
         'coins/rocket_coin.jpg',
         'player_1.png',
         'background_tile.jpg',
-        'rock.jpg'
+        'rock.jpg',
+        'bg.jpg'
       ]);
     } catch (e) {
       LogUtil.error('Exception -> $e');

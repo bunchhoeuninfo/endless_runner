@@ -10,8 +10,8 @@ import 'package:endless_runner/core/managers/game_state_manager.dart';
 import 'package:endless_runner/core/managers/game_service_manager.dart';
 import 'package:endless_runner/core/services/game_service_service.dart';
 
-import 'package:endless_runner/game/assets/image_asset_manager.dart';
-import 'package:endless_runner/game/assets/image_asset_services.dart';
+import 'package:endless_runner/core/managers/image_asset_manager.dart';
+import 'package:endless_runner/core/services/image_asset_services.dart';
 import 'package:endless_runner/game/utils/log_util.dart';
 import 'package:flame/camera.dart';
 import 'package:flame/events.dart';

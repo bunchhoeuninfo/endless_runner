@@ -7,10 +7,12 @@ import 'package:endless_runner/components/powerups/speed_boost.dart';
 import 'package:endless_runner/core/managers/coin_manager.dart';
 import 'package:endless_runner/core/managers/game_state_manager.dart';
 import 'package:endless_runner/core/managers/obstacle_manager.dart';
+import 'package:endless_runner/core/managers/player_movement_manager.dart';
 import 'package:endless_runner/core/managers/speed_boost_manager.dart';
 import 'package:endless_runner/core/services/coin_services.dart';
 import 'package:endless_runner/core/services/game_state_service.dart';
 import 'package:endless_runner/core/services/obstacle_services.dart';
+import 'package:endless_runner/core/services/player_movement_service.dart';
 import 'package:endless_runner/core/services/speed_boost_services.dart';
 import 'package:endless_runner/core/state/game_state.dart';
 import 'package:endless_runner/core/managers/game_service_manager.dart';
@@ -37,6 +39,9 @@ class GameServiceService implements GameServiceManager {
   final SpeedBoostManager _speedBoostManager = SpeedBoostServices();
   double speedBoostTimer = 0;
   final double speedBoostSpawnInterval = 2.0; // speed boost spawn every 2 seconds
+
+  // Initialize player
+  //final PlayerMovementManager _playerMovementManager = PlayerMovementService();
 
   @override
   void setupBackground(EndlessRunnerGame game) {
@@ -75,6 +80,7 @@ class GameServiceService implements GameServiceManager {
       
         game.resumeEngine();  //Resume the game loop   
         _gameStateManager.stateNotifier.value = GameState.playing;
+        //_playerMovementManager.setMovementBounds(game);
         game.isFirstRun = false;        
         game.overlays.remove('restart');
         game.overlays.add('liveScoreBoard');
@@ -102,6 +108,7 @@ class GameServiceService implements GameServiceManager {
       game.overlays.add('liveScoreBoard');
       game.isFirstRun = false;
       game.resumeEngine();
+      //_playerMovementManager.setMovementBounds(game);
       _gameStateManager.stateNotifier.value = GameState.playing;
       LogUtil.debug('Game Started!');
     } catch (e) {

@@ -87,6 +87,8 @@ flutter:
     - assets/images/background_object.PNG
     - assets/images/background_2d.jpg
     - assets/images/background_tile.jpg
+    - assets/images/sidewalk_bg.jpg
+    - assets/images/bg.jpg
   #   - images/a_dot_ham.jpeg    
     # about me data
     - assets/data/developer_profile.json
