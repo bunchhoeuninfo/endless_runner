@@ -11,14 +11,26 @@ import 'package:endless_runner/game/widgets/settings/widgets/signup/player_signe
 import 'package:endless_runner/theme/endless_runner_theme.dart';
 import 'package:flutter/material.dart';
 
-class ProfileSection extends StatelessWidget {
-  ProfileSection({super.key, required this.playerData});
+class ProfileSectioncopy extends StatefulWidget {
+  const ProfileSectioncopy({super.key, required this.playerData});
   final PlayerData playerData;
 
+  @override
+  State<ProfileSectioncopy> createState() => _ProfileSectionState();
+
+}
+
+class _ProfileSectionState extends State<ProfileSectioncopy> {
+  
   //late PlayerData playerData; 
   final PlayerAuthManager _playerAuthManager = PlayerAuthService(); 
   final PlayerDataNotifierManager _playerDataNotifierManager = PlayerDataNotifierService();
   
+  @override
+  void initState() {
+    super.initState();
+    //playerData = widget.playerData;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -124,7 +136,7 @@ class ProfileSection extends StatelessWidget {
               onPressed: () {
                 // Sign-out logic
                 LogUtil.debug('Sign-out button tapped');
-                //_signOut(context);
+                _signOut(context);
               },
               child: const Text('Sign Out', style: TextStyle(color: Colors.red)),
             ),                

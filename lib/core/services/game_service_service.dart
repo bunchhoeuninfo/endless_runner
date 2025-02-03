@@ -95,14 +95,9 @@ class GameServiceService implements GameServiceManager {
   @override
   void startGame(EndlessRunnerGame game) {
     //LogUtil.debug('Game state -> isMenu: ${game.gameStateManager.isMenu()}, isGameOver: ${game.gameStateManager.isGameOver()}, isPause: ${game.gameStateManager.isPaused()}');
-    //if (game.gameStateManager.isMenu() || game.gameStateManager.isGameOver() || game.gameStateManager.isPaused()) {
     try {
       LogUtil.debug('Try to start game.');
       List<String> overlayTexts = ['start', 'levelUp', 'restart', 'gameOver'];
-      /*game.overlays.remove('start');
-      game.overlays.remove('levelUp');
-      game.overlays.remove('restart');
-      game.overlays.remove('gameOver');*/
       game.overlays.removeAll(overlayTexts);
       game.overlays.add('liveScoreBoard');
       game.isFirstRun = false;

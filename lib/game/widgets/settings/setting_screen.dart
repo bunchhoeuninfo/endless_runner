@@ -30,7 +30,9 @@ class SettingScreen extends StatelessWidget {
 
     LogUtil.debug('Initiate game setting');
     //gameRef.gameStateManager.setState(GameState.menu);
-    _gameStateManager.stateNotifier.value = GameState.menu;
+    //_gameStateManager.stateNotifier.value = GameState.menu;
+    _gameStateManager.changeState(GameState.menu);
+    LogUtil.debug('Game state changed to _gameStateManager.stateNotifier.value: ${_gameStateManager.stateNotifier.value}');
 
     return Scaffold(
       appBar: AppBar(
@@ -42,7 +44,8 @@ class SettingScreen extends StatelessWidget {
             _gameStateManager.stateNotifier.value == GameState.paused 
               ? _gameServiceManager.resumeGame(gameRef)
               : //gameRef.gameStateManager.setState(GameState.menu);
-                _gameStateManager.stateNotifier.value = GameState.menu;
+                //_gameStateManager.stateNotifier.value = GameState.menu;
+                _gameStateManager.changeState(GameState.menu);
             Navigator.pop(context);
           }, 
           icon: const Icon(Icons.arrow_back),

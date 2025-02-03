@@ -61,6 +61,7 @@ class Player extends SpriteComponent with HasGameRef<EndlessRunnerGame>, Collisi
     canvas.drawRect(size.toRect(), paint);
   }
 
+/*
   void resetPosition() {
     //LogUtil.debug('Called reset player object position...');
     final screenLeftEdge = gameRef.size.x * 0.02;
@@ -70,7 +71,7 @@ class Player extends SpriteComponent with HasGameRef<EndlessRunnerGame>, Collisi
     velocityY = 0;
     isGrounded = true;
     //LogUtil.debug('Reset player object position is completed...');
-  }
+  }*/
 
   void jump() {
     LogUtil.debug('Called jump method...');
