@@ -13,7 +13,7 @@ class BackgroundObject extends SpriteComponent with HasGameRef<EndlessRunnerGame
   @override
   Future<void> onLoad() async {
     sprite =
-        await gameRef.loadSprite('sidewalk.jpg'); // Load background sprite
+        await gameRef.loadSprite('bg.jpg'); // Load background sprite
   }
 
   @override
