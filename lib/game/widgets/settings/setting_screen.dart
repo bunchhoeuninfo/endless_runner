@@ -2,13 +2,13 @@
 import 'package:endless_runner/auth/data/player_data.dart';
 import 'package:endless_runner/auth/managers/player_auth_manager.dart';
 import 'package:endless_runner/auth/services/player_auth_service.dart';
-import 'package:endless_runner/core/managers/game_state_manager.dart';
-import 'package:endless_runner/core/managers/player_data_notifier_manager.dart';
-import 'package:endless_runner/core/services/game_state_service.dart';
-import 'package:endless_runner/core/services/player_data_notifier_service.dart';
+import 'package:endless_runner/core/managers/games/game_state_manager.dart';
+import 'package:endless_runner/core/managers/players/player_data_notifier_manager.dart';
+import 'package:endless_runner/core/services/games/game_state_service.dart';
+import 'package:endless_runner/core/services/players/player_data_notifier_service.dart';
 import 'package:endless_runner/core/state/game_state.dart';
-import 'package:endless_runner/core/managers/game_service_manager.dart';
-import 'package:endless_runner/core/services/game_service_service.dart';
+import 'package:endless_runner/core/managers/games/game_service_manager.dart';
+import 'package:endless_runner/core/services/games/game_service_service.dart';
 import 'package:endless_runner/game/endless_runner_game.dart';
 import 'package:endless_runner/game/utils/log_util.dart';
 import 'package:endless_runner/game/widgets/settings/widgets/menu_settings/menu_section.dart';
@@ -30,7 +30,9 @@ class SettingScreen extends StatelessWidget {
 
     LogUtil.debug('Initiate game setting');
     //gameRef.gameStateManager.setState(GameState.menu);
-    _gameStateManager.stateNotifier.value = GameState.menu;
+    //_gameStateManager.stateNotifier.value = GameState.menu;
+    _gameStateManager.changeState(GameState.menu);
+    LogUtil.debug('Game state changed to _gameStateManager.stateNotifier.value: ${_gameStateManager.stateNotifier.value}');
 
     return Scaffold(
       appBar: AppBar(
@@ -42,7 +44,8 @@ class SettingScreen extends StatelessWidget {
             _gameStateManager.stateNotifier.value == GameState.paused 
               ? _gameServiceManager.resumeGame(gameRef)
               : //gameRef.gameStateManager.setState(GameState.menu);
-                _gameStateManager.stateNotifier.value = GameState.menu;
+                //_gameStateManager.stateNotifier.value = GameState.menu;
+                _gameStateManager.changeState(GameState.menu);
             Navigator.pop(context);
           }, 
           icon: const Icon(Icons.arrow_back),

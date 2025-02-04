@@ -2,9 +2,10 @@ import 'dart:math';
 
 import 'package:endless_runner/components/backgrounds/scrolling_background.dart';
 import 'package:endless_runner/components/powerups/speed_boost.dart';
-import 'package:endless_runner/core/managers/game_state_manager.dart';
-import 'package:endless_runner/core/managers/speed_boost_manager.dart';
-import 'package:endless_runner/core/services/game_state_service.dart';
+import 'package:endless_runner/core/managers/games/game_state_manager.dart';
+import 'package:endless_runner/core/managers/players/speed_boost_manager.dart';
+
+import 'package:endless_runner/core/services/games/game_state_service.dart';
 import 'package:endless_runner/game/endless_runner_game.dart';
 import 'package:endless_runner/game/utils/log_util.dart';
 import 'package:flame/components.dart';

@@ -1,55 +1,61 @@
 import 'package:endless_runner/core/managers/games/game_state_manager.dart';
+import 'package:endless_runner/core/managers/players/player_movement_manager.dart';
 import 'package:endless_runner/core/services/games/game_state_service.dart';
+import 'package:endless_runner/core/services/players/player_movement_service.dart';
 import 'package:endless_runner/core/state/game_state.dart';
 import 'package:endless_runner/game/endless_runner_game.dart';
 import 'package:endless_runner/game/utils/log_util.dart';
 import 'package:flutter/material.dart';
 
-class BoostPlayerSpeedBtn extends StatelessWidget {
+class RightControlBtn extends StatelessWidget {
 
-  BoostPlayerSpeedBtn({super.key, required this.game});
+  RightControlBtn({super.key, required this.game});
 
   final EndlessRunnerGame game;
   final GameStateManager _gameStateManager = GameStateService();
+  final PlayerMovementManager _playerMovementManager = PlayerMovementService();
 
   @override
   Widget build(BuildContext context) {
+    LogUtil.debug('Start RightControlButton build');
     return _buildButton();
   }
 
   Widget _buildButton() {
-    return ValueListenableBuilder<GameState>(
+    return ValueListenableBuilder(
       valueListenable: _gameStateManager.stateNotifier, 
       builder: (context, state, child) {
         return state == GameState.playing ?
-          _buildBoostSpeedBtn(context)
+          _buildRightControl(context)
         : Container();
       }
     );
   }
 
-  Align _buildBoostSpeedBtn(BuildContext context) {
+  Align _buildRightControl(BuildContext context) {
     return Align(
-      alignment: Alignment.bottomRight, // Align to the bottom-right of the screen
+      alignment: const Alignment (-1, 0.5),
       child: Padding(
-        padding: const EdgeInsets.only(bottom: 20, right: 100), // Add padding for spacing
+        padding: const EdgeInsets.only(left: 120),
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            _boostSpeedBtn(),
+            _rightButton(),
           ],
         ),
       ),
-    );
+    ); 
   }
 
-  GestureDetector _boostSpeedBtn() {
+  GestureDetector _rightButton() {
     return GestureDetector(
-      onTap: () {
-        LogUtil.debug('Click boost player speed button control');
-      },
-      child: const Icon(Icons.speed, size: 50, color: Colors.white,),
-    );
+    onTap: () {
+      LogUtil.debug('Click right control');
+      //_playerMovementManager.moveRight();
+      game.player.moveRight();
+    },
+      child: const Icon(Icons.arrow_forward, size: 50, color: Colors.white),
+    ); 
   }
 
 }

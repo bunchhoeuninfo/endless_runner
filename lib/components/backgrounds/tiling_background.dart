@@ -12,10 +12,10 @@ class TilingBackground extends SpriteComponent with HasGameRef<EndlessRunnerGame
     super.onLoad();
 
     try {
-      LogUtil.debug('Load sprite background_tile.jpg');
-      sprite = await gameRef.loadSprite('background_tile.jpg');
+      LogUtil.debug('Load sprite upward_background.jpg');
+      sprite = await gameRef.loadSprite('bg.jpg');
       size = Vector2(gameRef.size.x, gameRef.size.y);
-      LogUtil.debug('Load sprite background_tile.jpg is completed');
+      LogUtil.debug('Load sprite upward_background.jpg is completed');
     } catch (e) {
       LogUtil.error('Exception -> $e');
     }

@@ -5,6 +5,8 @@ abstract class GameStateManager {
 
   // --- Game State Management ---
   ValueNotifier<GameState> get stateNotifier;
+
+  void changeState(GameState newState);
   
 
   /*

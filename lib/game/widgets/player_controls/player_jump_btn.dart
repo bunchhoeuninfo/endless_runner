@@ -1,5 +1,5 @@
-import 'package:endless_runner/core/managers/game_state_manager.dart';
-import 'package:endless_runner/core/services/game_state_service.dart';
+import 'package:endless_runner/core/managers/games/game_state_manager.dart';
+import 'package:endless_runner/core/services/games/game_state_service.dart';
 import 'package:endless_runner/core/state/game_state.dart';
 import 'package:endless_runner/game/endless_runner_game.dart';
 import 'package:endless_runner/game/utils/log_util.dart';
@@ -31,9 +31,9 @@ class PlayerJumpBtn extends StatelessWidget {
 
   Align _buildJumpBtn(BuildContext context) {
     return Align(
-      alignment: Alignment.bottomRight, // Align to the bottom-right of the screen
+      alignment: const Alignment (1, 0.5), // Align to the bottom-right of the screen
       child: Padding(
-        padding: const EdgeInsets.only(bottom: 20, right: 40), // Add padding for spacing
+        padding: const EdgeInsets.only(right: 40), // Add padding for spacing
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -48,6 +48,7 @@ class PlayerJumpBtn extends StatelessWidget {
     return GestureDetector(
       onTap: () {
         LogUtil.debug('Click player jump button control');
+        game.player.jump();
       },
       child: const Icon(Icons.power, size: 50, color: Colors.white,),
     );

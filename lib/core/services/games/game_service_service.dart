@@ -1,19 +1,21 @@
 
+import 'package:endless_runner/components/backgrounds/road_background.dart';
+import 'package:endless_runner/components/backgrounds/road_downward_background.dart';
 import 'package:endless_runner/components/backgrounds/scrolling_background.dart';
 import 'package:endless_runner/components/coins/coin.dart';
 import 'package:endless_runner/components/obstacles/obstacle.dart';
-import 'package:endless_runner/components/players/player.dart';
 import 'package:endless_runner/components/powerups/speed_boost.dart';
-import 'package:endless_runner/core/managers/coin_manager.dart';
-import 'package:endless_runner/core/managers/game_state_manager.dart';
-import 'package:endless_runner/core/managers/obstacle_manager.dart';
-import 'package:endless_runner/core/managers/speed_boost_manager.dart';
-import 'package:endless_runner/core/services/coin_services.dart';
-import 'package:endless_runner/core/services/game_state_service.dart';
-import 'package:endless_runner/core/services/obstacle_services.dart';
-import 'package:endless_runner/core/services/speed_boost_services.dart';
+import 'package:endless_runner/core/managers/scores/coin_manager.dart';
+import 'package:endless_runner/core/managers/games/game_state_manager.dart';
+import 'package:endless_runner/core/managers/obstacles/obstacle_manager.dart';
+import 'package:endless_runner/core/managers/players/speed_boost_manager.dart';
+
+import 'package:endless_runner/core/services/scores/coin_services.dart';
+import 'package:endless_runner/core/services/games/game_state_service.dart';
+import 'package:endless_runner/core/services/obstacles/obstacle_services.dart';
+import 'package:endless_runner/core/services/players/speed_boost_services.dart';
 import 'package:endless_runner/core/state/game_state.dart';
-import 'package:endless_runner/core/managers/game_service_manager.dart';
+import 'package:endless_runner/core/managers/games/game_service_manager.dart';
 import 'package:endless_runner/game/endless_runner_game.dart';
 import 'package:endless_runner/game/utils/log_util.dart';
 import 'package:flame/components.dart';
@@ -38,12 +40,18 @@ class GameServiceService implements GameServiceManager {
   double speedBoostTimer = 0;
   final double speedBoostSpawnInterval = 2.0; // speed boost spawn every 2 seconds
 
+  // Initialize player
+  //final PlayerMovementManager _playerMovementManager = PlayerMovementService();
+
   @override
   void setupBackground(EndlessRunnerGame game) {
     try {
       // Add two full-screen backgrounds for seamless scrolling
-      game.add(ScrollingBackground(position: Vector2(0, -50), baseSpeed: 100));
-      game.add(ScrollingBackground(position: Vector2(game.size.x, -50), baseSpeed: 100));
+      //game.add(ScrollingBackground(position: Vector2(0, -50), baseSpeed: 100));
+      //game.add(ScrollingBackground(position: Vector2(game.size.x, -50), baseSpeed: 100));
+      game.add(RoadDownwardBackground(position: Vector2(0, -game.size.y), baseSpeed: 100));
+      game.add(RoadDownwardBackground(position: Vector2(0, 0), baseSpeed: 100));
+      //game.add(RoadBackground(speed:100));
     } catch (e) {
       LogUtil.error('Exception -> $e');
     }   
@@ -75,6 +83,7 @@ class GameServiceService implements GameServiceManager {
       
         game.resumeEngine();  //Resume the game loop   
         _gameStateManager.stateNotifier.value = GameState.playing;
+        //_playerMovementManager.setMovementBounds(game);
         game.isFirstRun = false;        
         game.overlays.remove('restart');
         game.overlays.add('liveScoreBoard');
@@ -95,18 +104,14 @@ class GameServiceService implements GameServiceManager {
   @override
   void startGame(EndlessRunnerGame game) {
     //LogUtil.debug('Game state -> isMenu: ${game.gameStateManager.isMenu()}, isGameOver: ${game.gameStateManager.isGameOver()}, isPause: ${game.gameStateManager.isPaused()}');
-    //if (game.gameStateManager.isMenu() || game.gameStateManager.isGameOver() || game.gameStateManager.isPaused()) {
     try {
       LogUtil.debug('Try to start game.');
       List<String> overlayTexts = ['start', 'levelUp', 'restart', 'gameOver'];
-      /*game.overlays.remove('start');
-      game.overlays.remove('levelUp');
-      game.overlays.remove('restart');
-      game.overlays.remove('gameOver');*/
       game.overlays.removeAll(overlayTexts);
       game.overlays.add('liveScoreBoard');
       game.isFirstRun = false;
       game.resumeEngine();
+      //_playerMovementManager.setMovementBounds(game);
       _gameStateManager.stateNotifier.value = GameState.playing;
       LogUtil.debug('Game Started!');
     } catch (e) {
@@ -119,15 +124,10 @@ class GameServiceService implements GameServiceManager {
   void addEntities(EndlessRunnerGame game) {    
     try {
       LogUtil.debug('Try to add overlay control to the game world.');  
-      List<String> overlayBtns = ['start', 'setting', 'playPause','leftControlBtn','playerJumpBtn', 'boostPlayerSpeed'];
+      List<String> overlayBtns = ['start', 'setting', 'playPause','leftControlBtn','rightControlBtn','playerJumpBtn', 'boostPlayerSpeed'];
     
+      // Overlay ojects
       game.overlays.addAll(overlayBtns);
-      //Overlay button
-      /*game.overlays.add('start');      
-      game.overlays.add('setting');
-      game.overlays.add('playPause');
-      game.overlays.add('leftControlBtn');
-      game.overlays.add(overlayName)*/
 
       // Add collision detection
       game.add(ScreenHitbox());
@@ -179,11 +179,11 @@ class GameServiceService implements GameServiceManager {
    // LogUtil.debug('Game method gameStateManager.stateNotifier.value -> ${_gameStateManager.stateNotifier.value}');
     if (state == GameState.playing) {
       //startGame(game);       
-      _spawnObstacle(dt, game);
+      //_spawnObstacle(dt, game);
       //spawn coin at intervals
-      _spawnCoin(dt, game);
+      //_spawnCoin(dt, game);
       //spawn speed boost at intervals
-      _speedBoost(dt, game);
+      //_speedBoost(dt, game);
     } 
     else if (_gameStateManager.stateNotifier.value == GameState.paused) {
       LogUtil.debug('Game method gameStateManager.isPaused() -> ${_gameStateManager.stateNotifier.value}');

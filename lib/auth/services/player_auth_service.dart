@@ -4,8 +4,8 @@ import 'dart:io';
 import 'package:endless_runner/auth/managers/player_auth_manager.dart';
 import 'package:endless_runner/auth/data/player_data.dart';
 import 'package:endless_runner/constants/game_constant.dart';
-import 'package:endless_runner/core/managers/player_data_notifier_manager.dart';
-import 'package:endless_runner/core/services/player_data_notifier_service.dart';
+import 'package:endless_runner/core/managers/players/player_data_notifier_manager.dart';
+import 'package:endless_runner/core/services/players/player_data_notifier_service.dart';
 
 import 'package:endless_runner/game/utils/log_util.dart';
 import 'package:flutter/services.dart';

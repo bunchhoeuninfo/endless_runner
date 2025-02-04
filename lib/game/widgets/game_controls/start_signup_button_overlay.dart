@@ -3,13 +3,13 @@ import 'package:endless_runner/auth/data/player_data.dart';
 import 'package:endless_runner/auth/managers/player_auth_manager.dart';
 import 'package:endless_runner/auth/services/player_auth_service.dart';
 import 'package:endless_runner/constants/game_constant.dart';
-import 'package:endless_runner/core/managers/game_state_manager.dart';
-import 'package:endless_runner/core/managers/player_data_notifier_manager.dart';
-import 'package:endless_runner/core/services/game_state_service.dart';
-import 'package:endless_runner/core/services/live_score_service.dart';
-import 'package:endless_runner/core/managers/game_service_manager.dart';
-import 'package:endless_runner/core/services/game_service_service.dart';
-import 'package:endless_runner/core/services/player_data_notifier_service.dart';
+import 'package:endless_runner/core/managers/games/game_state_manager.dart';
+import 'package:endless_runner/core/managers/players/player_data_notifier_manager.dart';
+import 'package:endless_runner/core/services/games/game_state_service.dart';
+import 'package:endless_runner/core/services/scores/live_score_service.dart';
+import 'package:endless_runner/core/managers/games/game_service_manager.dart';
+import 'package:endless_runner/core/services/games/game_service_service.dart';
+import 'package:endless_runner/core/services/players/player_data_notifier_service.dart';
 import 'package:endless_runner/core/state/game_state.dart';
 import 'package:endless_runner/game/endless_runner_game.dart';
 import 'package:endless_runner/game/utils/log_util.dart';
@@ -33,8 +33,18 @@ class StartSignupButtonOverlay extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    LogUtil.debug('Inside build method');
-    return _futureBuilder();
+    LogUtil.debug('Inside build method, listening _gameStateManager.stateNotifier -> ${_gameStateManager.stateNotifier.value} ');
+
+    //return _futureBuilder();
+    /*return ValueListenableBuilder<GameState>(
+      valueListenable: _gameStateManager.stateNotifier, 
+      builder: (context, state, child) {
+        return state == GameState.menu || state == GameState.start ?
+         _buildPlayerProgresInfo(context)
+        : Container();
+      }
+    );*/
+    return _buildPlayerProgresInfo(context);
   }
 
   FutureBuilder _futureBuilder() {

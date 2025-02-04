@@ -1,7 +1,7 @@
 
 import 'package:endless_runner/components/players/player_collision.dart';
-import 'package:endless_runner/core/managers/player_movement_manager.dart';
-import 'package:endless_runner/core/services/player_movement_service.dart';
+import 'package:endless_runner/core/managers/players/player_movement_manager.dart';
+import 'package:endless_runner/core/services/players/player_movement_service.dart';
 import 'package:endless_runner/game/endless_runner_game.dart';
 import 'package:endless_runner/game/utils/log_util.dart';
 import 'package:flame/collisions.dart';
@@ -21,7 +21,7 @@ class Player extends SpriteComponent with HasGameRef<EndlessRunnerGame>, Collisi
   double velocityY = 0;
   bool isGrounded = false;
 
-  late PlayerMovementManager _playerMovement = PlayerMovementService();
+  final PlayerMovementManager _playerMovement = PlayerMovementService();
   late PlayerCollision _collisionHandler;
 
   @override
@@ -40,6 +40,7 @@ class Player extends SpriteComponent with HasGameRef<EndlessRunnerGame>, Collisi
 
        paint = Paint()..color = Colors.blue;
       // set initial position
+      _playerMovement.setMovementBounds(gameRef);
       _playerMovement.resetPosition(gameRef, this);
 
       add(RectangleHitbox());
@@ -55,11 +56,13 @@ class Player extends SpriteComponent with HasGameRef<EndlessRunnerGame>, Collisi
     _collisionHandler.handleCollision(other);
   }
 
+/*
   @override
   void render(Canvas canvas) {
     super.render(canvas);
     canvas.drawRect(size.toRect(), paint);
   }
+
 
   void resetPosition() {
     //LogUtil.debug('Called reset player object position...');
@@ -70,11 +73,19 @@ class Player extends SpriteComponent with HasGameRef<EndlessRunnerGame>, Collisi
     velocityY = 0;
     isGrounded = true;
     //LogUtil.debug('Reset player object position is completed...');
-  }
+  }*/
 
   void jump() {
     LogUtil.debug('Called jump method...');
     _playerMovement.jump();
+  }
+
+  void moveLeft() {
+    _playerMovement.moveLeft();
+  }
+
+  void moveRight() {
+    _playerMovement.moveRight();
   }
 
   @override
@@ -88,7 +99,7 @@ class Player extends SpriteComponent with HasGameRef<EndlessRunnerGame>, Collisi
 
   void handleTap(Vector2 tapPosition) {
     LogUtil.debug('Called handleTap method...');
-    _playerMovement.handleTap(tapPosition, gameRef);
+    //_playerMovement.handleTap(tapPosition, gameRef);
   }
 
 }

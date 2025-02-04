@@ -1,5 +1,5 @@
 import 'package:endless_runner/auth/data/player_data.dart';
-import 'package:endless_runner/core/managers/player_data_notifier_manager.dart';
+import 'package:endless_runner/core/managers/players/player_data_notifier_manager.dart';
 import 'package:flutter/src/foundation/change_notifier.dart';
 
 class PlayerDataNotifierService implements PlayerDataNotifierManager {

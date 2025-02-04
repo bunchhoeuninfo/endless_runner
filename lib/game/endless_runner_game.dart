@@ -2,16 +2,16 @@
 import 'dart:math';
 
 import 'package:endless_runner/components/players/player.dart';
-import 'package:endless_runner/core/services/game_state_service.dart';
+import 'package:endless_runner/core/services/games/game_state_service.dart';
 import 'package:endless_runner/game/widgets/game_overs/game_over_screen.dart';
 
 import 'package:endless_runner/core/state/game_state.dart';
-import 'package:endless_runner/core/managers/game_state_manager.dart';
-import 'package:endless_runner/core/managers/game_service_manager.dart';
-import 'package:endless_runner/core/services/game_service_service.dart';
+import 'package:endless_runner/core/managers/games/game_state_manager.dart';
+import 'package:endless_runner/core/managers/games/game_service_manager.dart';
+import 'package:endless_runner/core/services/games/game_service_service.dart';
 
-import 'package:endless_runner/game/assets/image_asset_manager.dart';
-import 'package:endless_runner/game/assets/image_asset_services.dart';
+import 'package:endless_runner/core/managers/games/image_asset_manager.dart';
+import 'package:endless_runner/core/services/games/image_asset_services.dart';
 import 'package:endless_runner/game/utils/log_util.dart';
 import 'package:flame/camera.dart';
 import 'package:flame/events.dart';
@@ -34,21 +34,39 @@ class EndlessRunnerGame extends FlameGame with HasCollisionDetection, TapDetecto
 
   @override
   Future<void> onLoad() async {    
-    player = Player(position: Vector2(size.x * 0.02, size.y / 2)); // Starting position
+    //player = Player(position: Vector2(size.x * 0.02, size.y / 2)); // Starting position
+    player = Player(position: Vector2(50, 50)); // Starting position
     try {
       LogUtil.debug('Try to EndlessRunnerGame.onLoad...');   
            
       await super.onLoad();      
       await Future.delayed(const Duration(seconds: 1));         
-      camera.viewport = FixedResolutionViewport(resolution: Vector2(800, 600));      
+      //camera.viewport = FixedResolutionViewport(resolution: Vector2(800, 600));      
        // pre-load image assets to optimize the performance
       await _imageAssetManager.preLoadImgAssets(images);
       _gameServiceManager.setupBackground(this);  
       _gameServiceManager.addEntities(this);
-      add(player);      
+      initPlayer();     
     } catch (e) {
       LogUtil.error('Exception -> $e');
     }    
+  }
+
+  void initPlayer() {
+    // Listen for changes in game state
+    _gameStateManager.stateNotifier.addListener(() {
+      if (_gameStateManager.stateNotifier.value == GameState.playing) {
+        if (!children.contains(player)) {
+          add(player);
+          LogUtil.debug('Player added to the game world.');
+        }
+      } 
+    });
+
+    // If the game is already in playing state, add the player immediately
+    if (_gameStateManager.stateNotifier.value == GameState.playing) {
+      add(player);
+    } 
   }
 
   @override
@@ -60,7 +78,7 @@ class EndlessRunnerGame extends FlameGame with HasCollisionDetection, TapDetecto
       LogUtil.debug('Try to jump');     
       if (_gameStateManager.stateNotifier.value == GameState.playing) {
         LogUtil.debug('Screen tapped - Player jumps');
-        player.jump();
+        //player.jump();
       }
     } catch (e) {
       LogUtil.error('Exception -> $e');
