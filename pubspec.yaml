@@ -83,13 +83,7 @@ flutter:
     - assets/images/coins/rocket_coin.jpg
     # obstacle images
     - assets/images/rock.jpg
-    # background scrolling
-    - assets/images/backgrounds/background_object.PNG
-    - assets/images/backgrounds/background_2d.jpg
-    - assets/images/backgrounds/background_tile.jpg
-    - assets/images/backgrounds/sidewalk_bg.jpg
-    - assets/images/backgrounds/bg.jpg
-    - assets/images/backgrounds/road_bg.jpeg
+    # background downward move
     - assets/images/backgrounds/road_bg.jpg
   #   - images/a_dot_ham.jpeg    
     # about me data

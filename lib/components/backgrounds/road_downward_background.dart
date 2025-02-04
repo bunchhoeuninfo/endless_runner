@@ -1,5 +1,5 @@
-import 'package:endless_runner/core/managers/game_state_manager.dart';
-import 'package:endless_runner/core/services/game_state_service.dart';
+import 'package:endless_runner/core/managers/games/game_state_manager.dart';
+import 'package:endless_runner/core/services/games/game_state_service.dart';
 import 'package:endless_runner/core/state/game_state.dart';
 import 'package:endless_runner/game/endless_runner_game.dart';
 import 'package:endless_runner/game/utils/log_util.dart';
@@ -21,7 +21,7 @@ class RoadDownwardBackground extends SpriteComponent with HasGameRef<EndlessRunn
     LogUtil.debug('Start onLoad method');
     try {
       size = gameRef.size;
-      sprite = Sprite(gameRef.images.fromCache('backgrounds/road_bg.jpeg'));
+      sprite = Sprite(gameRef.images.fromCache('backgrounds/road_bg_1.jpg'));
       LogUtil.debug('Road upward background loaded successfully');
     } catch (e) {
       LogUtil.error('Exception -> $e');

@@ -1,7 +1,7 @@
 
 import 'package:endless_runner/components/players/player_collision.dart';
-import 'package:endless_runner/core/managers/player_movement_manager.dart';
-import 'package:endless_runner/core/services/player_movement_service.dart';
+import 'package:endless_runner/core/managers/players/player_movement_manager.dart';
+import 'package:endless_runner/core/services/players/player_movement_service.dart';
 import 'package:endless_runner/game/endless_runner_game.dart';
 import 'package:endless_runner/game/utils/log_util.dart';
 import 'package:flame/collisions.dart';

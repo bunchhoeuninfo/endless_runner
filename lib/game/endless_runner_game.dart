@@ -2,16 +2,16 @@
 import 'dart:math';
 
 import 'package:endless_runner/components/players/player.dart';
-import 'package:endless_runner/core/services/game_state_service.dart';
+import 'package:endless_runner/core/services/games/game_state_service.dart';
 import 'package:endless_runner/game/widgets/game_overs/game_over_screen.dart';
 
 import 'package:endless_runner/core/state/game_state.dart';
-import 'package:endless_runner/core/managers/game_state_manager.dart';
-import 'package:endless_runner/core/managers/game_service_manager.dart';
-import 'package:endless_runner/core/services/game_service_service.dart';
+import 'package:endless_runner/core/managers/games/game_state_manager.dart';
+import 'package:endless_runner/core/managers/games/game_service_manager.dart';
+import 'package:endless_runner/core/services/games/game_service_service.dart';
 
-import 'package:endless_runner/core/managers/image_asset_manager.dart';
-import 'package:endless_runner/core/services/image_asset_services.dart';
+import 'package:endless_runner/core/managers/games/image_asset_manager.dart';
+import 'package:endless_runner/core/services/games/image_asset_services.dart';
 import 'package:endless_runner/game/utils/log_util.dart';
 import 'package:flame/camera.dart';
 import 'package:flame/events.dart';

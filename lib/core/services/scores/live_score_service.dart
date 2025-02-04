@@ -1,10 +1,10 @@
 import 'package:endless_runner/auth/data/player_data.dart';
 import 'package:endless_runner/auth/managers/player_auth_manager.dart';
 import 'package:endless_runner/auth/services/player_auth_service.dart';
-import 'package:endless_runner/core/managers/live_score_manager.dart';
+import 'package:endless_runner/core/managers/scores/live_score_manager.dart';
 import 'package:endless_runner/constants/game_constant.dart';
-import 'package:endless_runner/core/managers/player_data_notifier_manager.dart';
-import 'package:endless_runner/core/services/player_data_notifier_service.dart';
+import 'package:endless_runner/core/managers/players/player_data_notifier_manager.dart';
+import 'package:endless_runner/core/services/players/player_data_notifier_service.dart';
 import 'package:endless_runner/game/utils/log_util.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';

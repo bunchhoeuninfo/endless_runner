@@ -1,5 +1,5 @@
-import 'package:endless_runner/core/managers/game_state_manager.dart';
-import 'package:endless_runner/core/services/game_state_service.dart';
+import 'package:endless_runner/core/managers/games/game_state_manager.dart';
+import 'package:endless_runner/core/services/games/game_state_service.dart';
 import 'package:endless_runner/core/state/game_state.dart';
 import 'package:endless_runner/game/endless_runner_game.dart';
 import 'package:endless_runner/game/utils/log_util.dart';
