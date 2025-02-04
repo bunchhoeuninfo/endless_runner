@@ -1,20 +1,21 @@
 import 'package:endless_runner/components/players/player.dart';
-import 'package:endless_runner/core/managers/players/player_manager.dart';
 import 'package:endless_runner/core/managers/players/player_movement_manager.dart';
-import 'package:endless_runner/core/services/players/player_service.dart';
 import 'package:endless_runner/game/endless_runner_game.dart';
 import 'package:endless_runner/game/utils/log_util.dart';
 import 'package:flame/components.dart';
 
 class PlayerMovementService implements PlayerMovementManager {
-  final PlayerManager _playerManager = PlayerService();
   final double _jumpForce = -400;
   final double _gravity = 600;
-  final double _moveSpeed = 200; // Movement speed
+  final double _moveSpeed = 500; // Movement speed
 
   double _velocityY = 0;
   double _velocityX = 0;
   bool isGrounded = false;
+
+  bool _deceleratingLeft = false;
+  bool _deceleratingRight= false;
+  bool _decelerating = false;
 
   late double _minX;
   late double _maxX;
@@ -46,6 +47,25 @@ class PlayerMovementService implements PlayerMovementManager {
       _velocityY = 0;
     }
 
+    if (_decelerating) {
+      LogUtil.debug('_decelerating->$_decelerating, _velocityX->$_velocityX');
+      const double friction = 2500; // Adjust for smooth stopping effect
+      if (_velocityX < 0) {
+        _velocityX += friction * dt; // Gradually increase velocity towards 0
+        if (_velocityX > 0) {
+          _velocityX = 0; // Stop completely
+          _decelerating = false;
+        }
+      } else {
+        _velocityX -= friction * dt; // Gradually decrease velocity towards 0
+        if (_velocityX < 0) {
+          _velocityX = 0; // Stop completely
+          _decelerating = false;
+        }
+      }
+    }
+
+    //LogUtil.debug('_velocityX->$_velocityX');
     // Move player and clamp within range
     player.position.x += _velocityX * dt;
     player.position.x = player.position.x.clamp(_minX, _maxX);
@@ -62,11 +82,13 @@ class PlayerMovementService implements PlayerMovementManager {
   @override
   void moveLeft() {
     _velocityX = -_moveSpeed; // Move left
+    _decelerating = false;
   }
 
   @override
   void moveRight() {
     _velocityX = _moveSpeed; // Move right
+    _decelerating = false;
   }
 
   @override
@@ -76,16 +98,27 @@ class PlayerMovementService implements PlayerMovementManager {
   
   @override
   void resetPosition(EndlessRunnerGame gameRef, Player player) {
-    //LogUtil.debug('Start inside resetPosition ...');
-    //final screenLeftEdge = gameRef.size.x * 0.02;
-    //final groundLevel = gameRef.size.y / 2;
-    //setMovementBounds(gameRef);
     final screenLeftEdge = gameRef.size.x * 0.45;
     final groundLevel = gameRef.size.y / 2;
-
-
     player.position = Vector2(screenLeftEdge, groundLevel);
     _velocityY = 0;
     isGrounded = true;
   }
+
+  @override
+  void onLeftTapUp() {
+    // When the user lifts their finger, set _velocityX to 0, stopping movement.
+    //_velocityX = 0;  // Stop moving when the tap is released
+    _decelerating = true;
+  }
+  
+  
+  @override
+  void onRighttapUp() {
+    //top gradually when the tap is released
+    _decelerating = true;
+  }
+
+  
+  
 }

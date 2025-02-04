@@ -49,11 +49,20 @@ class RightControlBtn extends StatelessWidget {
 
   GestureDetector _rightButton() {
     return GestureDetector(
+      onTapDown: (_) {
+        game.player.moveRight();
+        LogUtil.debug('Moving right click.....');
+      },
+      onTapUp: (_) {
+        LogUtil.debug('onRighttapUp....');
+        game.player.onRighttapUp();
+      },
+      /*
     onTap: () {
       LogUtil.debug('Click right control');
       //_playerMovementManager.moveRight();
       game.player.moveRight();
-    },
+    },*/
       child: const Icon(Icons.arrow_forward, size: 50, color: Colors.white),
     ); 
   }

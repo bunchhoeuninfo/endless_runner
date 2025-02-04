@@ -88,6 +88,14 @@ class Player extends SpriteComponent with HasGameRef<EndlessRunnerGame>, Collisi
     _playerMovement.moveRight();
   }
 
+  void onLeftTapUp() {
+    _playerMovement.onLeftTapUp();
+  }
+
+  void onRighttapUp() {
+    _playerMovement.onRighttapUp();
+  }
+
   @override
   void update(double dt) {
     //LogUtil.debug('Called update method...');

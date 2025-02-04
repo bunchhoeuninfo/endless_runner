@@ -21,7 +21,7 @@ class RoadDownwardBackground extends SpriteComponent with HasGameRef<EndlessRunn
     LogUtil.debug('Start onLoad method');
     try {
       size = gameRef.size;
-      sprite = Sprite(gameRef.images.fromCache('backgrounds/road_bg_1.jpg'));
+      sprite = Sprite(gameRef.images.fromCache('backgrounds/road_bg.jpg'));
       LogUtil.debug('Road upward background loaded successfully');
     } catch (e) {
       LogUtil.error('Exception -> $e');

@@ -1,6 +1,5 @@
 import 'package:endless_runner/components/players/player.dart';
 import 'package:endless_runner/game/endless_runner_game.dart';
-import 'package:flame/components.dart';
 
 abstract class PlayerMovementManager {
   void applyGravity(double dt, Player player, EndlessRunnerGame gameRef);
@@ -11,6 +10,10 @@ abstract class PlayerMovementManager {
   void moveLeft();
   void moveRight();
   void stopMoving();
+
+  void onLeftTapUp();
+
+  void onRighttapUp();
   
 
 }

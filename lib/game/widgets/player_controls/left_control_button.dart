@@ -47,11 +47,19 @@ class LeftControlButton extends StatelessWidget {
 
   GestureDetector _leftButton() {
     return GestureDetector(
-    onTap: () {
+      onTapDown: (_) {
+        game.player.moveLeft();
+        LogUtil.debug('onTapDown.....');
+      },
+      onTapUp: (details) {
+        LogUtil.debug('onTapUp....');
+        game.player.onLeftTapUp();
+      }
+    /*onTap: () {
       LogUtil.debug('Click move left button');
       //_playerMovementManager.moveLeft();
       game.player.moveLeft();
-    },
+    }*/,
       child: const Icon(Icons.arrow_back, size: 50, color: Colors.white),
     ); 
   }
