@@ -48,9 +48,9 @@ class GameServiceService implements GameServiceManager {
       // Add two full-screen backgrounds for seamless scrolling
       //game.add(ScrollingBackground(position: Vector2(0, -50), baseSpeed: 100));
       //game.add(ScrollingBackground(position: Vector2(game.size.x, -50), baseSpeed: 100));
-      //game.add(RoadDownwardBackground(position: Vector2(0, -game.size.y), baseSpeed: 100));
-      //game.add(RoadDownwardBackground(position: Vector2(0, 0), baseSpeed: 100));
-      game.add(RoadBackground(speed:100));
+      game.add(RoadDownwardBackground(position: Vector2(0, -game.size.y), baseSpeed: 100));
+      game.add(RoadDownwardBackground(position: Vector2(0, 0), baseSpeed: 100));
+      //game.add(RoadBackground(speed:100));
     } catch (e) {
       LogUtil.error('Exception -> $e');
     }   

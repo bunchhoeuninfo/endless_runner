@@ -89,6 +89,7 @@ flutter:
     - assets/images/backgrounds/background_tile.jpg
     - assets/images/backgrounds/sidewalk_bg.jpg
     - assets/images/backgrounds/bg.jpg
+    - assets/images/backgrounds/road_bg.jpeg
     - assets/images/backgrounds/road_bg.jpg
   #   - images/a_dot_ham.jpeg    
     # about me data
