@@ -123,13 +123,8 @@ class GameServiceService implements GameServiceManager {
       LogUtil.debug('Try to add overlay control to the game world.');  
       List<String> overlayBtns = ['start', 'setting', 'playPause','leftControlBtn','rightControlBtn','playerJumpBtn', 'boostPlayerSpeed'];
     
+      // Overlay ojects
       game.overlays.addAll(overlayBtns);
-      //Overlay button
-      /*game.overlays.add('start');      
-      game.overlays.add('setting');
-      game.overlays.add('playPause');
-      game.overlays.add('leftControlBtn');
-      game.overlays.add(overlayName)*/
 
       // Add collision detection
       game.add(ScreenHitbox());

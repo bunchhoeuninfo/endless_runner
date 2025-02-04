@@ -56,13 +56,14 @@ class Player extends SpriteComponent with HasGameRef<EndlessRunnerGame>, Collisi
     _collisionHandler.handleCollision(other);
   }
 
+/*
   @override
   void render(Canvas canvas) {
     super.render(canvas);
     canvas.drawRect(size.toRect(), paint);
   }
 
-/*
+
   void resetPosition() {
     //LogUtil.debug('Called reset player object position...');
     final screenLeftEdge = gameRef.size.x * 0.02;
