@@ -41,7 +41,7 @@ class EndlessRunnerGame extends FlameGame with HasCollisionDetection, TapDetecto
            
       await super.onLoad();      
       await Future.delayed(const Duration(seconds: 1));         
-      camera.viewport = FixedResolutionViewport(resolution: Vector2(800, 600));      
+      //camera.viewport = FixedResolutionViewport(resolution: Vector2(800, 600));      
        // pre-load image assets to optimize the performance
       await _imageAssetManager.preLoadImgAssets(images);
       _gameServiceManager.setupBackground(this);  

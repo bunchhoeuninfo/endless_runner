@@ -1,18 +1,17 @@
 
+import 'package:endless_runner/components/backgrounds/road_background.dart';
+import 'package:endless_runner/components/backgrounds/road_downward_background.dart';
 import 'package:endless_runner/components/backgrounds/scrolling_background.dart';
 import 'package:endless_runner/components/coins/coin.dart';
 import 'package:endless_runner/components/obstacles/obstacle.dart';
-import 'package:endless_runner/components/players/player.dart';
 import 'package:endless_runner/components/powerups/speed_boost.dart';
 import 'package:endless_runner/core/managers/coin_manager.dart';
 import 'package:endless_runner/core/managers/game_state_manager.dart';
 import 'package:endless_runner/core/managers/obstacle_manager.dart';
-import 'package:endless_runner/core/managers/player_movement_manager.dart';
 import 'package:endless_runner/core/managers/speed_boost_manager.dart';
 import 'package:endless_runner/core/services/coin_services.dart';
 import 'package:endless_runner/core/services/game_state_service.dart';
 import 'package:endless_runner/core/services/obstacle_services.dart';
-import 'package:endless_runner/core/services/player_movement_service.dart';
 import 'package:endless_runner/core/services/speed_boost_services.dart';
 import 'package:endless_runner/core/state/game_state.dart';
 import 'package:endless_runner/core/managers/game_service_manager.dart';
@@ -47,8 +46,11 @@ class GameServiceService implements GameServiceManager {
   void setupBackground(EndlessRunnerGame game) {
     try {
       // Add two full-screen backgrounds for seamless scrolling
-      game.add(ScrollingBackground(position: Vector2(0, -50), baseSpeed: 100));
-      game.add(ScrollingBackground(position: Vector2(game.size.x, -50), baseSpeed: 100));
+      //game.add(ScrollingBackground(position: Vector2(0, -50), baseSpeed: 100));
+      //game.add(ScrollingBackground(position: Vector2(game.size.x, -50), baseSpeed: 100));
+      //game.add(RoadDownwardBackground(position: Vector2(0, -game.size.y), baseSpeed: 100));
+      //game.add(RoadDownwardBackground(position: Vector2(0, 0), baseSpeed: 100));
+      game.add(RoadBackground(speed:100));
     } catch (e) {
       LogUtil.error('Exception -> $e');
     }   
@@ -176,11 +178,11 @@ class GameServiceService implements GameServiceManager {
    // LogUtil.debug('Game method gameStateManager.stateNotifier.value -> ${_gameStateManager.stateNotifier.value}');
     if (state == GameState.playing) {
       //startGame(game);       
-      _spawnObstacle(dt, game);
+      //_spawnObstacle(dt, game);
       //spawn coin at intervals
-      _spawnCoin(dt, game);
+      //_spawnCoin(dt, game);
       //spawn speed boost at intervals
-      _speedBoost(dt, game);
+      //_speedBoost(dt, game);
     } 
     else if (_gameStateManager.stateNotifier.value == GameState.paused) {
       LogUtil.debug('Game method gameStateManager.isPaused() -> ${_gameStateManager.stateNotifier.value}');
