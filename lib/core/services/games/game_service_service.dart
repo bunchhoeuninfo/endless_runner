@@ -124,7 +124,7 @@ class GameServiceService implements GameServiceManager {
   void addEntities(EndlessRunnerGame game) {    
     try {
       LogUtil.debug('Try to add overlay control to the game world.');  
-      List<String> overlayBtns = ['start', 'setting', 'playPause','leftControlBtn','rightControlBtn','playerJumpBtn', 'boostPlayerSpeed'];
+      List<String> overlayBtns = ['start', 'setting', 'playPause','leftControlBtn','rightControlBtn','boostPlayerSpeed', 'upwardBtn'];
     
       // Overlay ojects
       game.overlays.addAll(overlayBtns);

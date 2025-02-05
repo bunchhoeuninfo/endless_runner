@@ -6,6 +6,7 @@ abstract class PlayerMovementManager {
   void jump();
   //void handleTap(Vector2 tapPosition, EndlessRunnerGame gameRef);
   void resetPosition(EndlessRunnerGame gameRef, Player player);
+  void initPosition(EndlessRunnerGame gameRef, Player player);
   void setMovementBounds(EndlessRunnerGame gameRef);
   void moveLeft();
   void moveRight();

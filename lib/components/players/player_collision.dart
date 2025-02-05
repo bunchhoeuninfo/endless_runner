@@ -61,9 +61,11 @@ class PlayerCollision implements PlayerManager {
   @override
   Player singlePlayer(EndlessRunnerGame game) {
     late Player player = Player(position: Vector2(game.size.x * 0.02, game.size.y / 2)); // Starting position
+    //late Player player = Player();
     try {
       LogUtil.debug('Try to initialize player');
       player = Player(position: Vector2(game.size.x * 0.02, game.size.y / 2)); // Starting position
+      //player = Player();
       return player;
     } catch (e) {
       LogUtil.error('Exception -> $e');

@@ -41,7 +41,7 @@ class Player extends SpriteComponent with HasGameRef<EndlessRunnerGame>, Collisi
        paint = Paint()..color = Colors.blue;
       // set initial position
       _playerMovement.setMovementBounds(gameRef);
-      _playerMovement.resetPosition(gameRef, this);
+      //_playerMovement.resetPosition(gameRef, this);
 
       add(RectangleHitbox());
       priority = 100;
@@ -102,6 +102,10 @@ class Player extends SpriteComponent with HasGameRef<EndlessRunnerGame>, Collisi
     super.update(dt);
 
     _playerMovement.applyGravity(dt, this, gameRef);
+  }
+
+  void initPosition() {
+    _playerMovement.initPosition(gameRef, this);
   }
 
 

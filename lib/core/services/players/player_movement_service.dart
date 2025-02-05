@@ -26,14 +26,19 @@ class PlayerMovementService implements PlayerMovementManager {
     _maxX = gameRef.size.x * 0.9;
   }
 
+  
+
   @override
   void applyGravity(double dt, Player player, EndlessRunnerGame gameRef) {
+    //LogUtil.debug('Called here position');
     if (!isGrounded) {
       _velocityY += _gravity * dt;
       player.position.y += _velocityY * dt;
+      
     }
 
-    final groundLevel = gameRef.size.y / 2;
+    //final groundLevel = gameRef.size.y / 2;
+    final groundLevel = gameRef.size.y;// Move ground to bottom of the screen
     const topLevel = 0.0;
 
     if (player.position.y >= groundLevel) {
@@ -42,6 +47,7 @@ class PlayerMovementService implements PlayerMovementManager {
       isGrounded = true;
     }
 
+    // Present player from going above the top boundary
     if (player.position.y < topLevel) {
       player.position.y = topLevel;
       _velocityY = 0;
@@ -117,6 +123,15 @@ class PlayerMovementService implements PlayerMovementManager {
   void onRighttapUp() {
     //top gradually when the tap is released
     _decelerating = true;
+  }
+  
+  @override
+  void initPosition(EndlessRunnerGame gameRef, Player player) {
+    final screenLeftEdge = gameRef.size.x * 0.5;
+    final groundLevel = gameRef.size.y / 2;
+    player.position = Vector2(screenLeftEdge, groundLevel);
+    _velocityY = 0;
+    isGrounded = true;
   }
 
   

@@ -34,9 +34,9 @@ class RightControlBtn extends StatelessWidget {
 
   Align _buildRightControl(BuildContext context) {
     return Align(
-      alignment: const Alignment (-1, 0.5),
+      alignment: const Alignment (-1, 1),
       child: Padding(
-        padding: const EdgeInsets.only(left: 120),
+        padding: const EdgeInsets.only(left: 120, bottom: 20),
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
