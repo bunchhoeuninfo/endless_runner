@@ -1,5 +1,6 @@
 
-import 'package:endless_runner/components/players/player_collision.dart';
+import 'package:endless_runner/core/managers/collisions/player_collision_manager.dart';
+import 'package:endless_runner/core/services/collisions/player_collision_service.dart';
 import 'package:endless_runner/core/managers/players/player_movement_manager.dart';
 import 'package:endless_runner/core/services/players/player_movement_service.dart';
 import 'package:endless_runner/game/endless_runner_game.dart';
@@ -22,7 +23,7 @@ class Player extends SpriteComponent with HasGameRef<EndlessRunnerGame>, Collisi
   bool isGrounded = false;
 
   final PlayerMovementManager _playerMovement = PlayerMovementService();
-  late PlayerCollision _collisionHandler;
+  final PlayerCollisionManager _playerCollisionManager = PlayerCollisionService();
 
   @override
   Future<void> onLoad() async {
@@ -36,12 +37,12 @@ class Player extends SpriteComponent with HasGameRef<EndlessRunnerGame>, Collisi
       LogUtil.debug('Player sprite loaded succesfully');
 
       //_playerMovement = PlayerMovement(gameRef: gameRef, player: this);
-      _collisionHandler = PlayerCollision(gameRef: gameRef, player: this);
+      //_collisionHandler = PlayerCollision(gameRef: gameRef, player: this);
 
        paint = Paint()..color = Colors.blue;
       // set initial position
       _playerMovement.setMovementBounds(gameRef);
-      _playerMovement.resetPosition(gameRef, this);
+      //_playerMovement.resetPosition(gameRef, this);
 
       add(RectangleHitbox());
       priority = 100;
@@ -53,27 +54,10 @@ class Player extends SpriteComponent with HasGameRef<EndlessRunnerGame>, Collisi
   @override
   void onCollision(Set<Vector2> intersectionPoints, PositionComponent other) {    
     super.onCollision(intersectionPoints, other);    
-    _collisionHandler.handleCollision(other);
+    //_collisionHandler.handleCollision(other);
+    //_playerCollisionManager.handleObstacleCollision(other, gameRef);
+    _playerCollisionManager.handleCollision(other, gameRef);
   }
-
-/*
-  @override
-  void render(Canvas canvas) {
-    super.render(canvas);
-    canvas.drawRect(size.toRect(), paint);
-  }
-
-
-  void resetPosition() {
-    //LogUtil.debug('Called reset player object position...');
-    final screenLeftEdge = gameRef.size.x * 0.02;
-    final groundLevel = gameRef.size.y / 2;
-
-    position = Vector2(screenLeftEdge, groundLevel);
-    velocityY = 0;
-    isGrounded = true;
-    //LogUtil.debug('Reset player object position is completed...');
-  }*/
 
   void jump() {
     LogUtil.debug('Called jump method...');
@@ -88,12 +72,28 @@ class Player extends SpriteComponent with HasGameRef<EndlessRunnerGame>, Collisi
     _playerMovement.moveRight();
   }
 
+  void onLeftTapUp() {
+    _playerMovement.onLeftTapUp();
+  }
+
+  void onRighttapUp() {
+    _playerMovement.onRighttapUp();
+  }
+
+  void resetPosition() {
+    _playerMovement.resetPosition(gameRef, this);
+  }
+
   @override
   void update(double dt) {
     //LogUtil.debug('Called update method...');
     super.update(dt);
 
     _playerMovement.applyGravity(dt, this, gameRef);
+  }
+
+  void initPosition() {
+    _playerMovement.initPosition(gameRef, this);
   }
 
 

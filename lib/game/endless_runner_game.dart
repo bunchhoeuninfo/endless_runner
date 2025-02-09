@@ -16,6 +16,7 @@ import 'package:endless_runner/game/utils/log_util.dart';
 import 'package:flame/camera.dart';
 import 'package:flame/events.dart';
 import 'package:flame/game.dart';
+import 'package:flutter/material.dart';
 
 class EndlessRunnerGame extends FlameGame with HasCollisionDetection, TapDetector   {    
   final Random random = Random();
@@ -31,28 +32,51 @@ class EndlessRunnerGame extends FlameGame with HasCollisionDetection, TapDetecto
 
   // check if game first run or restart
   bool isFirstRun = true;
+  
+  List<Rect> _activeObjects = [];    // Store active coins & car obstacles
 
   @override
   Future<void> onLoad() async {    
+    await super.onLoad();  
     //player = Player(position: Vector2(size.x * 0.02, size.y / 2)); // Starting position
-    player = Player(position: Vector2(50, 50)); // Starting position
+    //player = Player(position: Vector2(50, 50)); // Starting position
     try {
       LogUtil.debug('Try to EndlessRunnerGame.onLoad...');   
-           
-      await super.onLoad();      
-      await Future.delayed(const Duration(seconds: 1));         
-      //camera.viewport = FixedResolutionViewport(resolution: Vector2(800, 600));      
+      await Future.delayed(const Duration(seconds: 1));        
+      //player = Player(position: Vector2(size.x * 0.5, size.y * 0.7)); 
+      player = Player(position: Vector2(size.x * 0.5, size.y / 2));
+      
+      
+      //camera.followComponent(player);
+      
        // pre-load image assets to optimize the performance
       await _imageAssetManager.preLoadImgAssets(images);
       _gameServiceManager.setupBackground(this);  
       _gameServiceManager.addEntities(this);
-      initPlayer();     
+      addPlayer();     
+      //player.position = Vector2(50, 50);
     } catch (e) {
       LogUtil.error('Exception -> $e');
     }    
   }
 
-  void initPlayer() {
+  bool isOverlapping(Rect newObject) {
+    for (Rect obj in _activeObjects) {
+      if (obj.overlaps(newObject)) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  void addObject(Rect obj) {
+    _activeObjects.add(obj);
+  }
+  
+
+  void addPlayer() {
+    //initialize player position on the screen
+    //player = Player(position: Vector2(size.x * 0.5, size.y - player.height));
     // Listen for changes in game state
     _gameStateManager.stateNotifier.addListener(() {
       if (_gameStateManager.stateNotifier.value == GameState.playing) {
@@ -67,6 +91,7 @@ class EndlessRunnerGame extends FlameGame with HasCollisionDetection, TapDetecto
     if (_gameStateManager.stateNotifier.value == GameState.playing) {
       add(player);
     } 
+    camera.viewport = FixedResolutionViewport(resolution: Vector2(800, 600));
   }
 
   @override

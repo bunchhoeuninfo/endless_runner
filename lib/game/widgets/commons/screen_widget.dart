@@ -3,6 +3,7 @@ import 'package:endless_runner/game/widgets/player_controls/boost_player_speed_b
 import 'package:endless_runner/game/widgets/player_controls/left_control_button.dart';
 import 'package:endless_runner/game/widgets/player_controls/player_jump_btn.dart';
 import 'package:endless_runner/game/widgets/player_controls/right_control_btn.dart';
+import 'package:endless_runner/game/widgets/player_controls/upward_control_button.dart';
 import 'package:endless_runner/game/widgets/scoreboards/live_score_board.dart';
 import 'package:endless_runner/game/widgets/game_controls/level_up_overlay.dart';
 import 'package:endless_runner/game/widgets/game_controls/resume_pause_button_overlay.dart';
@@ -41,8 +42,9 @@ class ScreenWidget extends StatelessWidget {
               'playPause': (context, game) => ResumePauseButtonOverlay(gameRef: game as EndlessRunnerGame),
               'liveScoreBoard': (context, game) => LiveScoreBoard(),
               'levelUp': (context, game) => LevelUpOverlay(game: game as EndlessRunnerGame),
-              'playerJumpBtn':  (context, game) => PlayerJumpBtn(game: game as EndlessRunnerGame),
+              //'playerJumpBtn':  (context, game) => PlayerJumpBtn(game: game as EndlessRunnerGame),
               'boostPlayerSpeed': (context, game) => BoostPlayerSpeedBtn(game: game as EndlessRunnerGame),
+              'upwardBtn': (context, game) => UpwardControlButton(game: game as EndlessRunnerGame),
               
             },
             // Show the play overlay initially

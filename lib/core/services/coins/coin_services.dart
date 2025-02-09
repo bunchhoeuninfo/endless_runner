@@ -1,12 +1,13 @@
 import 'dart:math';
 
-import 'package:endless_runner/core/managers/scores/coin_manager.dart';
+import 'package:endless_runner/core/managers/coins/coin_manager.dart';
 import 'package:endless_runner/components/coins/coin.dart';
 import 'package:endless_runner/components/coins/coin_type.dart';
 import 'package:endless_runner/components/players/player.dart';
 import 'package:endless_runner/game/endless_runner_game.dart';
 import 'package:endless_runner/game/utils/log_util.dart';
 import 'package:flame/game.dart';
+import 'package:flutter/material.dart';
 
 class CoinServices implements CoinManager {
 
@@ -14,6 +15,14 @@ class CoinServices implements CoinManager {
   final List<Coin> _coins = []; 
   final Random _random = Random();
   //final ObstacleServices _obstacleServices = ObstacleServices();
+
+  late double _minX;
+  late double _maxX;
+
+  void setMovementBounds(EndlessRunnerGame gameRef) {
+    _minX = gameRef.size.x * 0.05;
+    _maxX = gameRef.size.x * 0.89;
+  }
 
   @override
   void checkCoinCollisions(Player player, EndlessRunnerGame game) {
@@ -70,5 +79,38 @@ class CoinServices implements CoinManager {
     }
     
   }
+  
+  @override
+  void spawnDownwardCoin(EndlessRunnerGame game) {
+    setMovementBounds(game);
 
+    double spawnY = 0; // Start at the top of the screen
+
+    // Define number of columns and select one at random
+    int totalColumns = 5; // Assuming a 5-column layout
+    int selectedColumn = _random.nextInt(totalColumns); // Pick a column randomly
+
+    // Calculate the X position of the selected column
+    double columnSpacing = (_maxX - _minX) / (totalColumns - 1);
+    double columnX = _minX + (selectedColumn * columnSpacing);
+
+    // Decide how many coins to spawn in this column (either 3 or 5)
+    int coinCount = _random.nextBool() ? 3 : 5;
+
+    for (int i = 0; i < coinCount; i++) {
+      final randomCoinType = CoinType.values[_random.nextInt(CoinType.values.length)];
+      double coinY = spawnY - (i * 50); // Space out coins in the column
+
+      Rect newCoinRect = Rect.fromLTRB(columnX, coinY, 50, 50);
+
+      if (!game.isOverlapping(newCoinRect)) {
+        Coin coin = Coin(Vector2(columnX, coinY), randomCoinType);
+        game.add(coin);
+        game.addObject(newCoinRect);    // Store coin position
+        LogUtil.debug('Spawned a ${randomCoinType.name} coin at (${coin.position.x}, ${coin.position.y})');
+      
+      }
+      
+    }
+  }
 }

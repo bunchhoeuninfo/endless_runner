@@ -34,9 +34,9 @@ class RightControlBtn extends StatelessWidget {
 
   Align _buildRightControl(BuildContext context) {
     return Align(
-      alignment: const Alignment (-1, 0.5),
+      alignment: const Alignment (-1, 1),
       child: Padding(
-        padding: const EdgeInsets.only(left: 120),
+        padding: const EdgeInsets.only(left: 120, bottom: 20),
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -49,11 +49,20 @@ class RightControlBtn extends StatelessWidget {
 
   GestureDetector _rightButton() {
     return GestureDetector(
+      onTapDown: (_) {
+        game.player.moveRight();
+        LogUtil.debug('Moving right click.....');
+      },
+      onTapUp: (_) {
+        LogUtil.debug('onRighttapUp....');
+        game.player.onRighttapUp();
+      },
+      /*
     onTap: () {
       LogUtil.debug('Click right control');
       //_playerMovementManager.moveRight();
       game.player.moveRight();
-    },
+    },*/
       child: const Icon(Icons.arrow_forward, size: 50, color: Colors.white),
     ); 
   }

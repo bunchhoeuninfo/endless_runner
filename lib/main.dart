@@ -4,7 +4,7 @@ import 'package:endless_runner/game/widgets/commons/no_internet_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-void main() async {
+void main() {
   Widget appWidget;
   try {
     LogUtil.debug('Try to initialize main app');
