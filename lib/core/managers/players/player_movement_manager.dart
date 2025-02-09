@@ -8,6 +8,9 @@ abstract class PlayerMovementManager {
   void resetPosition(EndlessRunnerGame gameRef, Player player);
   void initPosition(EndlessRunnerGame gameRef, Player player);
   void setMovementBounds(EndlessRunnerGame gameRef);
+
+  void moveUpward();
+
   void moveLeft();
   void moveRight();
   void stopMoving();

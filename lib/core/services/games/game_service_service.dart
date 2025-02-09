@@ -5,6 +5,7 @@ import 'package:endless_runner/components/backgrounds/scrolling_background.dart'
 import 'package:endless_runner/components/coins/coin.dart';
 import 'package:endless_runner/components/obstacles/car_obstacle.dart';
 import 'package:endless_runner/components/obstacles/obstacle.dart';
+import 'package:endless_runner/components/obstacles/road_cone_obstacle.dart';
 import 'package:endless_runner/components/powerups/speed_boost.dart';
 import 'package:endless_runner/core/managers/coins/coin_manager.dart';
 import 'package:endless_runner/core/managers/games/game_state_manager.dart';
@@ -95,9 +96,10 @@ class GameServiceService implements GameServiceManager {
         
         // Remove all objects from game screen    
         //game.children.whereType<Obstacle>().forEach((obstacle) => obstacle.removeFromParent());        
-        //game.children.whereType<Coin>().forEach((coin) => coin.removeFromParent());
+        game.children.whereType<Coin>().forEach((coin) => coin.removeFromParent());
         //game.children.whereType<SpeedBoost>().forEach((speedBoost) => speedBoost.removeFromParent());
         game.children.whereType<CarObstacle>().forEach((carObstacle) => carObstacle.removeFromParent());
+        game.children.whereType<RoadConeObstacle>().forEach((roadConeObstacle) => roadConeObstacle.removeFromParent());
       } catch (e) {
         LogUtil.error('Exception -> $e');
       }
@@ -183,6 +185,7 @@ class GameServiceService implements GameServiceManager {
     if (state == GameState.playing) {
       _spawnCarObstacle(dt, game);
       _spawnDownwardCoin(dt, game);
+      _spawnRoadConeObstacle(dt, game);
       //startGame(game);       
       //_spawnObstacle(dt, game);
       //spawn coin at intervals
@@ -227,6 +230,14 @@ class GameServiceService implements GameServiceManager {
     if (coinTimer >= coinSpawnInterval) {
       coinTimer = 0;
       _coinManager.spawnDownwardCoin(gameRef);
+    }
+  }
+
+  void _spawnRoadConeObstacle(double dt, EndlessRunnerGame gameRef) {
+    obstacleTimer += dt;
+    if (obstacleTimer >= obstacleSpawnInterval) {
+      obstacleTimer = 0;
+      _obstacleManager.spawnRoadConeObstacle(gameRef);
     }
   }
 

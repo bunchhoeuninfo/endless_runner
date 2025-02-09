@@ -83,12 +83,17 @@ flutter:
     - assets/images/coins/rocket_coin.jpg
     # obstacle images
     - assets/images/rock.jpg
+    - assets/images/obstacles/road_cone.png
     # background downward move
     - assets/images/backgrounds/road_bg.jpg
   #   - images/a_dot_ham.jpeg    
     # about me data
     - assets/data/developer_profile.json
     - assets/images/profile.jpeg
+
+    # player sprite
+    - assets/images/players/player_sprite.jpg
+    - assets/images/players/monkey_walk.png
 
   fonts:
     - family: KhmerOS

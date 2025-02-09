@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:endless_runner/components/obstacles/car_obstacle.dart';
+import 'package:endless_runner/components/obstacles/road_cone_obstacle.dart';
 import 'package:endless_runner/core/managers/obstacles/obstacle_manager.dart';
 import 'package:endless_runner/components/obstacles/obstacle.dart';
 import 'package:endless_runner/game/endless_runner_game.dart';
@@ -11,6 +12,7 @@ class ObstacleServices implements ObstacleManager {
 
   final List<Obstacle> _obstacles = [];
   final List<CarObstacle> _carObstacles = [];
+  final List<RoadConeObstacle> _roadConeObstacles = [];
   final Random _random = Random();
   
   late double _minX;
@@ -63,6 +65,23 @@ class ObstacleServices implements ObstacleManager {
       _carObstacles.add(carObstacle);
       game.add(carObstacle);    // Add car obstacle to the game world
       game.addObject(newCarRect);   //Store car obstacle position
+    }
+  }
+  
+  @override
+  void spawnRoadConeObstacle(EndlessRunnerGame game) {
+    setMovementBounds(game);
+    // Define the top spawn position
+    double spawnY = 0;  // Start at the top of the screen
+    double spawnX = _minX + _random.nextDouble() * (_maxX - _minX);
+    
+    Rect newRoadConeRect = Rect.fromLTRB(spawnX, spawnY, 60, 100);
+    if (!game.isOverlapping(newRoadConeRect)) {
+      // Create road cone obstacle at the top
+      RoadConeObstacle roadConeObstacle = RoadConeObstacle(position: Vector2(spawnX, spawnY));
+      _roadConeObstacles.add(roadConeObstacle);
+      game.add(roadConeObstacle);
+      game.addObject(newRoadConeRect);
     }
   }
 }

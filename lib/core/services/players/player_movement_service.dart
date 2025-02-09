@@ -6,6 +6,7 @@ import 'package:flame/components.dart';
 
 class PlayerMovementService implements PlayerMovementManager {
   final double _jumpForce = -400;
+  final double _upwardForce = -400;
   final double _gravity = 600;
   final double _moveSpeed = 500; // Movement speed
 
@@ -142,6 +143,12 @@ class PlayerMovementService implements PlayerMovementManager {
     player.position = Vector2(screenLeftEdge, groundLevel);
     _velocityY = 0;
     isGrounded = true;
+  }
+  
+  @override
+  void moveUpward() {
+    _velocityY = _upwardForce;
+    isGrounded = false;
   }
 
   

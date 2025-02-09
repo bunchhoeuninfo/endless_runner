@@ -13,7 +13,10 @@ class ImageAssetServices implements ImageAssetManager {
         'coins/rocket_coin.jpg',
         'player_1.png',
         'rock.jpg',
-        'backgrounds/road_bg.jpg'
+        'backgrounds/road_bg.jpg',
+        'obstacles/road_cone.png',
+        'players/player_sprite.jpg',
+        'players/monkey_walk.png',
       ]);
     } catch (e) {
       LogUtil.error('Exception -> $e');

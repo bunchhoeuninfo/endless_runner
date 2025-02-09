@@ -2,9 +2,9 @@ import 'package:endless_runner/components/coins/coin.dart';
 import 'package:endless_runner/components/coins/coin_type.dart';
 import 'package:endless_runner/components/obstacles/car_obstacle.dart';
 import 'package:endless_runner/components/obstacles/obstacle.dart';
+import 'package:endless_runner/components/obstacles/road_cone_obstacle.dart';
 import 'package:endless_runner/components/players/player.dart';
 import 'package:endless_runner/core/managers/collisions/player_collision_manager.dart';
-import 'package:endless_runner/core/managers/players/player_manager.dart';
 import 'package:endless_runner/components/powerups/speed_boost.dart';
 import 'package:endless_runner/core/managers/players/speed_boost_manager.dart';
 import 'package:endless_runner/core/services/players/speed_boost_services.dart';
@@ -24,6 +24,10 @@ class PlayerCollisionService implements PlayerCollisionManager {
 
   @override
   void handleCollision(PositionComponent other, EndlessRunnerGame gameRef) {
+    takeAction(other, gameRef);
+  }
+
+  void takeAction(PositionComponent other, EndlessRunnerGame gameRef) {
     if (other is Obstacle) {
       LogUtil.debug('Game Over: Player collided with obstacle!');
       _gameServiceManager.gameOver(gameRef);
@@ -52,6 +56,10 @@ class PlayerCollisionService implements PlayerCollisionManager {
       other.removeFromParent();
     } else if (other is CarObstacle) {
       LogUtil.debug('Game Over: Player collided with car obstacle!');
+      _gameServiceManager.gameOver(gameRef);
+      other.removeFromParent();
+    } else if (other is RoadConeObstacle) {
+      LogUtil.debug('Game Over: Player collided with road cone obstacle!');
       _gameServiceManager.gameOver(gameRef);
       other.removeFromParent();
     }

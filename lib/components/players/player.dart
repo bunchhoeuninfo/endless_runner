@@ -9,9 +9,7 @@ import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 import 'package:flutter/material.dart';
 
-class Player extends SpriteComponent with HasGameRef<EndlessRunnerGame>, CollisionCallbacks, GestureHitboxes   {
-
-
+class Player extends SpriteAnimationComponent with HasGameRef<EndlessRunnerGame>, CollisionCallbacks, GestureHitboxes   {
 
   Player({required Vector2 position})
       : super(size: Vector2(50, 50), position: position); // Fixed position
@@ -24,6 +22,7 @@ class Player extends SpriteComponent with HasGameRef<EndlessRunnerGame>, Collisi
 
   final PlayerMovementManager _playerMovement = PlayerMovementService();
   final PlayerCollisionManager _playerCollisionManager = PlayerCollisionService();
+  late final SpriteAnimation _walkingAnimation;
 
   @override
   Future<void> onLoad() async {
@@ -31,18 +30,25 @@ class Player extends SpriteComponent with HasGameRef<EndlessRunnerGame>, Collisi
     LogUtil.debug('Inside Player.onLoad method...');
     try {
 
-      //sprite = await gameRef.loadSprite('rock.jpg'); // Load the player sprite
+      _playerMovement.setMovementBounds(gameRef);   
       
-      sprite = Sprite(gameRef.images.fromCache('rock.jpg'));
+      // Load walking animation from sprite sheet
+      _walkingAnimation = SpriteAnimation.fromFrameData(
+        gameRef.images.fromCache('players/monkey_walk.png'),  // sprite sheet image
+        SpriteAnimationData.sequenced(
+          amount: 4, // Number of frames in the sprite sheet
+          stepTime: 0.1,  // Time per frame (adjust for walk speed)
+          textureSize: Vector2(50, 50)  // Size of each frame
+        ),
+      );
+
+      //sprite = Sprite(gameRef.images.fromCache('rock.jpg'));
+      animation = _walkingAnimation;
       LogUtil.debug('Player sprite loaded succesfully');
 
-      //_playerMovement = PlayerMovement(gameRef: gameRef, player: this);
-      //_collisionHandler = PlayerCollision(gameRef: gameRef, player: this);
-
-       paint = Paint()..color = Colors.blue;
+      //paint = Paint()..color = Colors.blue;
       // set initial position
-      _playerMovement.setMovementBounds(gameRef);
-      //_playerMovement.resetPosition(gameRef, this);
+         
 
       add(RectangleHitbox());
       priority = 100;
@@ -54,8 +60,6 @@ class Player extends SpriteComponent with HasGameRef<EndlessRunnerGame>, Collisi
   @override
   void onCollision(Set<Vector2> intersectionPoints, PositionComponent other) {    
     super.onCollision(intersectionPoints, other);    
-    //_collisionHandler.handleCollision(other);
-    //_playerCollisionManager.handleObstacleCollision(other, gameRef);
     _playerCollisionManager.handleCollision(other, gameRef);
   }
 
@@ -82,6 +86,10 @@ class Player extends SpriteComponent with HasGameRef<EndlessRunnerGame>, Collisi
 
   void resetPosition() {
     _playerMovement.resetPosition(gameRef, this);
+  }
+
+  void moveUpward() {
+    _playerMovement.moveUpward();
   }
 
   @override
