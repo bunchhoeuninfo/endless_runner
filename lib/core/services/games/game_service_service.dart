@@ -3,14 +3,15 @@ import 'package:endless_runner/components/backgrounds/road_background.dart';
 import 'package:endless_runner/components/backgrounds/road_downward_background.dart';
 import 'package:endless_runner/components/backgrounds/scrolling_background.dart';
 import 'package:endless_runner/components/coins/coin.dart';
+import 'package:endless_runner/components/obstacles/car_obstacle.dart';
 import 'package:endless_runner/components/obstacles/obstacle.dart';
 import 'package:endless_runner/components/powerups/speed_boost.dart';
-import 'package:endless_runner/core/managers/scores/coin_manager.dart';
+import 'package:endless_runner/core/managers/coins/coin_manager.dart';
 import 'package:endless_runner/core/managers/games/game_state_manager.dart';
 import 'package:endless_runner/core/managers/obstacles/obstacle_manager.dart';
 import 'package:endless_runner/core/managers/players/speed_boost_manager.dart';
 
-import 'package:endless_runner/core/services/scores/coin_services.dart';
+import 'package:endless_runner/core/services/coins/coin_services.dart';
 import 'package:endless_runner/core/services/games/game_state_service.dart';
 import 'package:endless_runner/core/services/obstacles/obstacle_services.dart';
 import 'package:endless_runner/core/services/players/speed_boost_services.dart';
@@ -63,8 +64,6 @@ class GameServiceService implements GameServiceManager {
     if (_gameStateManager.stateNotifier.value == GameState.playing) {
       try {
         LogUtil.debug('Game Over.');
-        //game.gameStateManager.setState(GameState.gameOver);
-        //game.gameStateManager.setState(GameState.gameOver);
         _gameStateManager.stateNotifier.value = GameState.gameOver;
         game.overlays.add('restart');
         game.pauseEngine();
@@ -90,11 +89,15 @@ class GameServiceService implements GameServiceManager {
         
         // Reset background
         setupBackground(game);
+
+        // Reset player position
+        game.player.resetPosition();
         
         // Remove all objects from game screen    
-        game.children.whereType<Obstacle>().forEach((obstacle) => obstacle.removeFromParent());        
-        game.children.whereType<Coin>().forEach((coin) => coin.removeFromParent());
-        game.children.whereType<SpeedBoost>().forEach((speedBoost) => speedBoost.removeFromParent());
+        //game.children.whereType<Obstacle>().forEach((obstacle) => obstacle.removeFromParent());        
+        //game.children.whereType<Coin>().forEach((coin) => coin.removeFromParent());
+        //game.children.whereType<SpeedBoost>().forEach((speedBoost) => speedBoost.removeFromParent());
+        game.children.whereType<CarObstacle>().forEach((carObstacle) => carObstacle.removeFromParent());
       } catch (e) {
         LogUtil.error('Exception -> $e');
       }
@@ -178,6 +181,8 @@ class GameServiceService implements GameServiceManager {
   void onGameStateChanged(double dt, GameState state, EndlessRunnerGame game) {
    // LogUtil.debug('Game method gameStateManager.stateNotifier.value -> ${_gameStateManager.stateNotifier.value}');
     if (state == GameState.playing) {
+      _spawnCarObstacle(dt, game);
+      _spawnDownwardCoin(dt, game);
       //startGame(game);       
       //_spawnObstacle(dt, game);
       //spawn coin at intervals
@@ -201,12 +206,27 @@ class GameServiceService implements GameServiceManager {
     }
   }
 
+  void _spawnCarObstacle(double dt, EndlessRunnerGame game) {
+    obstacleTimer += dt;
+    if (obstacleTimer >= obstacleSpawnInterval) {
+      obstacleTimer = 0;
+      _obstacleManager.spawnCarObstacle(game);
+    }
+  }
 
   void _spawnObstacle(double dt, EndlessRunnerGame game) {
     obstacleTimer += dt;
     if (obstacleTimer >= obstacleSpawnInterval) {
       obstacleTimer = 0;
       _obstacleManager.spawnObstacle(game);        
+    }
+  }
+
+  void _spawnDownwardCoin(double dt, EndlessRunnerGame gameRef) {
+    coinTimer += dt;
+    if (coinTimer >= coinSpawnInterval) {
+      coinTimer = 0;
+      _coinManager.spawnDownwardCoin(gameRef);
     }
   }
 

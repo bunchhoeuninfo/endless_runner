@@ -22,8 +22,8 @@ class PlayerMovementService implements PlayerMovementManager {
 
   @override
   void setMovementBounds(EndlessRunnerGame gameRef) {
-    _minX = gameRef.size.x * 0.1;
-    _maxX = gameRef.size.x * 0.9;
+    _minX = gameRef.size.x * 0.05;
+    _maxX = gameRef.size.x * 0.89;
   }
 
   
@@ -31,6 +31,9 @@ class PlayerMovementService implements PlayerMovementManager {
   @override
   void applyGravity(double dt, Player player, EndlessRunnerGame gameRef) {
     //LogUtil.debug('Called here position');
+    final groundLevel = gameRef.size.y / 2;// Move ground to bottom of the screen
+    const topLevel = 0.0;
+
     if (!isGrounded) {
       _velocityY += _gravity * dt;
       player.position.y += _velocityY * dt;
@@ -38,8 +41,7 @@ class PlayerMovementService implements PlayerMovementManager {
     }
 
     //final groundLevel = gameRef.size.y / 2;
-    final groundLevel = gameRef.size.y;// Move ground to bottom of the screen
-    const topLevel = 0.0;
+    
 
     if (player.position.y >= groundLevel) {
       player.position.y = groundLevel;
@@ -52,6 +54,8 @@ class PlayerMovementService implements PlayerMovementManager {
       player.position.y = topLevel;
       _velocityY = 0;
     }
+
+    //LogUtil.debug('Player Y: ${player.position.y}, VelocityY: $_velocityY, Grounded: $isGrounded');
 
     if (_decelerating) {
       LogUtil.debug('_decelerating->$_decelerating, _velocityX->$_velocityX');
@@ -104,11 +108,17 @@ class PlayerMovementService implements PlayerMovementManager {
   
   @override
   void resetPosition(EndlessRunnerGame gameRef, Player player) {
-    final screenLeftEdge = gameRef.size.x * 0.45;
+    LogUtil.debug('Try to reset player position');
+    final screenX = gameRef.size.x * 0.5;
     final groundLevel = gameRef.size.y / 2;
-    player.position = Vector2(screenLeftEdge, groundLevel);
+    //player.position.x = screenLeftEdge;
+    player.position = Vector2(screenX, groundLevel);
     _velocityY = 0;
+    _velocityX = 0;
     isGrounded = true;
+    //player.position.x += _velocityX * dt;
+    //player.position.x = player.position.x.clamp(_minX, _maxX);
+    LogUtil.debug('Try to reset player position ${player.position.y}, VelocityY: $_velocityY, Grounded: $isGrounded');
   }
 
   @override

@@ -31,4 +31,6 @@ class GameConstant {
   static const String encouragementNotifierLevel1 = 'You are doing great! Keep it up!';  
   static const String encouragementNotifierLevel2 = 'You are on fire! Keep going!';
   static const String encouragementNotifierLevel3 = 'You are unstoppable! Keep running!';
+
+ 
 }

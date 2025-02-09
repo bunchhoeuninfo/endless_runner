@@ -16,6 +16,7 @@ import 'package:endless_runner/game/utils/log_util.dart';
 import 'package:flame/camera.dart';
 import 'package:flame/events.dart';
 import 'package:flame/game.dart';
+import 'package:flutter/material.dart';
 
 class EndlessRunnerGame extends FlameGame with HasCollisionDetection, TapDetector   {    
   final Random random = Random();
@@ -31,6 +32,8 @@ class EndlessRunnerGame extends FlameGame with HasCollisionDetection, TapDetecto
 
   // check if game first run or restart
   bool isFirstRun = true;
+  
+  List<Rect> _activeObjects = [];    // Store active coins & car obstacles
 
   @override
   Future<void> onLoad() async {    
@@ -40,7 +43,9 @@ class EndlessRunnerGame extends FlameGame with HasCollisionDetection, TapDetecto
     try {
       LogUtil.debug('Try to EndlessRunnerGame.onLoad...');   
       await Future.delayed(const Duration(seconds: 1));        
-      player = Player(position: Vector2(size.x * 0.5, size.y * 0.7)); 
+      //player = Player(position: Vector2(size.x * 0.5, size.y * 0.7)); 
+      player = Player(position: Vector2(size.x * 0.5, size.y / 2));
+      
       
       //camera.followComponent(player);
       
@@ -54,6 +59,20 @@ class EndlessRunnerGame extends FlameGame with HasCollisionDetection, TapDetecto
       LogUtil.error('Exception -> $e');
     }    
   }
+
+  bool isOverlapping(Rect newObject) {
+    for (Rect obj in _activeObjects) {
+      if (obj.overlaps(newObject)) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  void addObject(Rect obj) {
+    _activeObjects.add(obj);
+  }
+  
 
   void addPlayer() {
     //initialize player position on the screen

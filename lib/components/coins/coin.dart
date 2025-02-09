@@ -5,7 +5,7 @@ import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 
 class Coin extends SpriteComponent with HasGameRef<EndlessRunnerGame> {
-  final double speed = 200;
+  final double _fallSpeed = 200;
   final CoinType type;
 
   Coin(Vector2 position, this.type)
@@ -46,9 +46,9 @@ class Coin extends SpriteComponent with HasGameRef<EndlessRunnerGame> {
     //LogUtil.debug('Start inside $_className.update ...');
     super.update(dt);
 
-    position.x -= speed * dt;
+    position.y += _fallSpeed * dt;
     // Remove coin if it moves off-screen
-    if (position.x < -size.x) {
+    if (position.y > gameRef.size.y) {
       //LogUtil.debug('Start inside $_className.update...Removed coin here');
       removeFromParent();
     }
