@@ -93,7 +93,7 @@ flutter:
 
     # player sprite
     - assets/images/players/player_sprite.jpg
-    - assets/images/players/monkey_walk.png
+    - assets/images/players/walk_sheet.png
 
   fonts:
     - family: KhmerOS
