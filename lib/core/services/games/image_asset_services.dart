@@ -17,6 +17,7 @@ class ImageAssetServices implements ImageAssetManager {
         'obstacles/road_cone.png',
         'players/player_sprite.jpg',
         'players/walk_sheet.png',
+        'players/car_sprite.png',
       ]);
     } catch (e) {
       LogUtil.error('Exception -> $e');

@@ -94,6 +94,7 @@ flutter:
     # player sprite
     - assets/images/players/player_sprite.jpg
     - assets/images/players/walk_sheet.png
+    - assets/images/players/car_sprite.png
 
   fonts:
     - family: KhmerOS

@@ -12,7 +12,7 @@ import 'package:flutter/material.dart';
 class Player extends SpriteAnimationComponent with HasGameRef<EndlessRunnerGame>, CollisionCallbacks, GestureHitboxes   {
 
   Player({required Vector2 position})
-      : super(size: Vector2(50, 70), position: position); // Fixed position
+      : super(size: Vector2(90, 120), position: position); // Fixed position
 
   final double moveSpeed = 200;
   final double jumpForce = -400;
@@ -34,11 +34,11 @@ class Player extends SpriteAnimationComponent with HasGameRef<EndlessRunnerGame>
       
       // Load walking animation from sprite sheet
       _walkingAnimation = SpriteAnimation.fromFrameData(
-        gameRef.images.fromCache('players/walk_sheet.png'),  // sprite sheet image
+        gameRef.images.fromCache('players/car_sprite.png'),  // sprite sheet image
         SpriteAnimationData.sequenced(
-          amount: 4, // Number of frames in the sprite sheet
+          amount: 3, // Number of frames in the sprite sheet
           stepTime: 0.1,  // Time per frame (adjust for walk speed)
-          textureSize: Vector2(150, 300)  // Size of each frame
+          textureSize: Vector2(500, 500)  // Size of each frame
         ),
       );
 

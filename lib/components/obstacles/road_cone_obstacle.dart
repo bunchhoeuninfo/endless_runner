@@ -1,9 +1,11 @@
 import 'dart:math';
+import 'dart:ui';
 
 import 'package:endless_runner/game/endless_runner_game.dart';
 import 'package:endless_runner/game/utils/log_util.dart';
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
+import 'package:flutter/material.dart';
 
 class RoadConeObstacle extends SpriteComponent with HasGameRef<EndlessRunnerGame> {
 
@@ -20,7 +22,7 @@ class RoadConeObstacle extends SpriteComponent with HasGameRef<EndlessRunnerGame
     super.onLoad();
     try {
       sprite = await gameRef.loadSprite('obstacles/road_cone.png');
-      add(RectangleHitbox());
+      add(CircleHitbox());
     } catch (e) {
       LogUtil.error('Exception -> $e');
     }
@@ -39,6 +41,12 @@ class RoadConeObstacle extends SpriteComponent with HasGameRef<EndlessRunnerGame
   void resetState() {
     position.y = 0; // Reset position
     _fallSpeed = 200;
+  }
+
+   @override
+  void render(Canvas canvas) {
+    super.render(canvas);
+    canvas.drawRect(size.toRect(), Paint()..color = Colors.red..style = PaintingStyle.stroke);
   }
 
 }
