@@ -86,6 +86,7 @@ flutter:
     - assets/images/obstacles/road_cone.png
     # background downward move
     - assets/images/backgrounds/road_bg.jpg
+    - assets/images/backgrounds/grid_bg.png
   #   - images/a_dot_ham.jpeg    
     # about me data
     - assets/data/developer_profile.json
@@ -95,6 +96,7 @@ flutter:
     - assets/images/players/player_sprite.jpg
     - assets/images/players/walk_sheet.png
     - assets/images/players/car_sprite.png
+    - assets/images/players/kitti_jumping.png
 
   fonts:
     - family: KhmerOS

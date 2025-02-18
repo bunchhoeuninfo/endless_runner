@@ -183,9 +183,9 @@ class GameServiceService implements GameServiceManager {
   void onGameStateChanged(double dt, GameState state, EndlessRunnerGame game) {
    // LogUtil.debug('Game method gameStateManager.stateNotifier.value -> ${_gameStateManager.stateNotifier.value}');
     if (state == GameState.playing) {
-      _spawnCarObstacle(dt, game);
+      //_spawnCarObstacle(dt, game);
       _spawnDownwardCoin(dt, game);
-      _spawnRoadConeObstacle(dt, game);
+      //_spawnRoadConeObstacle(dt, game);
       //startGame(game);       
       //_spawnObstacle(dt, game);
       //spawn coin at intervals

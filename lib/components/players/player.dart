@@ -48,6 +48,13 @@ class Player extends SpriteAnimationComponent with HasGameRef<EndlessRunnerGame>
 
       //paint = Paint()..color = Colors.blue;
       // set initial position
+
+      final _jumpingAnimation = SpriteAnimation.fromFrameData(
+        gameRef.images.fromCache('players/kitti_jumping.png'), 
+        SpriteAnimationData.sequenced(
+          amount: 1, stepTime: 0.1, 
+          textureSize: Vector2(500, 500))
+      );
          
 
       add(RectangleHitbox());
@@ -56,6 +63,8 @@ class Player extends SpriteAnimationComponent with HasGameRef<EndlessRunnerGame>
       LogUtil.error('Exception -> $e, $stackTrace',);
     }    
   }
+
+  
 
   @override
   void onCollision(Set<Vector2> intersectionPoints, PositionComponent other) {    

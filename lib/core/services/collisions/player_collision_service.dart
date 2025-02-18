@@ -33,7 +33,7 @@ class PlayerCollisionService implements PlayerCollisionManager {
       _gameServiceManager.gameOver(gameRef);
       other.removeFromParent();
     } else if (other is Coin) {
-      LogUtil.debug('Player collected a coin!');      
+      //LogUtil.debug('Player collected a coin!');      
       int pointToAdd = 0;
       switch (other.type) {
         case CoinType.gold:
@@ -50,23 +50,23 @@ class PlayerCollisionService implements PlayerCollisionManager {
       _liveScoreService.updateScore(pointToAdd);
       other.removeFromParent();   //Remove the coin after collection
     } else if (other is SpeedBoost) {
-      LogUtil.debug('Speed Boost Activated.');
+      //LogUtil.debug('Speed Boost Activated.');
       double speedMultiplier = 5.0;
       _speedBoostManager.applySpeedBoost(speedMultiplier, gameRef);
       other.removeFromParent();
     } else if (other is CarObstacle) {
-      LogUtil.debug('Game Over: Player collided with car obstacle!');
+      //LogUtil.debug('Game Over: Player collided with car obstacle!');
       _gameServiceManager.gameOver(gameRef);
       other.removeFromParent();
     } else if (other is RoadConeObstacle) {
-      LogUtil.debug('Game Over: Player collided with road cone obstacle!');
+      //LogUtil.debug('Game Over: Player collided with road cone obstacle!');
       _gameServiceManager.gameOver(gameRef);
       other.removeFromParent();
     }
 
     // Check if player has leveled up
     _liveScoreService.listentoLevel((newLevel) {
-      LogUtil.debug('Player leveled up to $newLevel');
+      //LogUtil.debug('Player leveled up to $newLevel');
       _gameServiceManager.levelUp(gameRef);
       //_liveScoreService.levelNotifier.value = newLevel;
     });
