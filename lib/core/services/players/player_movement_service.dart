@@ -150,6 +150,8 @@ class PlayerMovementService implements PlayerMovementManager {
     _velocityY = _upwardForce;
     isGrounded = false;
   }
+  
+ 
 
   
   

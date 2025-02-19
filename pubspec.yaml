@@ -96,7 +96,13 @@ flutter:
     - assets/images/players/player_sprite.jpg
     - assets/images/players/walk_sheet.png
     - assets/images/players/car_sprite.png
-    - assets/images/players/kitti_jumping.png
+    # player kitty
+    - assets/images/players/kitties/kitty_jumping.png
+    - assets/images/players/kitties/kitty_jump.png
+    - assets/images/players/kitties/kitty_stand.png
+    - assets/images/players/kitties/kitty_post_jump.png
+    - assets/images/players/kitties/kitty_upward.png
+    - assets/images/players/kitties/kitty_idle.png
 
   fonts:
     - family: KhmerOS

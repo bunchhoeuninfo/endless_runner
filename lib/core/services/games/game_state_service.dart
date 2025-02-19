@@ -1,7 +1,6 @@
 import 'package:endless_runner/core/managers/games/game_state_manager.dart';
 import 'package:endless_runner/core/state/game_state.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/foundation/change_notifier.dart';
 
 class GameStateService implements GameStateManager {
 

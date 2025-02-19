@@ -1,8 +1,13 @@
 
 import 'package:endless_runner/core/managers/collisions/player_collision_manager.dart';
+import 'package:endless_runner/core/managers/players/player_animation_manager.dart';
+import 'package:endless_runner/core/managers/players/player_state_manager.dart';
 import 'package:endless_runner/core/services/collisions/player_collision_service.dart';
 import 'package:endless_runner/core/managers/players/player_movement_manager.dart';
+import 'package:endless_runner/core/services/players/player_animation_service.dart';
 import 'package:endless_runner/core/services/players/player_movement_service.dart';
+import 'package:endless_runner/core/services/players/player_state_service.dart';
+import 'package:endless_runner/core/state/player_state.dart';
 import 'package:endless_runner/game/endless_runner_game.dart';
 import 'package:endless_runner/game/utils/log_util.dart';
 import 'package:flame/collisions.dart';
@@ -21,49 +26,29 @@ class Player extends SpriteAnimationComponent with HasGameRef<EndlessRunnerGame>
   bool isGrounded = false;
 
   final PlayerMovementManager _playerMovement = PlayerMovementService();
+  final PlayerAnimationManager _playerAnimationManager = PlayerAnimationService();
   final PlayerCollisionManager _playerCollisionManager = PlayerCollisionService();
-  late final SpriteAnimation _walkingAnimation;
+  final PlayerStateManager _playerStateManager = PlayerStateService();
+  
+  final spriteSize = Vector2(300,370);
 
   @override
   Future<void> onLoad() async {
     super.onLoad();
     LogUtil.debug('Inside Player.onLoad method...');
     try {
-
+      _playerStateManager.stateNotifier.value = PlayerState.idle;
       _playerMovement.setMovementBounds(gameRef);   
-      
-      // Load walking animation from sprite sheet
-      _walkingAnimation = SpriteAnimation.fromFrameData(
-        gameRef.images.fromCache('players/car_sprite.png'),  // sprite sheet image
-        SpriteAnimationData.sequenced(
-          amount: 3, // Number of frames in the sprite sheet
-          stepTime: 0.1,  // Time per frame (adjust for walk speed)
-          textureSize: Vector2(500, 500)  // Size of each frame
-        ),
-      );
-
       //sprite = Sprite(gameRef.images.fromCache('rock.jpg'));
-      animation = _walkingAnimation;
+      animation = _playerAnimationManager.idleAnimation(gameRef, spriteSize);
       LogUtil.debug('Player sprite loaded succesfully');
 
-      //paint = Paint()..color = Colors.blue;
-      // set initial position
-
-      final _jumpingAnimation = SpriteAnimation.fromFrameData(
-        gameRef.images.fromCache('players/kitti_jumping.png'), 
-        SpriteAnimationData.sequenced(
-          amount: 1, stepTime: 0.1, 
-          textureSize: Vector2(500, 500))
-      );
-         
-
-      add(RectangleHitbox());
+      add(CircleHitbox());
       priority = 100;
     } catch (e, stackTrace) {
       LogUtil.error('Exception -> $e, $stackTrace',);
     }    
   }
-
   
 
   @override
@@ -73,8 +58,12 @@ class Player extends SpriteAnimationComponent with HasGameRef<EndlessRunnerGame>
   }
 
   void jump() {
-    LogUtil.debug('Called jump method...');
+    LogUtil.debug('Called jump method... player state: ${_playerStateManager.stateNotifier.value}');
     _playerMovement.jump();
+    if (_playerStateManager.stateNotifier.value != PlayerState.jumping) {
+      _playerStateManager.stateNotifier.value = PlayerState.jumping;
+      animation = _playerAnimationManager.jumpingAnimation(gameRef, spriteSize);
+    }
   }
 
   void moveLeft() {
@@ -98,7 +87,13 @@ class Player extends SpriteAnimationComponent with HasGameRef<EndlessRunnerGame>
   }
 
   void moveUpward() {
+    LogUtil.debug('Called move up ward method, player state: ${_playerStateManager.stateNotifier.value}');
     _playerMovement.moveUpward();
+    
+    if (_playerStateManager.stateNotifier.value != PlayerState.upward) {
+      _playerStateManager.stateNotifier.value = PlayerState.upward;
+      animation = _playerAnimationManager.upwardAnimation(gameRef, spriteSize);
+    }
   }
 
   @override
@@ -120,9 +115,9 @@ class Player extends SpriteAnimationComponent with HasGameRef<EndlessRunnerGame>
   }
 
   @override
-void render(Canvas canvas) {
-  super.render(canvas);
-  canvas.drawRect(size.toRect(), Paint()..color = Colors.red..style = PaintingStyle.stroke);
-}
+  void render(Canvas canvas) {
+    super.render(canvas);
+    canvas.drawRect(size.toRect(), Paint()..color = Colors.red..style = PaintingStyle.stroke);
+  }
 
 }

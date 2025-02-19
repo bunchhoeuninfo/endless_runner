@@ -1,12 +1,8 @@
 
-import 'package:endless_runner/components/backgrounds/road_background.dart';
 import 'package:endless_runner/components/backgrounds/road_downward_background.dart';
-import 'package:endless_runner/components/backgrounds/scrolling_background.dart';
 import 'package:endless_runner/components/coins/coin.dart';
 import 'package:endless_runner/components/obstacles/car_obstacle.dart';
-import 'package:endless_runner/components/obstacles/obstacle.dart';
 import 'package:endless_runner/components/obstacles/road_cone_obstacle.dart';
-import 'package:endless_runner/components/powerups/speed_boost.dart';
 import 'package:endless_runner/core/managers/coins/coin_manager.dart';
 import 'package:endless_runner/core/managers/games/game_state_manager.dart';
 import 'package:endless_runner/core/managers/obstacles/obstacle_manager.dart';

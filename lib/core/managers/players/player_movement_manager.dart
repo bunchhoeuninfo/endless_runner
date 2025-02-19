@@ -18,6 +18,7 @@ abstract class PlayerMovementManager {
   void onLeftTapUp();
 
   void onRighttapUp();
-  
+
+ 
 
 }

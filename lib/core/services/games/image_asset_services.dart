@@ -19,7 +19,13 @@ class ImageAssetServices implements ImageAssetManager {
         'players/player_sprite.jpg',
         'players/walk_sheet.png',
         'players/car_sprite.png',
-        'players/kitti_jumping.png',
+        // player kitty
+        'players/kitties/kitty_jumping.png',
+        'players/kitties/kitty_jump.png',
+        'players/kitties/kitty_stand.png',
+        'players/kitties/kitty_post_jump.png',
+        'players/kitties/kitty_upward.png',
+        'players/kitties/kitty_idle.png',
       ]);
     } catch (e) {
       LogUtil.error('Exception -> $e');
