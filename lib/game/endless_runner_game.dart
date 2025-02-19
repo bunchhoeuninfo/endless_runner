@@ -33,28 +33,21 @@ class EndlessRunnerGame extends FlameGame with HasCollisionDetection, TapDetecto
   // check if game first run or restart
   bool isFirstRun = true;
   
-  List<Rect> _activeObjects = [];    // Store active coins & car obstacles
+  final List<Rect> _activeObjects = [];    // Store active coins & car obstacles
 
   @override
   Future<void> onLoad() async {    
     await super.onLoad();  
-    //player = Player(position: Vector2(size.x * 0.02, size.y / 2)); // Starting position
-    //player = Player(position: Vector2(50, 50)); // Starting position
     try {
       LogUtil.debug('Try to EndlessRunnerGame.onLoad...');   
-      await Future.delayed(const Duration(seconds: 1));        
-      //player = Player(position: Vector2(size.x * 0.5, size.y * 0.7)); 
-      player = Player(position: Vector2(size.x * 0.5, size.y / 2));
-      
-      
-      //camera.followComponent(player);
-      
+      await Future.delayed(const Duration(seconds: 1));              
+      player = Player(position: Vector2(size.x / 2, size.y / 2));
+      //player.initBoundary();
        // pre-load image assets to optimize the performance
       await _imageAssetManager.preLoadImgAssets(images);
       _gameServiceManager.setupBackground(this);  
       _gameServiceManager.addEntities(this);
-      addPlayer();     
-      //player.position = Vector2(50, 50);
+      addPlayer();    
     } catch (e) {
       LogUtil.error('Exception -> $e');
     }    
@@ -72,12 +65,8 @@ class EndlessRunnerGame extends FlameGame with HasCollisionDetection, TapDetecto
   void addObject(Rect obj) {
     _activeObjects.add(obj);
   }
-  
 
   void addPlayer() {
-    //initialize player position on the screen
-    //player = Player(position: Vector2(size.x * 0.5, size.y - player.height));
-    // Listen for changes in game state
     _gameStateManager.stateNotifier.addListener(() {
       if (_gameStateManager.stateNotifier.value == GameState.playing) {
         if (!children.contains(player)) {

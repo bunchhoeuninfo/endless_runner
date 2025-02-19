@@ -24,6 +24,7 @@ class Player extends SpriteAnimationComponent with HasGameRef<EndlessRunnerGame>
   final double gravity = 600;
   double velocityY = 0;
   bool isGrounded = false;
+  bool isScreenVertical = true;
 
   final PlayerMovementManager _playerMovement = PlayerMovementService();
   final PlayerAnimationManager _playerAnimationManager = PlayerAnimationService();
@@ -38,8 +39,7 @@ class Player extends SpriteAnimationComponent with HasGameRef<EndlessRunnerGame>
     LogUtil.debug('Inside Player.onLoad method...');
     try {
       _playerStateManager.stateNotifier.value = PlayerState.idle;
-      _playerMovement.setMovementBounds(gameRef);   
-      //sprite = Sprite(gameRef.images.fromCache('rock.jpg'));
+      _playerMovement.setMovementBounds(gameRef);
       animation = _playerAnimationManager.idleAnimation(gameRef, spriteSize);
       LogUtil.debug('Player sprite loaded succesfully');
 
@@ -49,7 +49,6 @@ class Player extends SpriteAnimationComponent with HasGameRef<EndlessRunnerGame>
       LogUtil.error('Exception -> $e, $stackTrace',);
     }    
   }
-  
 
   @override
   void onCollision(Set<Vector2> intersectionPoints, PositionComponent other) {    
@@ -59,8 +58,12 @@ class Player extends SpriteAnimationComponent with HasGameRef<EndlessRunnerGame>
 
   void jump() {
     LogUtil.debug('Called jump method... player state: ${_playerStateManager.stateNotifier.value}');
-    _playerMovement.jump();
+    if (_playerStateManager.stateNotifier.value == PlayerState.jumping) {
+      return ;
+    }
+    
     if (_playerStateManager.stateNotifier.value != PlayerState.jumping) {
+      _playerMovement.jump();
       _playerStateManager.stateNotifier.value = PlayerState.jumping;
       animation = _playerAnimationManager.jumpingAnimation(gameRef, spriteSize);
     }
@@ -100,12 +103,15 @@ class Player extends SpriteAnimationComponent with HasGameRef<EndlessRunnerGame>
   void update(double dt) {
     //LogUtil.debug('Called update method...');
     super.update(dt);
-
     _playerMovement.applyGravity(dt, this, gameRef);
   }
 
   void initPosition() {
     _playerMovement.initPosition(gameRef, this);
+  }
+
+  void initBoundary() {
+    _playerMovement.setMovementBounds(gameRef);
   }
 
 

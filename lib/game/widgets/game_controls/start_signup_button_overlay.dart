@@ -75,9 +75,7 @@ class StartSignupButtonOverlay extends StatelessWidget {
           Column(
             children: [
               _buildRow(null, _liveScoreService.encouragementNotifier, Colors.amber),
-              const SizedBox(height: 5),
-              //_buildRow('Player', _liveScoreService.playerNameNotifier, Colors.yellow),
-              //_buildItem('Top Score', _playerDataNotifierManager.playerDataNotifier.value.playerName, Colors.yellow),
+              const SizedBox(height: 5),              
               ValueListenableBuilder<PlayerData>(
                 valueListenable: _playerDataNotifierManager.playerDataNotifier,
                 builder: (context, playerData, child) {
@@ -164,8 +162,6 @@ class StartSignupButtonOverlay extends StatelessWidget {
     );
   }
 
-
-
   Widget _buildRow<T>(String? label, ValueNotifier<T> notifier, Color valueColor) {
     LogUtil.debug('Inside _buildRow method');
     return ValueListenableBuilder<T>(
@@ -182,12 +178,14 @@ class StartSignupButtonOverlay extends StatelessWidget {
                 fontWeight: FontWeight.bold,
               ),
             ),
-            Text(
-              '$value',
-              style: TextStyle(
-                color: valueColor,
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
+            Expanded(
+              child: Text(
+                '$value',
+                style: TextStyle(
+                  color: valueColor,
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ),
           ],

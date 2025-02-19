@@ -7,7 +7,6 @@ import 'package:endless_runner/constants/game_constant.dart';
 import 'package:endless_runner/core/managers/players/player_data_notifier_manager.dart';
 import 'package:endless_runner/core/services/players/player_data_notifier_service.dart';
 import 'package:endless_runner/game/utils/log_util.dart';
-import 'package:endless_runner/game/widgets/settings/widgets/signup/player_signedup_edit.dart';
 import 'package:endless_runner/theme/endless_runner_theme.dart';
 import 'package:flutter/material.dart';
 
@@ -32,25 +31,7 @@ class ProfileSection extends StatelessWidget {
       children: [
         _buildProfileImg(),
         const SizedBox(width: 20,),
-        _buildPlayerName(),
-        /*
-          profileImg.isNotEmpty 
-            ? GestureDetector(
-                onTap: () => _showPicDialog(context, profileImg),
-                child: CircleAvatar( 
-                          backgroundImage: FileImage(File(profileImg)),
-                          radius: 40,
-                        ))
-                : const CircleAvatar(radius: 40, 
-                        child: Icon(Icons.person, size: 40),),
-                
-        const SizedBox(width: 20),
-        playerData.playerName == GameConstant.playerUknown
-            ? Text(
-                playerData.playerName,              
-                style: EndlessRunnerTheme.of(context).titleH2TextStyle,
-              )
-            : _buildEditProfileSignOut(),    */    
+        _buildPlayerName(), 
       ],
     );
   }
