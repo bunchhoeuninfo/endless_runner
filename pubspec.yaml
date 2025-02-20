@@ -103,6 +103,12 @@ flutter:
     - assets/images/players/kitties/kitty_post_jump.png
     - assets/images/players/kitties/kitty_upward.png
     - assets/images/players/kitties/kitty_idle.png
+    - assets/images/players/kitties/kitty_move_left.png
+    - assets/images/players/kitties/kitty_move_right.png
+
+    # surface to lands
+    ###### trees
+    - assets/images/surfacetolands/trees/idle_tree.png
 
   fonts:
     - family: KhmerOS

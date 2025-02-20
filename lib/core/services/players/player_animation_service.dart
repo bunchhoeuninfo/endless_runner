@@ -3,8 +3,6 @@ import 'package:endless_runner/game/endless_runner_game.dart';
 import 'package:endless_runner/game/utils/log_util.dart';
 import 'package:flame/components.dart';
 
-
-
 class PlayerAnimationService implements PlayerAnimationManager {
   @override
   SpriteAnimation idleAnimation(EndlessRunnerGame gameRef, Vector2 spriteSize) {
@@ -50,6 +48,32 @@ class PlayerAnimationService implements PlayerAnimationManager {
           amount: 1, stepTime: 0.1, 
           textureSize: spriteSize),
       );
+  }
+  
+  @override
+  SpriteAnimation moveLeftAnimation(EndlessRunnerGame gameRef, Vector2 spriteSize) {
+    LogUtil.debug('Player is moving left');
+    return SpriteAnimation.fromFrameData(
+      gameRef.images.fromCache('players/kitties/kitty_move_left.png'), 
+      SpriteAnimationData.sequenced(
+        amount: 1, 
+        stepTime: 0.1, 
+        textureSize: spriteSize,
+      ),
+    );
+  }
+  
+  @override
+  SpriteAnimation moverightAnimation(EndlessRunnerGame gameRef, Vector2 spriteSize) {
+    LogUtil.debug('Player is moving right');
+    return SpriteAnimation.fromFrameData(
+      gameRef.images.fromCache('players/kitties/kitty_move_right.png'), 
+      SpriteAnimationData.sequenced(
+        amount: 1, 
+        stepTime: 0.1, 
+        textureSize: spriteSize
+      ),
+    );
   }
 
 }

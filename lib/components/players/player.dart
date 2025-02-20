@@ -38,9 +38,9 @@ class Player extends SpriteAnimationComponent with HasGameRef<EndlessRunnerGame>
     super.onLoad();
     LogUtil.debug('Inside Player.onLoad method...');
     try {
-      _playerStateManager.stateNotifier.value = PlayerState.idle;
-      _playerMovement.setMovementBounds(gameRef);
+      _playerStateManager.stateNotifier.value = PlayerState.idle;  
       animation = _playerAnimationManager.idleAnimation(gameRef, spriteSize);
+      await _playerMovement.setMovementBounds(gameRef);
       LogUtil.debug('Player sprite loaded succesfully');
 
       add(CircleHitbox());
@@ -61,27 +61,26 @@ class Player extends SpriteAnimationComponent with HasGameRef<EndlessRunnerGame>
     if (_playerStateManager.stateNotifier.value == PlayerState.jumping) {
       return ;
     }
-    
-    if (_playerStateManager.stateNotifier.value != PlayerState.jumping) {
-      _playerMovement.jump();
-      _playerStateManager.stateNotifier.value = PlayerState.jumping;
-      animation = _playerAnimationManager.jumpingAnimation(gameRef, spriteSize);
-    }
+    _playerMovement.jump();
   }
 
   void moveLeft() {
+    LogUtil.debug('Player moved left...');
     _playerMovement.moveLeft();
   }
 
   void moveRight() {
+    LogUtil.debug('Player moved right...');
     _playerMovement.moveRight();
   }
 
   void onLeftTapUp() {
+    LogUtil.debug('Player onLeftTapUp...');
     _playerMovement.onLeftTapUp();
   }
 
   void onRighttapUp() {
+    LogUtil.debug('Player onRighttapUp...');
     _playerMovement.onRighttapUp();
   }
 
@@ -104,6 +103,23 @@ class Player extends SpriteAnimationComponent with HasGameRef<EndlessRunnerGame>
     //LogUtil.debug('Called update method...');
     super.update(dt);
     _playerMovement.applyGravity(dt, this, gameRef);
+    _checkPlayerState();
+  }
+
+  void _checkPlayerState() {
+    PlayerState state = _playerStateManager.stateNotifier.value;
+    //LogUtil.debug('Player state: $state');
+    if (state == PlayerState.idle) {
+      animation = _playerAnimationManager.idleAnimation(gameRef, spriteSize);
+    } else if (state == PlayerState.jumping) {
+      animation = _playerAnimationManager.jumpingAnimation(gameRef, spriteSize);
+    } else if (state == PlayerState.moveLeft) {
+      animation = _playerAnimationManager.moveLeftAnimation(gameRef, spriteSize);
+    } else if (state == PlayerState.moveRight) {
+      animation = _playerAnimationManager.moverightAnimation(gameRef, spriteSize);
+    } else if (state == PlayerState.jumping) {
+      animation = _playerAnimationManager.jumpingAnimation(gameRef, spriteSize);
+    }
   }
 
   void initPosition() {

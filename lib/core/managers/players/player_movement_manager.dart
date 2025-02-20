@@ -16,7 +16,7 @@ abstract class PlayerMovementManager {
   // set the movement bounds for the player
   void setMovementBoundsHorizontal(EndlessRunnerGame gameRef);
   void setMovementBoundsVertical(EndlessRunnerGame gameRef);
-  void setMovementBounds(EndlessRunnerGame gameRef);
+  Future<void> setMovementBounds(EndlessRunnerGame gameRef);
 
 
   void moveUpward();

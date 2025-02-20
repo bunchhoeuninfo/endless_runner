@@ -1,14 +1,19 @@
 import 'package:endless_runner/components/players/player.dart';
 import 'package:endless_runner/core/managers/players/player_movement_manager.dart';
+import 'package:endless_runner/core/managers/players/player_state_manager.dart';
+import 'package:endless_runner/core/services/players/player_state_service.dart';
+import 'package:endless_runner/core/state/player_state.dart';
 import 'package:endless_runner/game/endless_runner_game.dart';
 import 'package:endless_runner/game/utils/log_util.dart';
 import 'package:flame/components.dart';
+import 'package:flutter/material.dart';
 
 class PlayerMovementService implements PlayerMovementManager {
-  final double _jumpForce = -400;
+  final double _jumpForce = -250;
   final double _upwardForce = -400;
   final double _gravity = 600;
   final double _moveSpeed = 500; // Movement speed
+  final double _initGameSpeed = 100;
 
   double _velocityY = 0;
   double _velocityX = 0;
@@ -25,6 +30,7 @@ class PlayerMovementService implements PlayerMovementManager {
   late double _minY;
   late double _maxY;
 
+  final PlayerStateManager _playerStateManager = PlayerStateService();
 
   @override
   void setMovementBoundsHorizontal(EndlessRunnerGame gameRef) {
@@ -86,19 +92,36 @@ class PlayerMovementService implements PlayerMovementManager {
   void jump() {
     if (isGrounded) {
       _velocityY = _jumpForce;
+    
+      if (_playerStateManager.stateNotifier.value != PlayerState.jumping) {
+        _playerStateManager.stateNotifier.value = PlayerState.jumping;
+      }
+
       isGrounded = false;
     }
   }
 
   @override
   void moveLeft() {
+    if (_playerStateManager.stateNotifier.value != PlayerState.moveLeft) {
+      _playerStateManager.stateNotifier.value = PlayerState.moveLeft;
+    }
+
     _velocityX = -_moveSpeed; // Move left
+    _velocityY = 0;
+    isGrounded = true;
     _decelerating = false;
   }
 
   @override
   void moveRight() {
+    if (_playerStateManager.stateNotifier.value != PlayerState.moveRight) {
+      _playerStateManager.stateNotifier.value = PlayerState.moveRight;
+    }
+
     _velocityX = _moveSpeed; // Move right
+    _velocityY = 0;
+    isGrounded = true;
     _decelerating = false;
   }
 
@@ -208,24 +231,40 @@ class PlayerMovementService implements PlayerMovementManager {
   }
   
   @override
-  void setMovementBounds(EndlessRunnerGame gameRef) {
-    _minX = 0;  // Left edge of the screen
-    _maxX = gameRef.size.x - gameRef.player.size.x;  // Right edge of the screen
-    //_maxX = gameRef.size.x;
+  Future<void> setMovementBounds(EndlessRunnerGame gameRef) async {
+    try {
+      Vector2 screenSize = _getScreenSize();
+      await Future.delayed(const Duration(microseconds: 100), () {
+        _minX = 0;  // Left edge of the screen        
+        _maxX = screenSize.x - gameRef.player.size.x;  // Right edge of the screen        
+        //LogUtil.debug('Player position _minX: $_minX, _maxX: $_maxX');
+        _minY = 0;  // Top of the screen
+        _maxY = screenSize.y;  // Bottom of the screen
+      });
+    } catch (e) {
+      LogUtil.error('Exception -> $e');
+    }
+    
+  }
 
-    _minY = 0;  // Top of the screen
-    _maxY = gameRef.size.y;  // Bottom of the screen
+  Vector2 _getScreenSize() {
+    final Size screenSize = WidgetsBinding.instance.platformDispatcher.views.first.physicalSize /
+        WidgetsBinding.instance.platformDispatcher.views.first.devicePixelRatio;
+    
+    return Vector2(screenSize.width, screenSize.height);
   }
   
   @override
   void applyGravity(double dt, Player player, EndlessRunnerGame gameRef) {
     //LogUtil.debug('Called here position');
     //final groundLevel = gameRef.size.y / 2;// Move ground to bottom of the screen
-    final groundLevel = gameRef.size.y - gameRef.player.size.y;
+    final groundLevel = _maxY - gameRef.player.size.y; // Move ground to bottom of the screen
     const topLevel = 0.0;
+    const int currentLevel  = 1;
+    
 
     if (!isGrounded) {
-      _velocityY += _gravity * dt;  // Accelerate downwards
+      _velocityY += _getGameSpeed(currentLevel) * dt;  // Accelerate downwards
       player.position.y += _velocityY * dt;  // Move player downwards
     }    
     
@@ -234,6 +273,7 @@ class PlayerMovementService implements PlayerMovementManager {
       player.position.y = groundLevel;
       _velocityY = 0;
       isGrounded = true;
+      _playerStateManager.stateNotifier.value = PlayerState.idle;
     } else {
       isGrounded = false;   // Player is in the air
     }
@@ -266,12 +306,17 @@ class PlayerMovementService implements PlayerMovementManager {
 
     // Move player and clamp within range
     player.position.x += _velocityX * dt;
-    
+    //LogUtil.debug('Player position before clamp x: ${player.position.x}, maxX: $_maxX, minX: $_minX');
 
     // Ensure the player stays within the screen bounds
     player.position.x = player.position.x.clamp(_minX, _maxX);
+    //LogUtil.debug('Player position after clamp x: ${player.position.x}, maxX: $_maxX, minX: $_minX');
     player.position.y = player.position.y.clamp(_minY, _maxY);
 
   }  
+
+  double _getGameSpeed(int level) {
+    return 100 + (level * 20); // Adjust the speed increase per level
+  }
   
 }

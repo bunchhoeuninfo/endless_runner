@@ -6,5 +6,7 @@ abstract class PlayerAnimationManager {
    SpriteAnimation jumpingAnimation(EndlessRunnerGame gameRef, Vector2 spriteSize);
    SpriteAnimation idleAnimation(EndlessRunnerGame gameRef, Vector2 spriteSize);
    SpriteAnimation upwardAnimation(EndlessRunnerGame gameRef, Vector2 spriteSize);
+   SpriteAnimation moveLeftAnimation(EndlessRunnerGame gameRef, Vector2 spriteSize);
+   SpriteAnimation moverightAnimation(EndlessRunnerGame gameRef, Vector2 spriteSize);
   
 }

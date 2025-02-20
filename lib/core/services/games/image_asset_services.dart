@@ -26,6 +26,11 @@ class ImageAssetServices implements ImageAssetManager {
         'players/kitties/kitty_post_jump.png',
         'players/kitties/kitty_upward.png',
         'players/kitties/kitty_idle.png',
+        'players/kitties/kitty_move_left.png',
+        'players/kitties/kitty_move_right.png',
+
+        // surface to land - tree
+        'surfacetolands/trees/idle_tree.png'
       ]);
     } catch (e) {
       LogUtil.error('Exception -> $e');

@@ -22,5 +22,7 @@ enum PlayerState {
   left,
   right,
   moving,
+  moveLeft,
+  moveRight,
 
 }
