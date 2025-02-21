@@ -1,0 +1,18 @@
+enum GoldCoinState {
+  loading,
+  loaded,
+  error,
+  idle,
+  collected,
+  removed,
+  paused,
+  resumed,
+  movedDown,
+  movedUp,
+  destroyed,
+  spawned,
+  spawnedWithBreakable,
+  spawning,
+  hitGround,
+  hitPlayer,
+}

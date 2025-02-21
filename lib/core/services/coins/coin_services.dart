@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:endless_runner/constants/screen_utils.dart';
 import 'package:endless_runner/core/managers/coins/coin_manager.dart';
 import 'package:endless_runner/components/coins/coin.dart';
 import 'package:endless_runner/components/coins/coin_type.dart';
@@ -16,8 +17,17 @@ class CoinServices implements CoinManager {
   final Random _random = Random();
   //final ObstacleServices _obstacleServices = ObstacleServices();
 
+  bool isGrounded = false;
+  double _velocityY = 0;
+  double _velocityX = 0;
+
+  // Movement bounds horizontal
   late double _minX;
   late double _maxX;
+
+  // Movement bounds vertical
+  late double _minY;
+  late double _maxY;
 
   void setMovementBounds(EndlessRunnerGame gameRef) {
     _minX = gameRef.size.x * 0.05;
@@ -82,7 +92,7 @@ class CoinServices implements CoinManager {
   
   @override
   void spawnDownwardCoin(EndlessRunnerGame game) {
-    setMovementBounds(game);
+    //setMovementBounds(game);
 
     double spawnY = 0; // Start at the top of the screen
 
@@ -109,8 +119,72 @@ class CoinServices implements CoinManager {
         game.addObject(newCoinRect);    // Store coin position
         LogUtil.debug('Spawned a ${randomCoinType.name} coin at (${coin.position.x}, ${coin.position.y})');
       
-      }
+      }  
+    }
+  }
+
+  Vector2 _getScreenSize() {
+    final Size screenSize = WidgetsBinding.instance.platformDispatcher.views.first.physicalSize /
+        WidgetsBinding.instance.platformDispatcher.views.first.devicePixelRatio;
+    
+    return Vector2(screenSize.width, screenSize.height);
+  }
+  
+  @override
+  void removeCoins(EndlessRunnerGame gameRef) {
+    // TODO: implement removeCoins
+  }
+  
+  @override
+  void setCoinSpawnBounds(EndlessRunnerGame game) {
+    try {
+      Vector2 screenSize = ScreenUtils.getScreenSize();
+      _minX = 0;
+      _maxX = screenSize.x;
+      _minY = 0;
+      _maxY = screenSize.y; 
+    } catch (e) {
+      LogUtil.error('Exception -> $e');
+    }
+  }
+  
+  @override
+  void spawnCoinDownward(EndlessRunnerGame gameRef, Coin coin, double dt) {
+    double spawnY = 0; // Start at the top of the screen
+
+    // Define number of columns and select one at random
+    int totalColumns = 5; // Assuming a 5-column layout
+    int selectedColumn = _random.nextInt(totalColumns); // Pick a column randomly
+
+    // Calculate the X position of the selected column
+    double columnSpacing = (_maxX - _minX) / (totalColumns - 1);
+    double columnX = _minX + (selectedColumn * columnSpacing);
+
+    // Decide how many coins to spawn in this column (either 3 or 5)
+    int coinCount = _random.nextBool() ? 3 : 5;
+
+    for (int i = 0; i < coinCount; i++) {
+      final randomCoinType = CoinType.values[_random.nextInt(CoinType.values.length)];
+      double coinY = spawnY - (i * 50); // Space out coins in the column
+
+      Rect newCoinRect = Rect.fromLTRB(columnX, coinY, 50, 50);
+
+      if (!gameRef.isOverlapping(newCoinRect)) {
+        Coin coin = Coin(Vector2(columnX, coinY), randomCoinType);
+        gameRef.add(coin);
+        gameRef.addObject(newCoinRect);    // Store coin position
+        LogUtil.debug('Spawned a ${randomCoinType.name} coin at (${coin.position.x}, ${coin.position.y})');      
+      }  
+    }
+  }
+  
+  @override
+  void handleCoinsCollected(EndlessRunnerGame gameRef, Coin coin) {
+    LogUtil.debug('Start inside handleCoinsCollected ...');
+    try {
       
+    } catch (e) {
+      LogUtil.error('Exception -> $e');
     }
   }
 }

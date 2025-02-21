@@ -1,17 +1,18 @@
 
-import 'package:endless_runner/components/backgrounds/road_background.dart';
 import 'package:endless_runner/components/backgrounds/road_downward_background.dart';
-import 'package:endless_runner/components/backgrounds/scrolling_background.dart';
 import 'package:endless_runner/components/coins/coin.dart';
 import 'package:endless_runner/components/obstacles/car_obstacle.dart';
-import 'package:endless_runner/components/obstacles/obstacle.dart';
-import 'package:endless_runner/components/powerups/speed_boost.dart';
+import 'package:endless_runner/components/obstacles/road_cone_obstacle.dart';
 import 'package:endless_runner/core/managers/coins/coin_manager.dart';
+import 'package:endless_runner/core/managers/coins/golds/gold_coin_manager.dart';
+import 'package:endless_runner/core/managers/coins/silvers/silver_coin_manager.dart';
 import 'package:endless_runner/core/managers/games/game_state_manager.dart';
 import 'package:endless_runner/core/managers/obstacles/obstacle_manager.dart';
 import 'package:endless_runner/core/managers/players/speed_boost_manager.dart';
 
 import 'package:endless_runner/core/services/coins/coin_services.dart';
+import 'package:endless_runner/core/services/coins/golds/gold_coin_service.dart';
+import 'package:endless_runner/core/services/coins/silvers/silver_coin_service.dart';
 import 'package:endless_runner/core/services/games/game_state_service.dart';
 import 'package:endless_runner/core/services/obstacles/obstacle_services.dart';
 import 'package:endless_runner/core/services/players/speed_boost_services.dart';
@@ -35,6 +36,16 @@ class GameServiceService implements GameServiceManager {
   final double coinSpawnInterval = 2.0; // Coin Spawn every 2 seconds
   final CoinManager _coinManager = CoinServices();
   double coinTimer = 0;
+
+  // Gold coin
+  double goldCoinTimer = 0;
+  final double goldCoinSpawnInterval = 2.0; // Gold coin spawn every 2 seconds
+  final GoldCoinManager _goldCoinManager = GoldCoinService();
+
+  // Silver coin
+  double silverCoinTimer = 0;
+  final double silverCoinSpawnInterval = 2.0; // Silver coin spawn every 2 seconds
+  final SilverCoinManager _silverCoinManager = SilverCoinService();
 
   // Speed boost 
   final SpeedBoostManager _speedBoostManager = SpeedBoostServices();
@@ -95,9 +106,10 @@ class GameServiceService implements GameServiceManager {
         
         // Remove all objects from game screen    
         //game.children.whereType<Obstacle>().forEach((obstacle) => obstacle.removeFromParent());        
-        //game.children.whereType<Coin>().forEach((coin) => coin.removeFromParent());
+        game.children.whereType<Coin>().forEach((coin) => coin.removeFromParent());
         //game.children.whereType<SpeedBoost>().forEach((speedBoost) => speedBoost.removeFromParent());
         game.children.whereType<CarObstacle>().forEach((carObstacle) => carObstacle.removeFromParent());
+        game.children.whereType<RoadConeObstacle>().forEach((roadConeObstacle) => roadConeObstacle.removeFromParent());
       } catch (e) {
         LogUtil.error('Exception -> $e');
       }
@@ -127,7 +139,7 @@ class GameServiceService implements GameServiceManager {
   void addEntities(EndlessRunnerGame game) {    
     try {
       LogUtil.debug('Try to add overlay control to the game world.');  
-      List<String> overlayBtns = ['start', 'setting', 'playPause','leftControlBtn','rightControlBtn','boostPlayerSpeed', 'upwardBtn'];
+      List<String> overlayBtns = ['start', 'setting', 'playPause','leftControlBtn','rightControlBtn','boostPlayerSpeed', 'jumpControlBtn'];
     
       // Overlay ojects
       game.overlays.addAll(overlayBtns);
@@ -179,16 +191,12 @@ class GameServiceService implements GameServiceManager {
 
   @override
   void onGameStateChanged(double dt, GameState state, EndlessRunnerGame game) {
-   // LogUtil.debug('Game method gameStateManager.stateNotifier.value -> ${_gameStateManager.stateNotifier.value}');
+    LogUtil.debug('Game method gameStateManager.stateNotifier.value -> ${_gameStateManager.stateNotifier.value}');
     if (state == GameState.playing) {
-      _spawnCarObstacle(dt, game);
-      _spawnDownwardCoin(dt, game);
-      //startGame(game);       
-      //_spawnObstacle(dt, game);
-      //spawn coin at intervals
-      //_spawnCoin(dt, game);
-      //spawn speed boost at intervals
-      //_speedBoost(dt, game);
+      //_spawnCarObstacle(dt, game);
+      //_spawnDownwardCoin(dt, game);
+      _spawnGoldCoinDownward(game, dt);
+      _spawnSilverCoinDownward(game, dt);
     } 
     else if (_gameStateManager.stateNotifier.value == GameState.paused) {
       LogUtil.debug('Game method gameStateManager.isPaused() -> ${_gameStateManager.stateNotifier.value}');
@@ -204,6 +212,23 @@ class GameServiceService implements GameServiceManager {
       LogUtil.debug('Try to pause the game engine when player goto setting section');
       pauseGame(game);
     }
+  }
+
+  void _spawnSilverCoinDownward(EndlessRunnerGame gameRef, double dt) {
+    silverCoinTimer += dt;
+    if (silverCoinTimer >= silverCoinSpawnInterval) {
+      silverCoinTimer = 0;
+      _silverCoinManager.spawnSilverCoinDownward(gameRef, dt);
+    }
+  }
+
+  void _spawnGoldCoinDownward(EndlessRunnerGame gameRef, double dt) {    
+    goldCoinTimer += dt;
+    LogUtil.debug('Try to _spawnGoldCoinDownward, goldCoinTimer: $goldCoinTimer, goldCoinSpawnInterval: $goldCoinSpawnInterval');
+    if (goldCoinTimer >= goldCoinSpawnInterval) {
+      goldCoinTimer = 0;
+      _goldCoinManager.spawnGoldCoinsDownward(gameRef, dt) ;
+    }    
   }
 
   void _spawnCarObstacle(double dt, EndlessRunnerGame game) {
@@ -227,6 +252,14 @@ class GameServiceService implements GameServiceManager {
     if (coinTimer >= coinSpawnInterval) {
       coinTimer = 0;
       _coinManager.spawnDownwardCoin(gameRef);
+    }
+  }
+
+  void _spawnRoadConeObstacle(double dt, EndlessRunnerGame gameRef) {
+    obstacleTimer += dt;
+    if (obstacleTimer >= obstacleSpawnInterval) {
+      obstacleTimer = 0;
+      _obstacleManager.spawnRoadConeObstacle(gameRef);
     }
   }
 

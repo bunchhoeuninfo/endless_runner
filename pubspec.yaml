@@ -81,14 +81,45 @@ flutter:
     - assets/images/coins/red.jpg
     - assets/images/coins/gold.jpg
     - assets/images/coins/rocket_coin.jpg
+
+    # coin - golds
+    - assets/images/coins/golds/gold_coin_idle.png
+    - assets/images/coins/golds/gold_coin_sheet.png
+    - assets/images/coins/golds/gold_coin_hit_ground.png
+
+    # coin - silvers
+    - assets/images/coins/silvers/silver_coin_sheet.png
+    - assets/images/coins/silvers/silver_coin_idle.png
+    - assets/images/coins/silvers/silver_coin_hit_ground.png
+
     # obstacle images
     - assets/images/rock.jpg
+    - assets/images/obstacles/road_cone.png
     # background downward move
     - assets/images/backgrounds/road_bg.jpg
+    - assets/images/backgrounds/grid_bg.png
   #   - images/a_dot_ham.jpeg    
     # about me data
     - assets/data/developer_profile.json
     - assets/images/profile.jpeg
+
+    # player sprite
+    - assets/images/players/player_sprite.jpg
+    - assets/images/players/walk_sheet.png
+    - assets/images/players/car_sprite.png
+    # player kitty
+    - assets/images/players/kitties/kitty_jumping.png
+    - assets/images/players/kitties/kitty_jump.png
+    - assets/images/players/kitties/kitty_stand.png
+    - assets/images/players/kitties/kitty_post_jump.png
+    - assets/images/players/kitties/kitty_upward.png
+    - assets/images/players/kitties/kitty_idle.png
+    - assets/images/players/kitties/kitty_move_left.png
+    - assets/images/players/kitties/kitty_move_right.png
+
+    # surface to lands
+    ###### trees
+    - assets/images/surfacetolands/trees/idle_tree.png
 
   fonts:
     - family: KhmerOS

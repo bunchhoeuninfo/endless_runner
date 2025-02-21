@@ -33,4 +33,8 @@ class GameConstant {
   static const String encouragementNotifierLevel3 = 'You are unstoppable! Keep running!';
 
  
+  // Phone screen size
+
+  
+
 }

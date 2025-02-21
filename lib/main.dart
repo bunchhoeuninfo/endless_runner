@@ -10,7 +10,7 @@ void main() {
     LogUtil.debug('Try to initialize main app');
     WidgetsFlutterBinding.ensureInitialized();
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky); // Enables full-screen mode
-    setDeviceOrientation();
+    //setDeviceOrientation();
     appWidget = const GameMain();
     LogUtil.info("Succesfully initialized game app...");
     

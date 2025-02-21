@@ -45,11 +45,8 @@ class UpwardControlButton extends StatelessWidget {
 
   GestureDetector _bottomRight() {
     return GestureDetector(
-      onTapDown: (_) {
-        LogUtil.debug('_bottomRight.onTapDown');
-      }, 
-      onTapUp: (_) {
-        LogUtil.debug('_bottomRight.onTapUp');
+      onTap: () {
+        game.player.moveUpward();
       },
       child: const Icon(Icons.arrow_upward, size: 50, color: Colors.amber,),
     );
