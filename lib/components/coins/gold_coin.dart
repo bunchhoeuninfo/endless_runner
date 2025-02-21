@@ -1,8 +1,7 @@
 
-import 'package:endless_runner/core/managers/coins/golds/gold_coin_animation_manager.dart';
+
 import 'package:endless_runner/core/managers/coins/golds/gold_coin_manager.dart';
 import 'package:endless_runner/core/managers/coins/golds/gold_coin_state_manager.dart';
-import 'package:endless_runner/core/services/coins/golds/gold_coin_animation_service.dart';
 import 'package:endless_runner/core/services/coins/golds/gold_coin_service.dart';
 import 'package:endless_runner/core/services/coins/golds/gold_coin_state_service.dart';
 import 'package:endless_runner/core/state/gold_coin_state.dart';
@@ -16,19 +15,17 @@ class GoldCoin extends SpriteAnimationComponent with HasGameRef<EndlessRunnerGam
   
 
   GoldCoin(Vector2 position) : 
-    super(position: position, size: Vector2(90, 120));
+    super(position: position, size: Vector2(50, 50));
 
   final double _fallSpeed = 200;
   double velocityY = 0;
   bool isGrounded = false;
   double goldCoinTimer = 0;
   final double goldCoinSpawnInterval = 2.0; // Coin Spawn every 2 seconds
-
-  final GoldCoinAnimationManager _goldCoinAnimationManager = GoldCoinAnimationService();
   final GoldCoinManager _goldCoinManager = GoldCoinService();
   final GoldCoinStateManager _goldCoinStateManager = GoldCoinStateService();
 
-  final _goldCoinSize = Vector2(300, 370);
+  final _goldCoinSize = Vector2(50, 50);
 
   @override
   Future<void> onLoad() async {
@@ -36,9 +33,9 @@ class GoldCoin extends SpriteAnimationComponent with HasGameRef<EndlessRunnerGam
 
     try {
       LogUtil.debug('Try to load gold coin sprite');
-      _goldCoinStateManager.stateNotifier.value = GoldCoinState.idle;
+      _goldCoinStateManager.stateNotifier.value = GoldCoinState.spawning;
       _goldCoinManager.setGoldCoinSpawnBounds(gameRef);
-
+      animation = _goldCoinManager.applyGoldCoinAnimationByState(gameRef, this, _goldCoinSize);
       add(CircleHitbox());
       priority = 100;
     } catch (e) {
@@ -49,24 +46,8 @@ class GoldCoin extends SpriteAnimationComponent with HasGameRef<EndlessRunnerGam
   @override
   void update(double dt) {
     super.update(dt);
-    _applyGoldCoinGravity(dt);
-    _checkGoldCoinState();
-  }
-
-  void _applyGoldCoinGravity(double dt) {
-    position.y += _fallSpeed * dt;
-    if (position.y > gameRef.size.y) {
-      removeFromParent();
-    }
-  }
-
-  void _checkGoldCoinState() {
-    GoldCoinState state = _goldCoinStateManager.stateNotifier.value;
-    if (state == GoldCoinState.idle) {
-      animation = _goldCoinAnimationManager.idleGoldCoinAnimation(gameRef, _goldCoinSize);
-    } else if (state == GoldCoinState.hitGround) {
-      removeFromParent();
-    }
+    _goldCoinManager.checkGoldCoinGravity(dt, this);
+    //animation = _goldCoinManager.applyGoldCoinAnimationByState(gameRef, this, _goldCoinSize);
   }
 
   @override

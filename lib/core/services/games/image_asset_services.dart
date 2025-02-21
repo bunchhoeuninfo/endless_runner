@@ -11,6 +11,15 @@ class ImageAssetServices implements ImageAssetManager {
         'coins/blue.jpg',
         'coins/red.jpg',
         'coins/rocket_coin.jpg',
+        // gold coin
+        'coins/golds/gold_coin_idle.png',
+        'coins/golds/gold_coin_sheet.png',
+        'coins/golds/gold_coin_hit_ground.png',
+        // gold silver
+        'coins/silvers/silver_coin_sheet.png',
+        'coins/silvers/silver_coin_idle.png',
+        'coins/silvers/silver_coin_hit_ground.png'
+        // test player
         'player_1.png',
         'rock.jpg',
         'backgrounds/road_bg.jpg',

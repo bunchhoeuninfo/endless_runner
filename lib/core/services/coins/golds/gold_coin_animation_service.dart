@@ -32,9 +32,21 @@ class GoldCoinAnimationService implements GoldCoinAnimationManager {
 
 
   @override
-  SpriteAnimation spawnCoinAnimation(EndlessRunnerGame gameRef, Vector2 coinSize) {
-    // TODO: implement spawnCoinAnimation
-    throw UnimplementedError();
+  SpriteAnimation goldCoinSpawningAnimation(EndlessRunnerGame gameRef, Vector2 coinSize) {
+    LogUtil.debug('Gold coin spawning animation');
+    try {
+      return SpriteAnimation.fromFrameData(
+        gameRef.images.fromCache('coins/golds/gold_coin_sheet.png'), 
+        SpriteAnimationData.sequenced(
+          amount: 3, 
+          stepTime: 0.3, 
+          textureSize: coinSize,
+        ),
+      );
+    } catch (e) {
+      LogUtil.error('Exception -> $e');
+      throw Exception ('Error loading gold coin spawning animation');
+    }
   }
   
   @override
@@ -42,7 +54,7 @@ class GoldCoinAnimationService implements GoldCoinAnimationManager {
     LogUtil.debug('Gold coin idle animation');
     try {
       return SpriteAnimation.fromFrameData(
-        gameRef.images.fromCache('coins/gold.jpg'), 
+        gameRef.images.fromCache('coins/golds/gold_coin_idle.png'), 
         SpriteAnimationData.sequenced(
           amount: 1, 
           stepTime: 0.1, 
@@ -52,6 +64,24 @@ class GoldCoinAnimationService implements GoldCoinAnimationManager {
     } catch (e) {
       LogUtil.error('Exception -> $e');
       throw Exception ('Error loading gold coin idle animation');
+    }
+  }
+  
+  @override
+  SpriteAnimation hitGroundGoldCoinAnimation(EndlessRunnerGame gameRef, Vector2 coinSize) {
+    LogUtil.debug('Gold coin hit ground animation');
+    try {
+      return SpriteAnimation.fromFrameData(
+        gameRef.images.fromCache('coins/blue.jpg'), 
+        SpriteAnimationData.sequenced(
+          amount: 1, 
+          stepTime: 0.1, 
+          textureSize: coinSize,
+        ),
+      );
+    } catch (e) {
+      LogUtil.error('Exception -> $e');
+      throw Exception ('Error loading gold coin hit ground animation');
     }
   }
 

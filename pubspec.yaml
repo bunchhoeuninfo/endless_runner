@@ -81,6 +81,17 @@ flutter:
     - assets/images/coins/red.jpg
     - assets/images/coins/gold.jpg
     - assets/images/coins/rocket_coin.jpg
+
+    # coin - golds
+    - assets/images/coins/golds/gold_coin_idle.png
+    - assets/images/coins/golds/gold_coin_sheet.png
+    - assets/images/coins/golds/gold_coin_hit_ground.png
+
+    # coin - silvers
+    - assets/images/coins/silvers/silver_coin_sheet.png
+    - assets/images/coins/silvers/silver_coin_idle.png
+    - assets/images/coins/silvers/silver_coin_hit_ground.png
+
     # obstacle images
     - assets/images/rock.jpg
     - assets/images/obstacles/road_cone.png
