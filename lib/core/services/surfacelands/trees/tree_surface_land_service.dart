@@ -38,7 +38,7 @@ class TreeSurfaceLandService implements TreeSurfaceLandManager {
   }
 
   @override
-  void spawnTreeSurfaceLand(EndlessRunnerGame gameRef) {
+  void spawnTreeSurfaceToLand(EndlessRunnerGame gameRef) {
     // Define the bottom range
     final groundLevel = _maxY;
     double spawnY = 0.0; // Start at the top of the screen

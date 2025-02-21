@@ -205,6 +205,10 @@ class GameServiceService implements GameServiceManager {
     }
   }
 
+  void _spawnGoldCoinDownward(double dt, EndlessRunnerGame gameRef) {
+
+  }
+
   void _spawnCarObstacle(double dt, EndlessRunnerGame game) {
     obstacleTimer += dt;
     if (obstacleTimer >= obstacleSpawnInterval) {

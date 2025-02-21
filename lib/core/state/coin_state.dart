@@ -1,0 +1,16 @@
+enum CoinState {
+  loading,
+  loaded,
+  error,
+  idle,
+  collected,
+  removed,
+  paused,
+  resumed,
+  movedDown,
+  movedUp,
+  destroyed,
+  spawned,
+  spawnedWithBreakable,
+  spawning,
+}
