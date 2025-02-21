@@ -40,6 +40,7 @@ class GoldCoin extends SpriteAnimationComponent with HasGameRef<EndlessRunnerGam
       _goldCoinManager.setGoldCoinSpawnBounds(gameRef);
 
       add(CircleHitbox());
+      priority = 100;
     } catch (e) {
       LogUtil.error('Exception -> $e');
     }
@@ -48,15 +49,14 @@ class GoldCoin extends SpriteAnimationComponent with HasGameRef<EndlessRunnerGam
   @override
   void update(double dt) {
     super.update(dt);
-    _spawnGoldCoinByTimer(dt);
+    _applyGoldCoinGravity(dt);
     _checkGoldCoinState();
   }
 
-  void _spawnGoldCoinByTimer(double dt) {
-    goldCoinTimer += dt;
-    if (goldCoinTimer >= goldCoinSpawnInterval) {
-      goldCoinTimer = 0;
-      _goldCoinManager.spanwGoldCoinsDownward(gameRef, this, dt);
+  void _applyGoldCoinGravity(double dt) {
+    position.y += _fallSpeed * dt;
+    if (position.y > gameRef.size.y) {
+      removeFromParent();
     }
   }
 
@@ -64,6 +64,8 @@ class GoldCoin extends SpriteAnimationComponent with HasGameRef<EndlessRunnerGam
     GoldCoinState state = _goldCoinStateManager.stateNotifier.value;
     if (state == GoldCoinState.idle) {
       animation = _goldCoinAnimationManager.idleGoldCoinAnimation(gameRef, _goldCoinSize);
+    } else if (state == GoldCoinState.hitGround) {
+      removeFromParent();
     }
   }
 

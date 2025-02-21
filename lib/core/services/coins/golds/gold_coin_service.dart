@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:endless_runner/components/coins/gold_coin.dart';
 import 'package:endless_runner/constants/screen_utils.dart';
 import 'package:endless_runner/core/managers/coins/golds/gold_coin_manager.dart';
@@ -7,8 +9,11 @@ import 'package:endless_runner/core/state/gold_coin_state.dart';
 import 'package:endless_runner/game/endless_runner_game.dart';
 import 'package:endless_runner/game/utils/log_util.dart';
 import 'package:flame/components.dart';
+import 'package:flutter/material.dart';
 
 class GoldCoinService implements GoldCoinManager {
+
+  final double _fallSpeed = 200;    // Speed of gold coin movement
 
   bool isGrounded = false;
   double _velocityY = 0;
@@ -22,6 +27,7 @@ class GoldCoinService implements GoldCoinManager {
   late double _minY;
   late double _maxY;
 
+  final Random _random = Random();
   final GoldCoinStateManager _goldCoinStateManager = GoldCoinStateService();
 
   @override
@@ -48,34 +54,23 @@ class GoldCoinService implements GoldCoinManager {
   }
 
   @override
-  void spanwGoldCoinsDownward(EndlessRunnerGame gameRef , GoldCoin goldCoin, double dt) {
-    final groundLevel = _maxY - goldCoin.size.y;
-    const topLevel = 0.0;
-    const int currentLevel = 1;
+  void spawnGoldCoinsDownward(EndlessRunnerGame gameRef , double dt) {
+    try {
 
-    if (!isGrounded) {
-      _velocityY += _getGameSpeed(currentLevel) * dt; // Accelerate downwards
-      goldCoin.position.y += _velocityY * dt; // Move the gold coin downwards
+      LogUtil.debug('Try to spawn gold coin downward, dt: $dt, isGrounded: $isGrounded, _minX: $_minX, _maxX: $_maxX, _minY: $_minY, _maxY: $_maxY ');
+      
+      //final groundLevel = _maxY - goldCoin.size.y;
+      double spawnY = 0;  // Start at the top of the screen 
+      const int currentLevel = 1;
+      double spawnX = _minX + _random.nextDouble() * (_maxX - _minX);
+      Rect newRoadConeRect = Rect.fromLTRB(spawnX, spawnY, 60, 100);
+      GoldCoin goldCoin = GoldCoin(Vector2(100, 0));
+      gameRef.add(goldCoin);
+
+    } catch (e) {
+      LogUtil.error('Exception -> $e');
     }
-
-    // Check if the gold coin has reached the ground
-    if (goldCoin.position.y >= groundLevel) {
-      goldCoin.position.y = groundLevel;
-      _velocityY = 0;
-      isGrounded = true;
-      _goldCoinStateManager.stateNotifier.value = GoldCoinState.hitGround;
-    } else {
-      isGrounded = false; // The gold coin is still in the air
-    }
-
-    // Present the gold coin from going above the top boundary
-    if (goldCoin.position.y < topLevel) {
-      goldCoin.position.y = topLevel;   // Lock to the top
-      _velocityY = 0;
-    }
-
-    goldCoin.position.x = goldCoin.position.x.clamp(_minX, _maxX); // Lock the gold coin within the horizontal bounds
-
+    
   }
 
   @override

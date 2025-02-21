@@ -3,7 +3,7 @@ import 'package:endless_runner/game/endless_runner_game.dart';
 
 abstract class GoldCoinManager {
   void spawnGoldCoins(EndlessRunnerGame gameRef);
-  void spanwGoldCoinsDownward(EndlessRunnerGame gameRef,  GoldCoin goldCoin, double dt);
+  void spawnGoldCoinsDownward(EndlessRunnerGame gameRef, double dt);
   void handleGoldCoinsCollected(EndlessRunnerGame gameRef);
   
   void setGoldCoinSpawnBounds(EndlessRunnerGame gameRef);
