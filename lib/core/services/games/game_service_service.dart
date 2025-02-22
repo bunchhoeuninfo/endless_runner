@@ -204,6 +204,7 @@ class GameServiceService implements GameServiceManager {
       //_spawnDownwardCoin(dt, game);
       _spawnGoldCoinDownward(game, dt);
       _spawnSilverCoinDownward(game, dt);
+      _spawnTreeSurfaceToLandDownward(game, dt);
     } 
     else if (_gameStateManager.stateNotifier.value == GameState.paused) {
       LogUtil.debug('Game method gameStateManager.isPaused() -> ${_gameStateManager.stateNotifier.value}');

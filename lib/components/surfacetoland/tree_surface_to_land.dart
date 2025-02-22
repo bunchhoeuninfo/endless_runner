@@ -42,6 +42,7 @@ class TreeSurfaceToLand extends SpriteAnimationComponent with HasGameRef<Endless
   @override
   void update(double dt) {
     super.update(dt);
+    _treeSurfaceLandManager.checkTreeToLandGravity(dt, this);
   }
 
   @override

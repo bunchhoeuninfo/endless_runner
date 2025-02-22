@@ -20,7 +20,6 @@ class TreeSurfaceToLandService implements TreeSurfaceToLandManager {
   bool isGrounded = false;
 
   final _fallSpeed = 200; 
-  final TreeSurfaceToLandManager _treeSurfaceToLandManager = TreeSurfaceToLandService();
   final TreeSurfaceToLandStateManager _treeSurfaceToLandStateManager = TreeSurfaceToLandStateService();
 
   // Movement bounds horizontal
