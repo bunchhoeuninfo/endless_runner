@@ -9,6 +9,7 @@ import 'package:endless_runner/core/managers/coins/silvers/silver_coin_manager.d
 import 'package:endless_runner/core/managers/games/game_state_manager.dart';
 import 'package:endless_runner/core/managers/obstacles/obstacle_manager.dart';
 import 'package:endless_runner/core/managers/players/speed_boost_manager.dart';
+import 'package:endless_runner/core/managers/surfacelands/trees/tree_surface_to_land_manager.dart';
 
 import 'package:endless_runner/core/services/coins/coin_services.dart';
 import 'package:endless_runner/core/services/coins/golds/gold_coin_service.dart';
@@ -16,6 +17,7 @@ import 'package:endless_runner/core/services/coins/silvers/silver_coin_service.d
 import 'package:endless_runner/core/services/games/game_state_service.dart';
 import 'package:endless_runner/core/services/obstacles/obstacle_services.dart';
 import 'package:endless_runner/core/services/players/speed_boost_services.dart';
+import 'package:endless_runner/core/services/surfacelands/trees/tree_surface_to_land_service.dart';
 import 'package:endless_runner/core/state/game_state.dart';
 import 'package:endless_runner/core/managers/games/game_service_manager.dart';
 import 'package:endless_runner/game/endless_runner_game.dart';
@@ -46,6 +48,11 @@ class GameServiceService implements GameServiceManager {
   double silverCoinTimer = 0;
   final double silverCoinSpawnInterval = 2.0; // Silver coin spawn every 2 seconds
   final SilverCoinManager _silverCoinManager = SilverCoinService();
+
+  // Tree surface to land
+  double treeSurfaceTimer = 0;
+  final double treeSurfaceSpawnInterval = 2.0;  // Silver coin spawn every 2 seconds
+  final TreeSurfaceToLandManager _treeSurfaceToLandManager = TreeSurfaceToLandService();
 
   // Speed boost 
   final SpeedBoostManager _speedBoostManager = SpeedBoostServices();
@@ -211,6 +218,14 @@ class GameServiceService implements GameServiceManager {
     } else if (state == GameState.setting) {
       LogUtil.debug('Try to pause the game engine when player goto setting section');
       pauseGame(game);
+    }
+  }
+
+  void _spawnTreeSurfaceToLandDownward(EndlessRunnerGame gameRef, double dt) {
+    treeSurfaceTimer += dt;
+    if (treeSurfaceTimer >= treeSurfaceSpawnInterval) {
+      treeSurfaceTimer = 0;
+      _treeSurfaceToLandManager.spawnTreeSurfaceToLand(gameRef, dt);
     }
   }
 

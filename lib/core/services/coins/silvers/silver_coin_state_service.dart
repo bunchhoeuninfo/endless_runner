@@ -1,7 +1,6 @@
 import 'package:endless_runner/core/managers/coins/silvers/silver_coin_state_manager.dart';
 import 'package:endless_runner/core/state/silver_coin_state.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/foundation/change_notifier.dart';
 
 class SilverCoinStateService implements SilverCoinStateManager {
 
