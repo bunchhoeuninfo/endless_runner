@@ -44,7 +44,7 @@ class Player extends SpriteAnimationComponent with HasGameRef<EndlessRunnerGame>
       LogUtil.debug('Player sprite loaded succesfully');
 
       add(CircleHitbox());
-      priority = 100;
+      priority = 600;
     } catch (e, stackTrace) {
       LogUtil.error('Exception -> $e, $stackTrace',);
     }    

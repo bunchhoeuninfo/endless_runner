@@ -97,11 +97,11 @@ class SilverCoinService implements SilverCoinManager {
       double columnSpacing = (_maxX - _minX) / (totalColumns - 1);
       double columnX = _minX + (selectedColumn * columnSpacing);
 
-      // Decide how many gold coins to spawn in this column (either 3 or 5)
-      int goldCoinCount = _random.nextBool() ? 3 : 5;
+      // Decide how many silver coins to spawn in this column (either 3 or 5)
+      int silverCoinCount = _random.nextBool() ? 3 : 5;
       LogUtil.debug('Try to spawn gold coin downward, dt: $dt, isGrounded: $isGrounded, _minX: $_minX, _maxX: $_maxX, _minY: $_minY, _maxY: $_maxY ');
 
-      for (int i = 0; i < goldCoinCount; i++ ) {
+      for (int i = 0; i < silverCoinCount; i++ ) {
         double coinY = _minY - (i * 35); // Space out gold coins in the column     
         SilverCoin silverCoin = SilverCoin(Vector2(columnX, coinY));
         gameRef.add(silverCoin);

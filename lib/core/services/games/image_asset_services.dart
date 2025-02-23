@@ -1,12 +1,17 @@
+import 'dart:convert';
+
 import 'package:endless_runner/core/managers/games/image_asset_manager.dart';
 import 'package:endless_runner/game/utils/log_util.dart';
 import 'package:flame/cache.dart';
+import 'package:flutter/services.dart';
 
 class ImageAssetServices implements ImageAssetManager {
-  @override
-  Future<void> preLoadImgAssets(Images images) async {
-    try {
-      await images.loadAll([
+  
+  /*
+  List<String> _imgAssetNames = [];
+
+
+  List<String> listAssetName = [
         'coins/gold.jpg',
         'coins/blue.jpg',
         'coins/red.jpg',
@@ -39,8 +44,31 @@ class ImageAssetServices implements ImageAssetManager {
         'players/kitties/kitty_move_right.png',
 
         // surface to land - tree
-        'surfacetolands/trees/idle_tree.png'
-      ]);
+        'surfacetolands/trees/tree_spawning.png',
+
+        // surface to land - stone
+        'surfacetolands/stones/stone_spawning.png',
+
+        // obstacle - fire
+        'obstacles/fires/fire_obstacle.png',
+      ];*/
+
+  final String _imgJson = 'assets/data/img_asset_names.json';
+  static List<String>? _cachedImgAssetNames;
+
+  @override
+  Future<void> preLoadImgAssets(Images images) async {
+    try {
+      if (_cachedImgAssetNames == null) {
+        final String response = await rootBundle.loadString(_imgJson);
+        _cachedImgAssetNames = List<String>.from(jsonDecode(response)['imgAssetNames']);
+      }
+      
+      // Load all images in parallel for better performance
+      //await images.loadAll(_imgAssetNames);
+      await Future.wait(_cachedImgAssetNames!.map((img) => images.load(img)));
+
+      LogUtil.debug('Succesfully completed pre load image assets');
     } catch (e) {
       LogUtil.error('Exception -> $e');
     }

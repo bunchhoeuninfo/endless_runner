@@ -15,7 +15,7 @@ class TreeSurfaceToLandAnimationService implements TreeSurfaceToLandAnimationMan
   SpriteAnimation idleAnimation(EndlessRunnerGame gameRef, Vector2 spriteSize) {
     LogUtil.debug('Tree is idle');
     return SpriteAnimation.fromFrameData(
-        gameRef.images.fromCache('surfacetolands/trees/idle_tree.png'), 
+        gameRef.images.fromCache('surfacetolands/trees/tree_spawning.png'), 
         SpriteAnimationData.sequenced(
           amount: 1, stepTime: 0.1, 
           textureSize: spriteSize),
@@ -26,7 +26,7 @@ class TreeSurfaceToLandAnimationService implements TreeSurfaceToLandAnimationMan
   SpriteAnimation spawningAnimation(EndlessRunnerGame gameRef, Vector2 spriteSize) {
     LogUtil.debug('Spawning tree animation');
     return SpriteAnimation.fromFrameData(
-      gameRef.images.fromCache('surfacetolands/trees/idle_tree.png'), 
+      gameRef.images.fromCache('surfacetolands/trees/tree_spawning.png'), 
       SpriteAnimationData.sequenced(
         amount: 1, 
         stepTime: 0.1, 

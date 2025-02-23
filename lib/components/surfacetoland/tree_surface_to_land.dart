@@ -16,12 +16,12 @@ import 'package:flutter/material.dart';
 class TreeSurfaceToLand extends SpriteAnimationComponent with HasGameRef<EndlessRunnerGame>, CollisionCallbacks {
   double speed = 200; // Speed of tree movement
   TreeSurfaceToLand({required Vector2 position})
-      :super(position: position, size: Vector2(90, 120));
+      :super(position: position, size: Vector2(90, 85));
 
   final TreeSurfaceToLandStateManager _treeSurfaceStateManager = TreeSurfaceToLandStateService();
   final TreeSurfaceToLandAnimationManager _animationManager = TreeSurfaceToLandAnimationService();
   final TreeSurfaceToLandManager _treeSurfaceLandManager = TreeSurfaceToLandService();
-  final spriteSize = Vector2(300, 370);
+  final spriteSize = Vector2(90, 85);
 
   @override
   Future<void> onLoad() async {
@@ -29,7 +29,7 @@ class TreeSurfaceToLand extends SpriteAnimationComponent with HasGameRef<Endless
     LogUtil.debug('Start inside TreeSurface.onload...');
     try {
       _treeSurfaceStateManager.stateNotifier.value = TreeSurfaceToLandState.spawning;
-      animation = _animationManager.idleAnimation(gameRef, spriteSize);
+      animation = _animationManager.spawningAnimation(gameRef, spriteSize);
       _treeSurfaceLandManager.setTreeSurfaceLandSpawnBounds();
       LogUtil.debug('TreeSurface sprite loaded succesfully');
       add(CircleHitbox());

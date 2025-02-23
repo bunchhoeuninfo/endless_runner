@@ -73,6 +73,9 @@ flutter:
 
   # To add assets to your application, add an assets section, like this:
   assets:
+    # image asset name JSON
+    - assets/data/img_asset_names.json
+    
     - assets/images/player_1.png
     # coin images
     - assets/images/coin.jpg
@@ -119,7 +122,14 @@ flutter:
 
     # surface to lands
     ###### trees
-    - assets/images/surfacetolands/trees/idle_tree.png
+    - assets/images/surfacetolands/trees/tree_spawning.png
+
+    ###### stones
+    - assets/images/surfacetolands/stones/stone_spawning.png
+
+    # obstacles
+    ###### fire obstacles
+    - assets/images/obstacles/fires/fire_obstacle.png
 
   fonts:
     - family: KhmerOS

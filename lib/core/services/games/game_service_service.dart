@@ -7,16 +7,20 @@ import 'package:endless_runner/core/managers/coins/coin_manager.dart';
 import 'package:endless_runner/core/managers/coins/golds/gold_coin_manager.dart';
 import 'package:endless_runner/core/managers/coins/silvers/silver_coin_manager.dart';
 import 'package:endless_runner/core/managers/games/game_state_manager.dart';
+import 'package:endless_runner/core/managers/obstacles/fires/fire_obstacle_manager.dart';
 import 'package:endless_runner/core/managers/obstacles/obstacle_manager.dart';
 import 'package:endless_runner/core/managers/players/speed_boost_manager.dart';
+import 'package:endless_runner/core/managers/surfacelands/stones/stone_surface_to_land_manager.dart';
 import 'package:endless_runner/core/managers/surfacelands/trees/tree_surface_to_land_manager.dart';
 
 import 'package:endless_runner/core/services/coins/coin_services.dart';
 import 'package:endless_runner/core/services/coins/golds/gold_coin_service.dart';
 import 'package:endless_runner/core/services/coins/silvers/silver_coin_service.dart';
 import 'package:endless_runner/core/services/games/game_state_service.dart';
+import 'package:endless_runner/core/services/obstacles/fires/fire_obstacle_service.dart';
 import 'package:endless_runner/core/services/obstacles/obstacle_services.dart';
 import 'package:endless_runner/core/services/players/speed_boost_services.dart';
+import 'package:endless_runner/core/services/surfacelands/stones/stone_surface_to_land_service.dart';
 import 'package:endless_runner/core/services/surfacelands/trees/tree_surface_to_land_service.dart';
 import 'package:endless_runner/core/state/game_state.dart';
 import 'package:endless_runner/core/managers/games/game_service_manager.dart';
@@ -53,6 +57,16 @@ class GameServiceService implements GameServiceManager {
   double treeSurfaceTimer = 0;
   final double treeSurfaceSpawnInterval = 2.0;  // Silver coin spawn every 2 seconds
   final TreeSurfaceToLandManager _treeSurfaceToLandManager = TreeSurfaceToLandService();
+
+  // Stone surface to land
+  double stoneSurfaceTimer = 0;
+  final double stoneSurfaceSpawnInterval = 1.1;   // Stone surface spawn every 1.1 seconds. the spawn time to increase based on the player level
+  final StoneSurfaceToLandManager _stoneSurfaceToLandManager = StoneSurfaceToLandService();
+
+  // Fire obstacle
+  double fireObstacleTimer = 0;
+  final double fireObstacleSpawnInterval = 3.0;   // Fire obstacle spawn every 3 seconds. The spawn time to increase based on the player level
+  final FireObstacleManager _fireObstacleManager = FireObstacleService();
 
   // Speed boost 
   final SpeedBoostManager _speedBoostManager = SpeedBoostServices();
@@ -199,26 +213,49 @@ class GameServiceService implements GameServiceManager {
   @override
   void onGameStateChanged(double dt, GameState state, EndlessRunnerGame game) {
     LogUtil.debug('Game method gameStateManager.stateNotifier.value -> ${_gameStateManager.stateNotifier.value}');
-    if (state == GameState.playing) {
-      //_spawnCarObstacle(dt, game);
-      //_spawnDownwardCoin(dt, game);
-      _spawnGoldCoinDownward(game, dt);
-      _spawnSilverCoinDownward(game, dt);
-      _spawnTreeSurfaceToLandDownward(game, dt);
-    } 
-    else if (_gameStateManager.stateNotifier.value == GameState.paused) {
-      LogUtil.debug('Game method gameStateManager.isPaused() -> ${_gameStateManager.stateNotifier.value}');
-      pauseGame(game);
-    } else if (_gameStateManager.stateNotifier.value == GameState.resumed) {
-      LogUtil.debug('Game method gameStateManager.isResumed() -> ${_gameStateManager.stateNotifier.value}');
-      resumeGame(game);
-    } 
-    else if (_gameStateManager.stateNotifier.value == GameState.menu) {
-      game.pauseEngine();
-      LogUtil.debug('Game method gameStateManager.isMenu() -> ${_gameStateManager.stateNotifier.value}');
-    } else if (state == GameState.setting) {
-      LogUtil.debug('Try to pause the game engine when player goto setting section');
-      pauseGame(game);
+    try {
+      if (state == GameState.playing) {
+        //_spawnCarObstacle(dt, game);
+        //_spawnDownwardCoin(dt, game);
+        _spawnGoldCoinDownward(game, dt);
+        _spawnSilverCoinDownward(game, dt);
+        //_spawnTreeSurfaceToLandDownward(game, dt);
+        _spawnStoneSurfaceToLand(game, dt);
+        _spawnFireObstacle(game, dt);
+      } 
+      else if (_gameStateManager.stateNotifier.value == GameState.paused) {
+        LogUtil.debug('Game method gameStateManager.isPaused() -> ${_gameStateManager.stateNotifier.value}');
+        pauseGame(game);
+      } else if (_gameStateManager.stateNotifier.value == GameState.resumed) {
+        LogUtil.debug('Game method gameStateManager.isResumed() -> ${_gameStateManager.stateNotifier.value}');
+        resumeGame(game);
+      } 
+      else if (_gameStateManager.stateNotifier.value == GameState.menu) {
+        game.pauseEngine();
+        LogUtil.debug('Game method gameStateManager.isMenu() -> ${_gameStateManager.stateNotifier.value}');
+      } else if (state == GameState.setting) {
+        LogUtil.debug('Try to pause the game engine when player goto setting section');
+        pauseGame(game);
+      }
+    } catch (e) {
+      LogUtil.error('Exception -> $e');
+    }
+    
+  }
+
+  void _spawnStoneSurfaceToLand(EndlessRunnerGame gameRef, double dt) {
+    stoneSurfaceTimer += dt;
+    if (stoneSurfaceTimer >= stoneSurfaceSpawnInterval) {
+      stoneSurfaceTimer = 0;
+      _stoneSurfaceToLandManager.spawnStoneSurfaceToLand(gameRef, dt);
+    }
+  }
+
+  void _spawnFireObstacle(EndlessRunnerGame gameRef, double dt) {
+    fireObstacleTimer += dt;
+    if (fireObstacleTimer >= fireObstacleSpawnInterval) {
+      fireObstacleTimer = 0;
+      _fireObstacleManager.spawnFireObstacle(gameRef, dt);
     }
   }
 
