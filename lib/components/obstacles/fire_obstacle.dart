@@ -13,11 +13,11 @@ import 'package:flutter/material.dart';
 class FireObstacle extends SpriteAnimationComponent with HasGameRef<EndlessRunnerGame>, CollisionCallbacks {
 
   FireObstacle(Vector2 position)
-    : super(position: position, size: Vector2(50, 55));
+    : super(position: position, size: Vector2(35, 50));
 
   final FireObstacleManager _fireObstacleManager = FireObstacleService();
   final FireObstacleStateManager _obstacleStateManager = FireObstacleStateService();
-  final _fireObstacleSize = Vector2(50, 55);
+  final _fireObstacleSize = Vector2(35, 50);
 
   @override
   Future<void> onLoad() async {

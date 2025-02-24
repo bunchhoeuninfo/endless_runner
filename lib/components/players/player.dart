@@ -43,7 +43,10 @@ class Player extends SpriteAnimationComponent with HasGameRef<EndlessRunnerGame>
       await _playerMovement.setMovementBounds(gameRef);
       LogUtil.debug('Player sprite loaded succesfully');
 
-      add(CircleHitbox());
+      add(RectangleHitbox(
+        size: Vector2(size.x * 0.8, size.y * 0.2), // Smaller hitbox at foot area
+        position: Vector2(size.x * 0.1, size.y * 0.8), // Placed at the bottom);
+      ));
       priority = 600;
     } catch (e, stackTrace) {
       LogUtil.error('Exception -> $e, $stackTrace',);
@@ -53,7 +56,14 @@ class Player extends SpriteAnimationComponent with HasGameRef<EndlessRunnerGame>
   @override
   void onCollision(Set<Vector2> intersectionPoints, PositionComponent other) {    
     super.onCollision(intersectionPoints, other);    
-    _playerCollisionManager.handleCollision(other, gameRef);
+    //_playerCollisionManager.handleCollision(other, gameRef);
+    _playerMovement.landingStoneJump(other, gameRef);
+  }
+
+   @override
+  void onCollisionEnd(PositionComponent other) {
+    super.onCollisionEnd(other);
+    _playerMovement.handleCollisionEnd(other, gameRef);
   }
 
   void jump() {
@@ -61,6 +71,7 @@ class Player extends SpriteAnimationComponent with HasGameRef<EndlessRunnerGame>
     if (_playerStateManager.stateNotifier.value == PlayerState.jumping) {
       return ;
     }
+    
     _playerMovement.jump();
   }
 

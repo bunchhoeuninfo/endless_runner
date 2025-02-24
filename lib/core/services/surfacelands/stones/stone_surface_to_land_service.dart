@@ -15,7 +15,7 @@ import 'package:flame/components.dart';
 
 class StoneSurfaceToLandService implements StoneSurfaceToLandManager {
 
-  final double _fallSpeed = 200;    // Speed of gold coin movement
+  final double _fallSpeed = 100;    // Speed of stone surface  movement
 
   bool isGrounded = false;
   double _velocityY = 0;
@@ -55,8 +55,6 @@ class StoneSurfaceToLandService implements StoneSurfaceToLandManager {
 
   @override
   void checkStoneSurfaceToLandGravity(double dt, StoneSurfaceToLand stoneSurfaceToLand) {
-    
-
     try {
       stoneSurfaceToLand.position.y += _fallSpeed * dt;
       _stateManager.stateNotifier.value = StoneSurfaceToLandState.spawning;

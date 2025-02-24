@@ -1,4 +1,5 @@
 import 'package:endless_runner/components/players/player.dart';
+import 'package:endless_runner/components/surfacetoland/stone_surface_to_land.dart';
 import 'package:endless_runner/core/managers/players/player_movement_manager.dart';
 import 'package:endless_runner/core/managers/players/player_state_manager.dart';
 import 'package:endless_runner/core/services/players/player_state_service.dart';
@@ -308,6 +309,14 @@ class PlayerMovementService implements PlayerMovementManager {
     player.position.x += _velocityX * dt;
     //LogUtil.debug('Player position before clamp x: ${player.position.x}, maxX: $_maxX, minX: $_minX');
 
+    // Check if player is above stone surface then allow player to jump
+    for (final stoneObj in gameRef.children.whereType<StoneSurfaceToLand>()) {
+      if (player.toRect().bottom >= stoneObj.toRect().top) {
+        LogUtil.debug('Hit stone surface') ; 
+        //_playerStateManager.stateNotifier.value = PlayerState.hitStoneSurface;
+      }
+    }
+
     // Ensure the player stays within the screen bounds
     player.position.x = player.position.x.clamp(_minX, _maxX);
     //LogUtil.debug('Player position after clamp x: ${player.position.x}, maxX: $_maxX, minX: $_minX');
@@ -317,6 +326,24 @@ class PlayerMovementService implements PlayerMovementManager {
 
   double _getGameSpeed(int level) {
     return 100 + (level * 20); // Adjust the speed increase per level
+  }
+  
+  @override
+  void landingStoneJump(PositionComponent other, EndlessRunnerGame gameRef) {
+    if (other is StoneSurfaceToLand) {
+      LogUtil.debug('Player is landing stone surface');
+      _velocityY = 0;
+      isGrounded = true;
+      _playerStateManager.stateNotifier.value = PlayerState.idle;
+    }
+  }
+  
+  @override
+  void handleCollisionEnd(PositionComponent other, EndlessRunnerGame gameRef) {
+    if (other is StoneSurfaceToLand) {
+      isGrounded = false; // Player is in the air
+      
+    }
   }
   
 }

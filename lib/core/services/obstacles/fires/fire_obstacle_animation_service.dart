@@ -45,8 +45,8 @@ class FireObstacleAnimationService implements FireObstacleAnimationManager {
       return SpriteAnimation.fromFrameData(
         gameRef.images.fromCache('obstacles/fires/fire_obstacle.png'), 
         SpriteAnimationData.sequenced(
-          amount: 1, 
-          stepTime: 0.1, 
+          amount: 3, 
+          stepTime: 0.3, 
           textureSize: spriteSize,
         ),
       );

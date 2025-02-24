@@ -45,12 +45,12 @@ class GameServiceService implements GameServiceManager {
 
   // Gold coin
   double goldCoinTimer = 0;
-  final double goldCoinSpawnInterval = 2.0; // Gold coin spawn every 2 seconds
+  final double goldCoinSpawnInterval = 2.6; // Gold coin spawn every 2 seconds
   final GoldCoinManager _goldCoinManager = GoldCoinService();
 
   // Silver coin
   double silverCoinTimer = 0;
-  final double silverCoinSpawnInterval = 2.0; // Silver coin spawn every 2 seconds
+  final double silverCoinSpawnInterval = 2.1; // Silver coin spawn every 2 seconds
   final SilverCoinManager _silverCoinManager = SilverCoinService();
 
   // Tree surface to land
@@ -65,7 +65,7 @@ class GameServiceService implements GameServiceManager {
 
   // Fire obstacle
   double fireObstacleTimer = 0;
-  final double fireObstacleSpawnInterval = 3.0;   // Fire obstacle spawn every 3 seconds. The spawn time to increase based on the player level
+  final double fireObstacleSpawnInterval = 4.5;   // Fire obstacle spawn every 3 seconds. The spawn time to increase based on the player level
   final FireObstacleManager _fireObstacleManager = FireObstacleService();
 
   // Speed boost 

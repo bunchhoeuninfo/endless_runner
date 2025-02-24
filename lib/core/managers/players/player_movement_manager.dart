@@ -1,5 +1,6 @@
-import 'package:endless_runner/components/players/player.dart';
+  import 'package:endless_runner/components/players/player.dart';
 import 'package:endless_runner/game/endless_runner_game.dart';
+import 'package:flame/components.dart';
 
 abstract class PlayerMovementManager {
   
@@ -28,6 +29,9 @@ abstract class PlayerMovementManager {
   void onLeftTapUp();
 
   void onRighttapUp();
+
+  void landingStoneJump(PositionComponent other, EndlessRunnerGame gameRef);
+  void handleCollisionEnd(PositionComponent other, EndlessRunnerGame gameRef);
 
  
 

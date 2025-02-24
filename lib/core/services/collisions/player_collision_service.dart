@@ -4,13 +4,17 @@ import 'package:endless_runner/components/obstacles/car_obstacle.dart';
 import 'package:endless_runner/components/obstacles/obstacle.dart';
 import 'package:endless_runner/components/obstacles/road_cone_obstacle.dart';
 import 'package:endless_runner/components/players/player.dart';
+import 'package:endless_runner/components/surfacetoland/stone_surface_to_land.dart';
 import 'package:endless_runner/core/managers/collisions/player_collision_manager.dart';
 import 'package:endless_runner/components/powerups/speed_boost.dart';
+import 'package:endless_runner/core/managers/players/player_state_manager.dart';
 import 'package:endless_runner/core/managers/players/speed_boost_manager.dart';
+import 'package:endless_runner/core/services/players/player_state_service.dart';
 import 'package:endless_runner/core/services/players/speed_boost_services.dart';
 import 'package:endless_runner/core/services/scores/live_score_service.dart';
 import 'package:endless_runner/core/managers/games/game_service_manager.dart';
 import 'package:endless_runner/core/services/games/game_service_service.dart';
+import 'package:endless_runner/core/state/player_state.dart';
 import 'package:endless_runner/game/endless_runner_game.dart';
 import 'package:endless_runner/game/utils/log_util.dart';
 import 'package:flame/components.dart';
@@ -21,6 +25,7 @@ class PlayerCollisionService implements PlayerCollisionManager {
   final SpeedBoostManager _speedBoostManager = SpeedBoostServices();
   final GameServiceManager _gameServiceManager = GameServiceService();
   final LiveScoreService _liveScoreService = LiveScoreService();
+  final PlayerStateManager _playerStateManager = PlayerStateService();
 
   @override
   void handleCollision(PositionComponent other, EndlessRunnerGame gameRef) {
@@ -95,4 +100,6 @@ class PlayerCollisionService implements PlayerCollisionManager {
       _gameServiceManager.gameOver(gameRef);
     }
   }
+  
+
 }

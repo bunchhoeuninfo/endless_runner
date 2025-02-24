@@ -24,5 +24,6 @@ enum PlayerState {
   moving,
   moveLeft,
   moveRight,
+  hitStoneSurface,
 
 }
