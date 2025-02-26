@@ -99,8 +99,14 @@ class EndlessRunnerGame extends FlameGame with HasCollisionDetection, TapDetecto
       }
     } catch (e) {
       LogUtil.error('Exception -> $e');
-    }          
-  }  
+    }
+  }
+
+  @override
+  void onDetech() {
+    super.onDetach();
+    _gameStateManager.stateNotifier.value == GameState.start;
+  }
 
   @override
   void update(double dt) {

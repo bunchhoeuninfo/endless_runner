@@ -35,9 +35,9 @@ class ResumePauseButtonOverlay extends StatelessWidget {
 
   Align _buildTopCenter(BuildContext context, bool isPaused) {
     return Align(
-      alignment: Alignment.topCenter,
+      alignment: Alignment.topRight,    // Move to the right side
       child: Padding(
-        padding: const EdgeInsets.only(top: 20),
+        padding: const EdgeInsets.only(top: 50, right: 10),
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [

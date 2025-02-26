@@ -212,7 +212,7 @@ class GameServiceService implements GameServiceManager {
 
   @override
   void onGameStateChanged(double dt, GameState state, EndlessRunnerGame game) {
-    LogUtil.debug('Game method gameStateManager.stateNotifier.value -> ${_gameStateManager.stateNotifier.value}');
+    //LogUtil.debug('Game method gameStateManager.stateNotifier.value -> ${_gameStateManager.stateNotifier.value}');
     try {
       if (state == GameState.playing) {
         //_spawnCarObstacle(dt, game);
@@ -223,18 +223,20 @@ class GameServiceService implements GameServiceManager {
         _spawnStoneSurfaceToLand(game, dt);
         _spawnFireObstacle(game, dt);
       } 
-      else if (_gameStateManager.stateNotifier.value == GameState.paused) {
-        LogUtil.debug('Game method gameStateManager.isPaused() -> ${_gameStateManager.stateNotifier.value}');
+      else if (state == GameState.paused) {
+        LogUtil.debug('Game method gameStateManager.isPaused() -> $state');
         pauseGame(game);
-      } else if (_gameStateManager.stateNotifier.value == GameState.resumed) {
-        LogUtil.debug('Game method gameStateManager.isResumed() -> ${_gameStateManager.stateNotifier.value}');
+      } else if (state == GameState.resumed) {
+        LogUtil.debug('Game method gameStateManager.isResumed() -> $state');
         resumeGame(game);
       } 
-      else if (_gameStateManager.stateNotifier.value == GameState.menu) {
+      else if (state == GameState.menu) {
         game.pauseEngine();
-        LogUtil.debug('Game method gameStateManager.isMenu() -> ${_gameStateManager.stateNotifier.value}');
+        LogUtil.debug('Game method gameStateManager.isMenu() -> $state');
       } else if (state == GameState.setting) {
         LogUtil.debug('Try to pause the game engine when player goto setting section');
+        pauseGame(game);
+      } else if (state == GameState.start) {
         pauseGame(game);
       }
     } catch (e) {
