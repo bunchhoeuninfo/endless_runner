@@ -223,12 +223,12 @@ class GameServiceService implements GameServiceManager {
       if (state == GameState.playing) {
         //_spawnCarObstacle(dt, game);
         //_spawnDownwardCoin(dt, game);
-        _spawnGoldCoinDownward(game, dt);
-        _spawnSilverCoinDownward(game, dt);
+        //_spawnGoldCoinDownward(game, dt);
+        //_spawnSilverCoinDownward(game, dt);
         //_spawnTreeSurfaceToLandDownward(game, dt);
         _spawnStoneSurfaceToLand(game, dt);
         _spawnFireObstacle(game, dt);
-        _spawnRocketBooster(game, dt);
+        //_spawnRocketBooster(game, dt);
       } 
       else if (state == GameState.paused) {
         LogUtil.debug('Game method gameStateManager.isPaused() -> $state');

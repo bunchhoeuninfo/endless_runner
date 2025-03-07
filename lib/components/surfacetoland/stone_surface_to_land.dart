@@ -1,7 +1,11 @@
+import 'package:endless_runner/components/players/player.dart';
+import 'package:endless_runner/core/managers/players/player_state_manager.dart';
 import 'package:endless_runner/core/managers/surfacelands/stones/stone_surface_to_land_manager.dart';
 import 'package:endless_runner/core/managers/surfacelands/stones/stone_surface_to_land_state_manager.dart';
+import 'package:endless_runner/core/services/players/player_state_service.dart';
 import 'package:endless_runner/core/services/surfacelands/stones/stone_surface_to_land_service.dart';
 import 'package:endless_runner/core/services/surfacelands/stones/stone_surface_to_land_state_service.dart';
+import 'package:endless_runner/core/state/player_state.dart';
 import 'package:endless_runner/core/state/stone_surface_to_land_state.dart';
 import 'package:endless_runner/game/endless_runner_game.dart';
 import 'package:endless_runner/game/utils/log_util.dart';
@@ -16,6 +20,7 @@ class StoneSurfaceToLand extends SpriteAnimationComponent with HasGameRef<Endles
   final _stoneSurfaceSize = Vector2(100, 30);
   final StoneSurfaceToLandManager _stoneToLadManager = StoneSurfaceToLandService();
   final StoneSurfaceToLandStateManager _stateManager = StoneSurfaceToLandStateService();
+  final PlayerStateManager _playerStateManager = PlayerStateService();
 
   @override
   Future<void> onLoad() async {
@@ -38,6 +43,8 @@ class StoneSurfaceToLand extends SpriteAnimationComponent with HasGameRef<Endles
     super.update(dt);
     _stoneToLadManager.checkStoneSurfaceToLandGravity(dt, this);
   }
+
+ 
 
   @override
   void render(Canvas canvas) {

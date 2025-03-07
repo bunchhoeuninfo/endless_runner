@@ -57,22 +57,25 @@ class Player extends SpriteAnimationComponent with HasGameRef<EndlessRunnerGame>
   void onCollision(Set<Vector2> intersectionPoints, PositionComponent other) {    
     super.onCollision(intersectionPoints, other);    
     //_playerCollisionManager.handleCollision(other, gameRef);
-    _playerMovement.landingStoneJump(other, gameRef);
+    //_playerMovement.landingStoneJump(other, gameRef);
   }
 
    @override
   void onCollisionEnd(PositionComponent other) {
     super.onCollisionEnd(other);
-    _playerMovement.handleCollisionEnd(other, gameRef);
+    //_playerMovement.handleCollisionEnd(other, gameRef);
   }
 
   void jump() {
-    LogUtil.debug('Called jump method... player state: ${_playerStateManager.stateNotifier.value}');
+    final state = _playerStateManager.stateNotifier.value;
+    LogUtil.debug('Called jump method... player state: $state');
     if (_playerStateManager.stateNotifier.value == PlayerState.jumping) {
       return ;
     }
     
     _playerMovement.jump();
+    
+    
   }
 
   void moveLeft() {
