@@ -10,7 +10,7 @@ class RocketBoosterAnimationService implements RocketBoosterAnimationManager {
   SpriteAnimation hitGroundAnimation(EndlessRunnerGame gameRef, Vector2 spriteSize) {
     try {
       return SpriteAnimation.fromFrameData(
-        gameRef.images.fromCache('rocket_booster.png'), 
+        gameRef.images.fromCache('powerups/rockets/rocket.png'), 
         SpriteAnimationData.sequenced(
           amount: 3, 
           stepTime: 0.3, 
@@ -27,7 +27,7 @@ class RocketBoosterAnimationService implements RocketBoosterAnimationManager {
   SpriteAnimation idleAnimation(EndlessRunnerGame gameRef, Vector2 spriteSize) {
     try {
       return SpriteAnimation.fromFrameData(
-        gameRef.images.fromCache('rocket_booster.png'), 
+        gameRef.images.fromCache('powerups/rockets/rocket.png'), 
         SpriteAnimationData.sequenced(
           amount: 3, 
           stepTime: 0.3, 
@@ -44,10 +44,10 @@ class RocketBoosterAnimationService implements RocketBoosterAnimationManager {
   SpriteAnimation spawningAnimation(EndlessRunnerGame gameRef, Vector2 spriteSize) {
     try {
       return SpriteAnimation.fromFrameData(
-        gameRef.images.fromCache('rocket_booster.png'), 
+        gameRef.images.fromCache('powerups/rockets/rocket.png'), 
         SpriteAnimationData.sequenced(
-          amount: 3, 
-          stepTime: 0.3, 
+          amount: 4, 
+          stepTime: 0.4, 
           textureSize: spriteSize,
         ),
       );

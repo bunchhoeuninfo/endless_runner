@@ -28,6 +28,7 @@
         "players/kitties/kitty_move_right.png",
         "surfacetolands/trees/tree_spawning.png",
         "surfacetolands/stones/stone_spawning.png",
-        "obstacles/fires/fire_obstacle.png"
+        "obstacles/fires/fire_obstacle.png",
+        "powerups/rockets/rocket.png"
       ]
 }

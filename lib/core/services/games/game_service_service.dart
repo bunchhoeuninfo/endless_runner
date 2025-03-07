@@ -10,6 +10,7 @@ import 'package:endless_runner/core/managers/games/game_state_manager.dart';
 import 'package:endless_runner/core/managers/obstacles/fires/fire_obstacle_manager.dart';
 import 'package:endless_runner/core/managers/obstacles/obstacle_manager.dart';
 import 'package:endless_runner/core/managers/players/speed_boost_manager.dart';
+import 'package:endless_runner/core/managers/powerups/rocket_booster_manager.dart';
 import 'package:endless_runner/core/managers/surfacelands/stones/stone_surface_to_land_manager.dart';
 import 'package:endless_runner/core/managers/surfacelands/trees/tree_surface_to_land_manager.dart';
 
@@ -20,6 +21,7 @@ import 'package:endless_runner/core/services/games/game_state_service.dart';
 import 'package:endless_runner/core/services/obstacles/fires/fire_obstacle_service.dart';
 import 'package:endless_runner/core/services/obstacles/obstacle_services.dart';
 import 'package:endless_runner/core/services/players/speed_boost_services.dart';
+import 'package:endless_runner/core/services/powerups/rocket_booster_services.dart';
 import 'package:endless_runner/core/services/surfacelands/stones/stone_surface_to_land_service.dart';
 import 'package:endless_runner/core/services/surfacelands/trees/tree_surface_to_land_service.dart';
 import 'package:endless_runner/core/state/game_state.dart';
@@ -67,6 +69,10 @@ class GameServiceService implements GameServiceManager {
   double fireObstacleTimer = 0;
   final double fireObstacleSpawnInterval = 4.5;   // Fire obstacle spawn every 3 seconds. The spawn time to increase based on the player level
   final FireObstacleManager _fireObstacleManager = FireObstacleService();
+
+  double rocketBoosterTimer = 0;
+  final double rocketBoosterSpawnInterval = 5;  // Rocket booster spanw every 5 seconds. the spawn time to increase based on the player level
+  final RocketBoosterManager _rocketBoosterManager = RocketBoosterServices();
 
   // Speed boost 
   final SpeedBoostManager _speedBoostManager = SpeedBoostServices();
@@ -222,6 +228,7 @@ class GameServiceService implements GameServiceManager {
         //_spawnTreeSurfaceToLandDownward(game, dt);
         _spawnStoneSurfaceToLand(game, dt);
         _spawnFireObstacle(game, dt);
+        _spawnRocketBooster(game, dt);
       } 
       else if (state == GameState.paused) {
         LogUtil.debug('Game method gameStateManager.isPaused() -> $state');
@@ -250,6 +257,14 @@ class GameServiceService implements GameServiceManager {
     if (stoneSurfaceTimer >= stoneSurfaceSpawnInterval) {
       stoneSurfaceTimer = 0;
       _stoneSurfaceToLandManager.spawnStoneSurfaceToLand(gameRef, dt);
+    }
+  }
+
+  void _spawnRocketBooster(EndlessRunnerGame gameRef, double dt) {
+    rocketBoosterTimer += dt;
+    if (rocketBoosterTimer >= rocketBoosterSpawnInterval) {
+      rocketBoosterTimer = 0;
+      _rocketBoosterManager.spawnRocketBooster(gameRef, dt);
     }
   }
 

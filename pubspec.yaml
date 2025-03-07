@@ -106,6 +106,8 @@ flutter:
     - assets/data/developer_profile.json
     - assets/images/profile.jpeg
 
+
+
     # player sprite
     - assets/images/players/player_sprite.jpg
     - assets/images/players/walk_sheet.png
@@ -130,6 +132,10 @@ flutter:
     # obstacles
     ###### fire obstacles
     - assets/images/obstacles/fires/fire_obstacle.png
+
+    # powerups
+    ###### rockets
+    - assets/images/powerups/rockets/rocket.png
 
   fonts:
     - family: KhmerOS

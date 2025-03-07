@@ -35,11 +35,22 @@ class RocketBoosterServices implements RocketBoosterManager {
 
   @override
   void checkRocketBoosterGravity(double dt, RocketBooster rocketBooster) {
-    // TODO: implement checkRocketBoosterGravity
+    try {
+      rocketBooster.position.y += _fallSpeed * dt;
+      _rocketBoosterStateManager.stateNotifier.value = RocketBoosterState.spawning;
+      Vector2 screenSize = ScreenUtils.getScreenSize();
+      double groundLevel = screenSize.y - rocketBooster.size.y;
+      if (rocketBooster.position.y > groundLevel) {
+        _rocketBoosterStateManager.stateNotifier.value = RocketBoosterState.spawning;
+        rocketBooster.removeFromParent();
+      }
+    } catch (e) {
+      LogUtil.error('Exception -> $e');
+    }
   }
 
   @override
-  void setRocketBoosterSpawnBounds(EndlessRunnerGame gameRef, double dt) {
+  void setRocketBoosterSpawnBounds(EndlessRunnerGame gameRef) {
     try {
       Vector2 screenSize = ScreenUtils.getScreenSize();
       _minX = 0;
@@ -53,7 +64,26 @@ class RocketBoosterServices implements RocketBoosterManager {
 
   @override
   void spawnRocketBooster(EndlessRunnerGame gameRef, double dt) {
-    // TODO: implement spawnRocketBooster
+    try {
+      Vector2 screenSize = ScreenUtils.getScreenSize();
+      _minX = 0;
+      _maxX = screenSize.x;
+      _minY = 0;
+      _maxY = screenSize.y;
+
+      // Define number of columns an select one at random
+      int totalColumns = 5; // Assuming a 5-column layout
+      int selectedColumn = _random.nextInt(totalColumns);
+
+      // Calculate the X position of the selected column
+      double columnSpacing = (_maxX - _minX) / (totalColumns - 1);
+      double columnX = _minX + (selectedColumn * columnSpacing);
+
+      RocketBooster rocketBooster = RocketBooster(Vector2(columnX, _minY));
+      gameRef.add(rocketBooster);
+    } catch (e) {
+      LogUtil.error('Exception -> $e');
+    }
   }
 
   @override
