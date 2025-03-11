@@ -1,0 +1,11 @@
+export 'coins/coin_manager.dart';
+export 'coins/golds/gold_coin_manager.dart';
+export 'coins/silvers/silver_coin_manager.dart';
+export 'games/game_state_manager.dart';
+export 'obstacles/fires/fire_obstacle_manager.dart';
+export 'obstacles/obstacle_manager.dart';
+export 'players/speed_boost_manager.dart';
+export 'powerups/rocket_booster_manager.dart';
+export 'surfacelands/stones/stone_surface_to_land_manager.dart';
+export 'surfacelands/trees/tree_surface_to_land_manager.dart';
+export 'games/game_service_manager.dart';

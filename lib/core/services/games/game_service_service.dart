@@ -3,32 +3,14 @@ import 'package:endless_runner/components/backgrounds/road_downward_background.d
 import 'package:endless_runner/components/coins/coin.dart';
 import 'package:endless_runner/components/obstacles/car_obstacle.dart';
 import 'package:endless_runner/components/obstacles/road_cone_obstacle.dart';
-import 'package:endless_runner/core/managers/coins/coin_manager.dart';
-import 'package:endless_runner/core/managers/coins/golds/gold_coin_manager.dart';
-import 'package:endless_runner/core/managers/coins/silvers/silver_coin_manager.dart';
-import 'package:endless_runner/core/managers/games/game_state_manager.dart';
-import 'package:endless_runner/core/managers/obstacles/fires/fire_obstacle_manager.dart';
-import 'package:endless_runner/core/managers/obstacles/obstacle_manager.dart';
-import 'package:endless_runner/core/managers/players/speed_boost_manager.dart';
-import 'package:endless_runner/core/managers/powerups/rocket_booster_manager.dart';
-import 'package:endless_runner/core/managers/surfacelands/stones/stone_surface_to_land_manager.dart';
-import 'package:endless_runner/core/managers/surfacelands/trees/tree_surface_to_land_manager.dart';
-
-import 'package:endless_runner/core/services/coins/coin_services.dart';
-import 'package:endless_runner/core/services/coins/golds/gold_coin_service.dart';
-import 'package:endless_runner/core/services/coins/silvers/silver_coin_service.dart';
-import 'package:endless_runner/core/services/games/game_state_service.dart';
-import 'package:endless_runner/core/services/obstacles/fires/fire_obstacle_service.dart';
-import 'package:endless_runner/core/services/obstacles/obstacle_services.dart';
-import 'package:endless_runner/core/services/players/speed_boost_services.dart';
-import 'package:endless_runner/core/services/powerups/rocket_booster_services.dart';
-import 'package:endless_runner/core/services/surfacelands/stones/stone_surface_to_land_service.dart';
-import 'package:endless_runner/core/services/surfacelands/trees/tree_surface_to_land_service.dart';
 import 'package:endless_runner/core/state/game_state.dart';
-import 'package:endless_runner/core/managers/games/game_service_manager.dart';
 import 'package:endless_runner/game/endless_runner_game.dart';
 import 'package:endless_runner/game/utils/log_util.dart';
 import 'package:flame/components.dart';
+import 'package:endless_runner/core/managers/core_manager.dart';
+import 'package:endless_runner/core/services/core_services.dart';
+
+
 
 class GameServiceService implements GameServiceManager {
   //final GameServiceManager _gameServiceManager = GameServiceService();
@@ -85,12 +67,8 @@ class GameServiceService implements GameServiceManager {
   @override
   void setupBackground(EndlessRunnerGame game) {
     try {
-      // Add two full-screen backgrounds for seamless scrolling
-      //game.add(ScrollingBackground(position: Vector2(0, -50), baseSpeed: 100));
-      //game.add(ScrollingBackground(position: Vector2(game.size.x, -50), baseSpeed: 100));
-      game.add(RoadDownwardBackground(position: Vector2(0, -game.size.y), baseSpeed: 100));
-      game.add(RoadDownwardBackground(position: Vector2(0, 0), baseSpeed: 100));
-      //game.add(RoadBackground(speed:100));
+      //game.add(RoadDownwardBackground(position: Vector2(0, -game.size.y), baseSpeed: 100));
+      //game.add(RoadDownwardBackground(position: Vector2(0, 0), baseSpeed: 100));      
     } catch (e) {
       LogUtil.error('Exception -> $e');
     }   
@@ -346,6 +324,19 @@ class GameServiceService implements GameServiceManager {
     if (speedBoostTimer >= speedBoostSpawnInterval) {
       speedBoostTimer = 0;
       _speedBoostManager.spawnSpeedBoostCoin(game);        
+    }
+  }
+  
+  @override
+  void setupDynamicBackground(EndlessRunnerGame game) {
+    try {
+      final bg1 = RoadDownwardBackground(position: Vector2(0, -game.size.y),);
+      final bg2 = RoadDownwardBackground(position: Vector2(0, 0));
+      game.backgrounds.addAll([bg1, bg2]);
+      game.add(bg1);
+      game.add(bg2);
+    } catch (e) {
+      LogUtil.error('Exception -> $e');
     }
   }
   

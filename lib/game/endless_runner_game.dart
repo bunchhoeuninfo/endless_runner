@@ -1,6 +1,7 @@
 
 import 'dart:math';
 
+import 'package:endless_runner/components/backgrounds/road_downward_background.dart';
 import 'package:endless_runner/components/players/player.dart';
 import 'package:endless_runner/core/services/games/game_state_service.dart';
 import 'package:endless_runner/game/widgets/game_overs/game_over_screen.dart';
@@ -35,6 +36,8 @@ class EndlessRunnerGame extends FlameGame with HasCollisionDetection, TapDetecto
   
   final List<Rect> _activeObjects = [];    // Store active coins & car obstacles
 
+  final List<RoadDownwardBackground> backgrounds = [];
+
   @override
   Future<void> onLoad() async {    
     await super.onLoad();  
@@ -45,7 +48,8 @@ class EndlessRunnerGame extends FlameGame with HasCollisionDetection, TapDetecto
       //player.initBoundary();
        // pre-load image assets to optimize the performance
       await _imageAssetManager.preLoadImgAssets(images);
-      _gameServiceManager.setupBackground(this);  
+      //_gameServiceManager.setupBackground(this);  
+      _gameServiceManager.setupDynamicBackground(this);
       _gameServiceManager.addEntities(this);
       addPlayer();    
       LogUtil.debug('Initiallize game world successfully. Game screen size. maxX: ${size.x}, maxY: ${size.y}, player position: ${player.position}');

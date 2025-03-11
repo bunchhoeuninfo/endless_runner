@@ -90,9 +90,12 @@ class PlayerMovementService implements PlayerMovementManager {
   }
 
   @override
-  void jump() {
+  void jump(EndlessRunnerGame gameRef) {
     if (isGrounded) {
       _velocityY = _jumpForce;
+      for (var bg in gameRef.backgrounds) {
+        bg.updateSpeed(gameRef.player.velocityY);
+      }
     
       if (_playerStateManager.stateNotifier.value != PlayerState.jumping) {
         _playerStateManager.stateNotifier.value = PlayerState.jumping;

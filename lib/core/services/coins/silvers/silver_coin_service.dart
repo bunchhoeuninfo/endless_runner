@@ -1,7 +1,7 @@
 import 'dart:math';
 
 import 'package:endless_runner/components/coins/silver_coin.dart';
-import 'package:endless_runner/constants/screen_utils.dart';
+import 'package:endless_runner/game/utils/screen_utils.dart';
 import 'package:endless_runner/core/managers/coins/silvers/silver_coin_animation_manager.dart';
 import 'package:endless_runner/core/managers/coins/silvers/silver_coin_manager.dart';
 import 'package:endless_runner/core/managers/coins/silvers/silver_coin_state_manager.dart';

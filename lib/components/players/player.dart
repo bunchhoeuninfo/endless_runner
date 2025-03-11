@@ -53,18 +53,6 @@ class Player extends SpriteAnimationComponent with HasGameRef<EndlessRunnerGame>
     }    
   }
 
-  @override
-  void onCollision(Set<Vector2> intersectionPoints, PositionComponent other) {    
-    super.onCollision(intersectionPoints, other);    
-    //_playerCollisionManager.handleCollision(other, gameRef);
-    //_playerMovement.landingStoneJump(other, gameRef);
-  }
-
-   @override
-  void onCollisionEnd(PositionComponent other) {
-    super.onCollisionEnd(other);
-    //_playerMovement.handleCollisionEnd(other, gameRef);
-  }
 
   void jump() {
     final state = _playerStateManager.stateNotifier.value;
@@ -73,8 +61,7 @@ class Player extends SpriteAnimationComponent with HasGameRef<EndlessRunnerGame>
       return ;
     }
     
-    _playerMovement.jump();
-    
+    _playerMovement.jump(gameRef);
     
   }
 

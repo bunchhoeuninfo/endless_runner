@@ -1,7 +1,7 @@
 import 'dart:math';
 
 import 'package:endless_runner/components/surfacetoland/tree_surface_to_land.dart';
-import 'package:endless_runner/constants/screen_utils.dart';
+import 'package:endless_runner/game/utils/screen_utils.dart';
 import 'package:endless_runner/core/managers/surfacelands/trees/tree_surface_to_land_manager.dart';
 import 'package:endless_runner/core/managers/surfacelands/trees/tree_surface_to_land_state_manager.dart';
 import 'package:endless_runner/core/services/surfacelands/trees/tree_surface_to_land_state_service.dart';

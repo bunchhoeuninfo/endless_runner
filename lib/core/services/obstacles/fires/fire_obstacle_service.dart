@@ -1,7 +1,7 @@
 import 'dart:math';
 
 import 'package:endless_runner/components/obstacles/fire_obstacle.dart';
-import 'package:endless_runner/constants/screen_utils.dart';
+import 'package:endless_runner/game/utils/screen_utils.dart';
 import 'package:endless_runner/core/managers/obstacles/fires/fire_obstacle_animation_manager.dart';
 import 'package:endless_runner/core/managers/obstacles/fires/fire_obstacle_manager.dart';
 import 'package:endless_runner/core/managers/obstacles/fires/fire_obstacle_state_manager.dart';

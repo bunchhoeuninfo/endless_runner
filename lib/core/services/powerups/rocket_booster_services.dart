@@ -1,7 +1,7 @@
 import 'dart:math';
 
 import 'package:endless_runner/components/powerups/rocket_booster.dart';
-import 'package:endless_runner/constants/screen_utils.dart';
+import 'package:endless_runner/game/utils/screen_utils.dart';
 import 'package:endless_runner/core/managers/powerups/rocket_booster_animation_manager.dart';
 import 'package:endless_runner/core/managers/powerups/rocket_booster_manager.dart';
 import 'package:endless_runner/core/managers/powerups/rocket_booster_state_manager.dart';

@@ -10,14 +10,15 @@ import 'package:flame/components.dart';
 
 class RoadDownwardBackground extends SpriteComponent with HasGameRef<EndlessRunnerGame> {
 
-  double baseSpeed; //Speed of background movement
-  double currentSpeed;
+  //double baseSpeed; //Speed of background movement
+  double currentSpeed = 0;
 
   final GameStateManager _gameStateManager = GameStateService();
-  RoadDownwardBackground({required Vector2 position, required this.baseSpeed})
-    : currentSpeed = baseSpeed,
+  
+  RoadDownwardBackground({required Vector2 position}) :
     super(position: position);
 
+  
   @override
   Future<void> onLoad() async {
     LogUtil.debug('Start onLoad method');
@@ -38,10 +39,26 @@ class RoadDownwardBackground extends SpriteComponent with HasGameRef<EndlessRunn
     
     position.y += currentSpeed * dt;
 
-    if (position.y >= size.y) {
-      position.y -= size.y * 2;
+    // Reset position to create an infinite scrolling effect
+    if (position.y >= gameRef.size.y) {
+      position.y -= gameRef.size.y * 2; // Move it back up
     }
 
+
+    /*
+    if (position.y >= size.y) {
+      position.y -= size.y * 2;
+    }*/
+
+  }
+
+  // Update speed dynamically
+  void updateSpeed(double playerSpeed) {
+    if (playerSpeed < 0) {  // Player moving up
+      currentSpeed = playerSpeed.abs();   // Move background down
+    } else {
+      currentSpeed = 0;   // Stop background movement
+    }
   }
 
 }
