@@ -204,8 +204,8 @@ class GameServiceService implements GameServiceManager {
         //_spawnGoldCoinDownward(game, dt);
         //_spawnSilverCoinDownward(game, dt);
         //_spawnTreeSurfaceToLandDownward(game, dt);
-        _spawnStoneSurfaceToLand(game, dt);
-        _spawnFireObstacle(game, dt);
+        //_spawnStoneSurfaceToLand(game, dt);
+        //_spawnFireObstacle(game, dt);
         //_spawnRocketBooster(game, dt);
       } 
       else if (state == GameState.paused) {
@@ -330,11 +330,11 @@ class GameServiceService implements GameServiceManager {
   @override
   void setupDynamicBackground(EndlessRunnerGame game) {
     try {
-      final bg1 = RoadDownwardBackground(position: Vector2(0, -game.size.y),);
-      final bg2 = RoadDownwardBackground(position: Vector2(0, 0));
+      final bg1 = RoadDownwardBackground(position: Vector2(0, 0),);
+      final bg2 = RoadDownwardBackground(position: Vector2(0, -game.size.y));      
       game.backgrounds.addAll([bg1, bg2]);
       game.add(bg1);
-      game.add(bg2);
+      game.add(bg2);     
     } catch (e) {
       LogUtil.error('Exception -> $e');
     }

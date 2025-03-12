@@ -1,7 +1,9 @@
 import 'package:endless_runner/components/players/player.dart';
 import 'package:endless_runner/components/surfacetoland/stone_surface_to_land.dart';
+import 'package:endless_runner/core/managers/players/player_animation_manager.dart';
 import 'package:endless_runner/core/managers/players/player_movement_manager.dart';
 import 'package:endless_runner/core/managers/players/player_state_manager.dart';
+import 'package:endless_runner/core/services/players/player_animation_service.dart';
 import 'package:endless_runner/core/services/players/player_state_service.dart';
 import 'package:endless_runner/core/state/player_state.dart';
 import 'package:endless_runner/game/endless_runner_game.dart';
@@ -19,6 +21,7 @@ class PlayerMovementService implements PlayerMovementManager {
   double _velocityY = 0;
   double _velocityX = 0;
   bool isGrounded = false;
+  bool isIdle = false;
 
   bool _decelerating = false;
 
@@ -32,6 +35,7 @@ class PlayerMovementService implements PlayerMovementManager {
   late double _maxY;
 
   final PlayerStateManager _playerStateManager = PlayerStateService();
+  final PlayerAnimationManager _playerAnimationManager = PlayerAnimationService();
 
   @override
   void setMovementBoundsHorizontal(EndlessRunnerGame gameRef) {
@@ -91,18 +95,12 @@ class PlayerMovementService implements PlayerMovementManager {
 
   @override
   void jump(EndlessRunnerGame gameRef) {
-    if (isGrounded) {
-      _velocityY = _jumpForce;
-      for (var bg in gameRef.backgrounds) {
-        bg.updateSpeed(gameRef.player.velocityY);
-      }
+    _velocityY = _jumpForce;
     
-      if (_playerStateManager.stateNotifier.value != PlayerState.jumping) {
-        _playerStateManager.stateNotifier.value = PlayerState.jumping;
-      }
-
-      isGrounded = false;
+    if (_playerStateManager.stateNotifier.value != PlayerState.jumping) {
+      _playerStateManager.stateNotifier.value = PlayerState.jumping;
     }
+
   }
 
   @override
@@ -347,6 +345,110 @@ class PlayerMovementService implements PlayerMovementManager {
       isGrounded = false; // Player is in the air
       
     }
+  }
+  
+  @override
+  SpriteAnimation applyPlayerAnimationByState(EndlessRunnerGame gameRef, Player player, Vector2 spriteSize) {
+    PlayerState state = _playerStateManager.stateNotifier.value;
+    //LogUtil.debug('Player state -> $state');
+    try {
+      if (state == PlayerState.idle) {
+        return _playerAnimationManager.idleAnimation(gameRef, spriteSize);
+      } else if (state == PlayerState.jumping) {
+        return _playerAnimationManager.jumpingAnimation(gameRef, spriteSize);
+      } else if (state == PlayerState.moveLeft) {
+        return _playerAnimationManager.moveLeftAnimation(gameRef, spriteSize);
+      } else if (state == PlayerState.moveRight) {
+        return _playerAnimationManager.moverightAnimation(gameRef, spriteSize);
+      } else if (state == PlayerState.jumping) {
+        return _playerAnimationManager.jumpingAnimation(gameRef, spriteSize);
+      }
+      return _playerAnimationManager.idleAnimation(gameRef, spriteSize);
+
+    } catch (e) {
+      LogUtil.error('Exception -> $e');
+      return _playerAnimationManager.idleAnimation(gameRef, spriteSize);
+    }
+  }
+  
+  @override
+  void applyMoveUpGravity(double dt, Player player, EndlessRunnerGame gameRef) {
+    final idlePosition = _maxY / 2; // Player idle position
+    const topLevel = 0.0;
+    const double gravity = 2000; // Gravity strength
+    
+    
+
+     // Apply gravity effect
+    _velocityY += gravity * dt;  // Pull player down
+    player.position.y += _velocityY * dt;  // Move player
+
+    // Prevent player from going above the top boundary
+    if (player.position.y < topLevel) {
+      player.position.y = topLevel; // Lock the top 
+      _velocityY = 0;
+    }
+
+    //LogUtil.debug('Player Y: ${player.position.y}, VelocityY: $_velocityY, Grounded: $isGrounded');
+
+    if (_decelerating) {
+      LogUtil.debug('_decelerating->$_decelerating, _velocityX->$_velocityX');
+      const double friction = 2500; // Adjust for smooth stopping effect
+      if (_velocityX < 0) {
+        _velocityX += friction * dt; // Gradually increase velocity towards 0
+        if (_velocityX > 0) {
+          _velocityX = 0; // Stop completely
+          _decelerating = false;
+        }
+      } else {
+        _velocityX -= friction * dt; // Gradually decrease velocity towards 0
+        if (_velocityX < 0) {
+          _velocityX = 0; // Stop completely
+          _decelerating = false;
+        }
+      }
+    }
+
+    if (player.position.y >= idlePosition) {
+      player.position.y = idlePosition;
+      _velocityY = 0;
+      isIdle = true;
+      _playerStateManager.stateNotifier.value = PlayerState.idle;
+      
+      // Reset background speed
+      for (var bg in gameRef.backgrounds) {
+        bg.currentSpeed = 0;
+      }
+    } else {
+      isIdle = false;   // Player is in the air
+    }
+
+    // Move player and clamp within range
+    player.position.x += _velocityX * dt;
+    //LogUtil.debug('Player position before clamp x: ${player.position.x}, maxX: $_maxX, minX: $_minX');
+
+    // Ensure the player stays within the screen bounds
+    player.position.x = player.position.x.clamp(_minX, _maxX);
+    //LogUtil.debug('Player position after clamp x: ${player.position.x}, maxX: $_maxX, minX: $_minX');
+    player.position.y = player.position.y.clamp(_minY, _maxY);
+
+
+  }
+  
+  @override
+  void jumpInIdleState(EndlessRunnerGame gameRef) {
+    LogUtil.debug('Jump in idle state -> isIdle: $isIdle');
+    if (isIdle) {  // Ensure player can only jump when idle
+      _velocityY = -800; // Set initial jump speed (negative moves up)
+      isIdle = false;
+      _playerStateManager.stateNotifier.value = PlayerState.jumping;
+
+      // Move the background downward
+      for (var bg in gameRef.backgrounds) {
+        bg.currentSpeed = 100;
+      }
+    }
+    
   }
   
 }

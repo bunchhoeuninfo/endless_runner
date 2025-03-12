@@ -8,7 +8,9 @@ abstract class PlayerMovementManager {
   void applyGravityHorizontal(double dt, Player player, EndlessRunnerGame gameRef);
   void applyGravityVertical(double dt, Player player, EndlessRunnerGame gameRef);
   void applyGravity(double dt, Player player, EndlessRunnerGame gameRef);
+  void applyMoveUpGravity(double dt, Player player, EndlessRunnerGame gameRef);
 
+  void jumpInIdleState(EndlessRunnerGame gameRef);
   void jump(EndlessRunnerGame gameRef);
   //void handleTap(Vector2 tapPosition, EndlessRunnerGame gameRef);
   void resetPosition(EndlessRunnerGame gameRef, Player player);
@@ -32,6 +34,8 @@ abstract class PlayerMovementManager {
 
   void landingStoneJump(PositionComponent other, EndlessRunnerGame gameRef);
   void handleCollisionEnd(PositionComponent other, EndlessRunnerGame gameRef);
+
+  SpriteAnimation applyPlayerAnimationByState(EndlessRunnerGame gameRef, Player player, Vector2 spriteSize);
 
 
 

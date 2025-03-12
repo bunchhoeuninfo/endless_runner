@@ -2,7 +2,6 @@
 
 import 'package:endless_runner/core/managers/games/game_state_manager.dart';
 import 'package:endless_runner/core/services/games/game_state_service.dart';
-import 'package:endless_runner/core/state/game_state.dart';
 import 'package:endless_runner/game/endless_runner_game.dart';
 import 'package:endless_runner/game/utils/log_util.dart';
 import 'package:flame/components.dart';
@@ -16,7 +15,7 @@ class RoadDownwardBackground extends SpriteComponent with HasGameRef<EndlessRunn
   final GameStateManager _gameStateManager = GameStateService();
   
   RoadDownwardBackground({required Vector2 position}) :
-    super(position: position);
+    super(position: position, size: Vector2(800, 1200));
 
   
   @override
@@ -35,20 +34,16 @@ class RoadDownwardBackground extends SpriteComponent with HasGameRef<EndlessRunn
   void update(double dt) {
     super.update(dt);
 
-    if (_gameStateManager.stateNotifier.value != GameState.playing) return;
+    if (currentSpeed > 0) {
+      //if (_gameStateManager.stateNotifier.value != GameState.playing) return;
     
-    position.y += currentSpeed * dt;
+      position.y += currentSpeed * dt;
 
-    // Reset position to create an infinite scrolling effect
-    if (position.y >= gameRef.size.y) {
-      position.y -= gameRef.size.y * 2; // Move it back up
+      // If background moves out of view, reposition it at the top
+      if (position.y >= gameRef.size.y) {
+        position.y -= gameRef.size.y * 2;// Move it back up
+      }
     }
-
-
-    /*
-    if (position.y >= size.y) {
-      position.y -= size.y * 2;
-    }*/
 
   }
 

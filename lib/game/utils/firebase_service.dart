@@ -1,5 +1,5 @@
 
-import 'package:endless_runner/game/utils/firebase_options.dart';
+/*import 'package:endless_runner/game/utils/firebase_options.dart';
 import 'package:endless_runner/game/utils/log_util.dart';
 
 import 'package:firebase_core/firebase_core.dart';
@@ -46,4 +46,4 @@ class FirebaseService {
       LogUtil.error("Error retrieving app_id: $e");
     }
   }
-}
+}*/

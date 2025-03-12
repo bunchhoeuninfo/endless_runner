@@ -37,8 +37,8 @@ dependencies:
   cupertino_icons: ^1.0.8
   flame: ^1.23.0
   logger: ^2.5.0
-  firebase_core: ^3.9.0
-  cloud_firestore: ^5.6.0
+  #firebase_core: ^3.9.0
+  #cloud_firestore: ^5.6.0
   connectivity_plus: ^6.1.1
   shared_preferences: ^2.3.4
   font_awesome_flutter: ^10.8.0
@@ -46,8 +46,8 @@ dependencies:
   image_picker: ^1.1.2
   path_provider: ^2.1.5
   google_fonts: ^6.2.1
-  firebase_app_check: ^0.3.1+6
-  firebase_crashlytics: ^4.2.0
+  #firebase_app_check: ^0.3.1+6
+  #firebase_crashlytics: ^4.2.0
 
 dev_dependencies:
   flutter_test:

@@ -31,6 +31,7 @@ class ScreenWidget extends StatelessWidget {
 
   GameWidget _buildGameWidget() {
     return GameWidget(
+            
             game: EndlessRunnerGame(),
             overlayBuilderMap: {              
               'start': (context, game) => StartSignupButtonOverlay(game: game as EndlessRunnerGame),

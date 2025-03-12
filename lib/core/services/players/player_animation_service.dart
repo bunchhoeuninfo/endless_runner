@@ -6,7 +6,7 @@ import 'package:flame/components.dart';
 class PlayerAnimationService implements PlayerAnimationManager {
   @override
   SpriteAnimation idleAnimation(EndlessRunnerGame gameRef, Vector2 spriteSize) {
-    LogUtil.debug('Player is idle');
+    //LogUtil.debug('Player is idle');
     return SpriteAnimation.fromFrameData(
         gameRef.images.fromCache('players/kitties/kitty_idle.png'), 
         SpriteAnimationData.sequenced(

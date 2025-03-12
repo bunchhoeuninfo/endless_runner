@@ -1,10 +1,7 @@
 
-import 'package:endless_runner/core/managers/collisions/player_collision_manager.dart';
-import 'package:endless_runner/core/managers/players/player_animation_manager.dart';
+
 import 'package:endless_runner/core/managers/players/player_state_manager.dart';
-import 'package:endless_runner/core/services/collisions/player_collision_service.dart';
 import 'package:endless_runner/core/managers/players/player_movement_manager.dart';
-import 'package:endless_runner/core/services/players/player_animation_service.dart';
 import 'package:endless_runner/core/services/players/player_movement_service.dart';
 import 'package:endless_runner/core/services/players/player_state_service.dart';
 import 'package:endless_runner/core/state/player_state.dart';
@@ -26,9 +23,7 @@ class Player extends SpriteAnimationComponent with HasGameRef<EndlessRunnerGame>
   bool isGrounded = false;
   bool isScreenVertical = true;
 
-  final PlayerMovementManager _playerMovement = PlayerMovementService();
-  final PlayerAnimationManager _playerAnimationManager = PlayerAnimationService();
-  final PlayerCollisionManager _playerCollisionManager = PlayerCollisionService();
+  final PlayerMovementManager _playerMovement = PlayerMovementService();  
   final PlayerStateManager _playerStateManager = PlayerStateService();
   
   final spriteSize = Vector2(300,370);
@@ -38,8 +33,8 @@ class Player extends SpriteAnimationComponent with HasGameRef<EndlessRunnerGame>
     super.onLoad();
     LogUtil.debug('Inside Player.onLoad method...');
     try {
-      _playerStateManager.stateNotifier.value = PlayerState.idle;  
-      animation = _playerAnimationManager.idleAnimation(gameRef, spriteSize);
+      _playerStateManager.stateNotifier.value = PlayerState.idle;        
+      animation = _playerMovement.applyPlayerAnimationByState(gameRef, this, spriteSize);
       await _playerMovement.setMovementBounds(gameRef);
       LogUtil.debug('Player sprite loaded succesfully');
 
@@ -61,7 +56,7 @@ class Player extends SpriteAnimationComponent with HasGameRef<EndlessRunnerGame>
       return ;
     }
     
-    _playerMovement.jump(gameRef);
+    _playerMovement.jumpInIdleState(gameRef);
     
   }
 
@@ -95,7 +90,7 @@ class Player extends SpriteAnimationComponent with HasGameRef<EndlessRunnerGame>
     
     if (_playerStateManager.stateNotifier.value != PlayerState.upward) {
       _playerStateManager.stateNotifier.value = PlayerState.upward;
-      animation = _playerAnimationManager.upwardAnimation(gameRef, spriteSize);
+      animation = _playerMovement.applyPlayerAnimationByState(gameRef, this, spriteSize);
     }
   }
 
@@ -103,24 +98,9 @@ class Player extends SpriteAnimationComponent with HasGameRef<EndlessRunnerGame>
   void update(double dt) {
     //LogUtil.debug('Called update method...');
     super.update(dt);
-    _playerMovement.applyGravity(dt, this, gameRef);
-    _checkPlayerState();
-  }
-
-  void _checkPlayerState() {
-    PlayerState state = _playerStateManager.stateNotifier.value;
-    //LogUtil.debug('Player state: $state');
-    if (state == PlayerState.idle) {
-      animation = _playerAnimationManager.idleAnimation(gameRef, spriteSize);
-    } else if (state == PlayerState.jumping) {
-      animation = _playerAnimationManager.jumpingAnimation(gameRef, spriteSize);
-    } else if (state == PlayerState.moveLeft) {
-      animation = _playerAnimationManager.moveLeftAnimation(gameRef, spriteSize);
-    } else if (state == PlayerState.moveRight) {
-      animation = _playerAnimationManager.moverightAnimation(gameRef, spriteSize);
-    } else if (state == PlayerState.jumping) {
-      animation = _playerAnimationManager.jumpingAnimation(gameRef, spriteSize);
-    }
+    //_playerMovement.applyGravity(dt, this, gameRef);
+    _playerMovement.applyMoveUpGravity(dt, this, gameRef);
+    animation = _playerMovement.applyPlayerAnimationByState(gameRef, this, spriteSize);
   }
 
   void initPosition() {
