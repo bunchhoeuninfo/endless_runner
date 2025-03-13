@@ -51,7 +51,7 @@ class EndlessRunnerGame extends FlameGame with HasCollisionDetection, TapDetecto
        // pre-load image assets to optimize the performance
       await _imageAssetManager.preLoadImgAssets(images);
       //_gameServiceManager.setupBackground(this);  
-      _gameServiceManager.setupDynamicBackground(this);
+      //_gameServiceManager.setupDynamicBackground(this);
       _gameServiceManager.addEntities(this);
       addPlayer();    
       LogUtil.debug('Initiallize game world successfully. Game screen size. maxX: ${size.x}, maxY: ${size.y}, player position: ${player.position}');

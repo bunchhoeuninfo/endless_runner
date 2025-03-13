@@ -9,7 +9,7 @@ class GridBackgroundAnimationServices implements GridBackgroundAnimationManager 
   SpriteAnimation loopingBackgroundAnimation(EndlessRunnerGame gameRef, Vector2 spriteSize) {
     try {
       return SpriteAnimation.fromFrameData(
-        gameRef.images.fromCache('grid_bg.png'), 
+        gameRef.images.fromCache('backgrounds/grid_bg_sheet.png'), 
         SpriteAnimationData.sequenced(
           amount: 1, 
           stepTime: 0.1, 

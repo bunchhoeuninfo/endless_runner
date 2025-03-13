@@ -1,4 +1,5 @@
 
+import 'package:endless_runner/components/backgrounds/grid_background.dart';
 import 'package:endless_runner/components/backgrounds/road_downward_background.dart';
 import 'package:endless_runner/components/coins/coin.dart';
 import 'package:endless_runner/components/obstacles/car_obstacle.dart';
@@ -146,9 +147,13 @@ class GameServiceService implements GameServiceManager {
       LogUtil.debug('Try to add overlay control to the game world.');  
       List<String> overlayBtns = ['start', 'setting', 'playPause','leftControlBtn','rightControlBtn','boostPlayerSpeed', 'jumpControlBtn'];
     
+      // grid background
+      final gbg = GridBackground();
+
       // Overlay ojects
       game.overlays.addAll(overlayBtns);
 
+      game.add(gbg);
       // Add collision detection
       game.add(ScreenHitbox());
       
@@ -330,11 +335,10 @@ class GameServiceService implements GameServiceManager {
   @override
   void setupDynamicBackground(EndlessRunnerGame game) {
     try {
-      final bg1 = RoadDownwardBackground(position: Vector2(0, 0),);
-      final bg2 = RoadDownwardBackground(position: Vector2(0, -game.size.y));      
-      game.backgrounds.addAll([bg1, bg2]);
-      game.add(bg1);
-      game.add(bg2);     
+      LogUtil.debug('Try to setup dynamic background');
+      final gbg = GridBackground();
+      game.add(gbg);
+
     } catch (e) {
       LogUtil.error('Exception -> $e');
     }

@@ -14,6 +14,7 @@
         "rock.jpg",
         "backgrounds/road_bg.jpg",
         "backgrounds/grid_bg.png",
+        "backgrounds/grid_bg_sheet.png",
         "obstacles/road_cone.png",
         "players/player_sprite.jpg",
         "players/walk_sheet.png",

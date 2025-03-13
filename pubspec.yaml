@@ -101,6 +101,8 @@ flutter:
     # background downward move
     - assets/images/backgrounds/road_bg.jpg
     - assets/images/backgrounds/grid_bg.png
+    - assets/images/backgrounds/grid_bg_sheet.png
+
   #   - images/a_dot_ham.jpeg    
     # about me data
     - assets/data/developer_profile.json
